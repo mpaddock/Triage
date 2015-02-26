@@ -1,0 +1,19 @@
+<template name="sidebar">
+<div class="panel-group" id="accordion">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href='#tagCollapse'>Tag</a>
+      </h4>
+    </div>
+    <div id="tagCollapse" class="panel-collapse collapse in">
+      <div class="panel-body">
+        {{#each tags}}
+        <input type="checkbox" name="{{_id}}" value="{{name}}">{{this}}<br>
+        {{/each}}
+      </div>
+    </div>
+  </div>
+</div>
+</template>
+

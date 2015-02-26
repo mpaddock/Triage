@@ -1,0 +1,16 @@
+<template name="layout">
+<div class="wrap">
+{{> navbar}}
+{{> queuebar}}
+</div>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-xs-12 col-sm-10">
+      {{> yield}}
+    </div>
+    <div class="col-sm-2">
+      {{> sidebar}}
+    </div>
+  </div>
+</div>
+</template>
