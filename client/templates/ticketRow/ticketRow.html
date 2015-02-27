@@ -1,0 +1,18 @@
+<template name="ticketRow">
+<tr data-toggle="collapse" data-target="#row{{_id}}" class="accordion-toggle">
+  <td>
+    <span class="glyphicon glyphicon-plus" name="{{_id}}"></span>
+  </td>
+  <td>{{title}}</td>
+  <td>{{authorId}}</td>
+  <td>{{status}}</td>
+  <td>{{>dateFormatter date=submittedTimestamp}}</td>
+</tr>
+<tr>
+  <td colspan='5' class="hiddenRow">
+    <div class="accordion-body collapse" id="row{{_id}}" name="{{_id}}">
+      {{body}}
+    </div>
+  </td>
+</tr>
+</template>

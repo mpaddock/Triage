@@ -32,6 +32,7 @@ Meteor.startup ->
       title: "Academic Science Building Site"
       body: "This is a ticket for discussion and planning of the new site for the building."
       authorId: "nmad222"
+      tags: ["ProjectPlanning", "AcademicScience", "WebDev"]
       formFields:
         dueDate: new Date()
       submissionData:

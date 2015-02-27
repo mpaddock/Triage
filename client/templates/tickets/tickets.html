@@ -1,38 +1,26 @@
 <template name="tickets">
-<table class="table table-striped table-condensed" style="border-collapse:collapse;">
-  <thead>
-    <tr>
-      <th>&nbsp;</th>
-      <th>Subject</th>
-      <th>Requester</th>
-      <th>Status</th>
-      <th>Submitted</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr></tr>
-    {{#each tickets}}
-    {{>ticketRow}}
-    {{/each}}
-  </tbody>
-</table>
-</template>
-
-<template name="ticketRow">
-<tr data-toggle="collapse" data-target="#row{{_id}}" class="accordion-toggle">
-  <td>
-    <span class="glyphicon glyphicon-plus" name="{{_id}}"></span>
-  </td>
-  <td>{{title}}</td>
-  <td>{{authorId}}</td>
-  <td>{{status}}</td>
-  <td>{{>dateFormatter date=submittedTimestamp}}</td>
-</tr>
-<tr>
-  <td colspan='5' class="hiddenRow">
-    <div class="accordion-body collapse" id="row{{_id}}" name="{{_id}}">
-      {{body}}
-    </div>
-  </td>
-</tr>
+<div class="row">
+  <div class="col-xs-12 col-sm-10">
+    <table class="table table-striped table-condensed" style="border-collapse:collapse;">
+      <thead>
+        <tr>
+          <th>&nbsp;</th>
+          <th>Subject</th>
+          <th>Requester</th>
+          <th>Status</th>
+          <th>Submitted</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr></tr>
+        {{#each tickets}}
+        {{>ticketRow}}
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+  <div class="col-sm-2">
+    {{> sidebar }}
+  </div>
+</div>
 </template>

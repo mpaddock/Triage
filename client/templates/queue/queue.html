@@ -1,3 +1,26 @@
 <template name="queue">
-{{name}}
+<div class="row">
+  <div class="col-xs-12 col-sm-10">
+    <table class="table table-striped table-condensed" style="border-collapse:collapse;">
+      <thead>
+        <tr>
+          <th>&nbsp;</th>
+          <th>Subject</th>
+          <th>Requester</th>
+          <th>Status</th>
+          <th>Submitted</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr></tr>
+        {{#each this}}
+        {{>ticketRow}}
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+  <div class="col-sm-2">
+    {{> sidebar data=this}}
+  </div>
+</div>
 </template>

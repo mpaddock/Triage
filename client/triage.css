@@ -63,3 +63,7 @@
   padding: 0 0 0 0  !important;
   margin-bottom: 0 !important;
 }
+
+.hiddenRow {
+  padding: 0 !important;
+}
