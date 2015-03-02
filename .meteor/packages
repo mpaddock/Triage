@@ -14,3 +14,4 @@ aldeed:simple-schema
 aldeed:collection2
 mrt:moment
 accounts-base
+hive:accounts-ldap

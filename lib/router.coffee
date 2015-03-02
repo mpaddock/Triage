@@ -1,6 +1,13 @@
 Router.configure
   layoutTemplate: 'layout'
 
+Router.onBeforeAction () ->
+  if @ready()
+    if not Meteor.userId()
+      @render('login')
+    else
+      @next()
+
 Router.map ->
   @route 'tickets',
     path: '/'

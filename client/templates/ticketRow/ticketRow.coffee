@@ -4,8 +4,8 @@ Template.ticketRow.events
       Changelog.insert
         ticketId: this._id
         timestamp: new Date()
-        authorName: "Anonymous"
-        authorId: Meteor.userId() || "0"
+        authorName: Meteor.user().username #Make this name when we publish the profile
+        authorId: Meteor.userId()
         type: "note"
         message: e.target.value
 
