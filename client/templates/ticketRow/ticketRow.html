@@ -11,7 +11,27 @@
 <tr>
   <td colspan='5' class="hiddenRow">
     <div class="accordion-body collapse" id="row{{_id}}" name="{{_id}}">
-      {{body}}
+      <form class="form-horizontal" name="ticketForm">
+        <div class="form-group">
+          <label for="body" class="control-label col-xs-4 col-md-1">Ticket Body:</label>
+          <div class="col-xs-8 col-md-11">
+            <textarea class="form-control" rows="5" name="body" value="{{body}}" disabled></textarea>
+          </div>
+        </div>
+        {{#each notes}}
+        <div class="form-group">
+          <label for="note-{{_id}}" class="control-label col-xs-4 col-md-1">{{authorName}}: </label>
+          <div class="col-xs-8 col-md-11">
+            <input class="form-control" name="note-{{_id}}" value="{{message}}" disabled>
+          </div>
+        </div>
+        {{/each}}
+        <div class="form-group">
+          <div class="col-xs-8 col-xs-offset-4 col-md-11 col-md-offset-1">
+            <input class="form-control" name="newNote" placeholder="Add a new note...">
+          </div>
+        </div>
+      </form>
     </div>
   </td>
 </tr>

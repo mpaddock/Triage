@@ -40,3 +40,31 @@
   attachmentIds:
     optional: true
     type: [String]
+
+
+@Changelog = new Mongo.Collection 'changelog'
+@Changelog.attachSchema new SimpleSchema
+  ticketId:
+    type: String
+    label: "Ticket ID"
+  timestamp:
+    type: new Date()
+    label: "Timestamp"
+  authorName:
+    type: String
+    label: "Author Name"
+  authorId:
+    type: String
+    label: "Author ID"
+  type:
+    type: String
+    allowedValues: ['note', 'field']
+    label: "Type"
+  field:
+    type: String
+    label: "Field"
+    optional: true
+  message:
+    type: String
+    label: "Message"
+    optional: true
