@@ -1,6 +1,20 @@
 <template name="queue">
 <div class="row">
   <div class="col-xs-12 col-sm-10">
+    {{#if queueAdmin}}
+    <div class="pull-left">
+      <a role="button" href="/queue/{{queueName}}/dashboard" class="btn btn-sm btn-success">Manage This Queue</a>
+    </div>
+    {{/if}}
+    <div class="pull-right">
+      {{#each members}}
+      <img src="https://as.uky.edu/profile-picture/{{this}}" style="max-height: 40px; max-width: 100px" data-toggle="popover" data-placement="bottom" data-trigger="hover" tabindex="0" title="{{this}}" data-content="This is some information about user {{this}}. I'm sure he/she is a really great person.">
+      {{/each}}
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-12 col-sm-10">
     <table class="table table-striped table-condensed" style="border-collapse:collapse;">
       <thead>
         <tr>
@@ -19,7 +33,7 @@
       </tbody>
     </table>
   </div>
-  <div class="col-sm-2">
+  <div class="col-sm-2 hidden-xs">
     {{> sidebar data=this}}
   </div>
 </div>

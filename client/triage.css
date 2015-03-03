@@ -1,3 +1,11 @@
+.navbar {
+  position: static;
+}
+
+.navbar .nav > li {
+  z-index: 1001;
+}
+
 .navbar-default {
   background-color: #005daa;
   border-color: #006ac3;

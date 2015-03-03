@@ -18,6 +18,15 @@ Router.map ->
       Session.set "queueName", @params.queue_name #just makes it easier for our sidebar. can't get data context to work at the moment.
       @next()
     data: -> Tickets.find {queueName: @params.queue_name}
+
+  @route 'queueDashboard',
+    path: '/queue/:queue_name/dashboard',
+    onBeforeAction: ->
+      Session.set "queueName", @params.queue_name #Temporary until we figure out how we're storing queues probably.
+      @next()
+
+  @route 'userDashboard',
+    path: '/my/dashboard'
     
   @route 'apiSubmit',
     path: '/api/1.0/submit'
@@ -45,4 +54,3 @@ Router.map ->
         tags: @request.params.tags?.split(';\n') || []
 
       @response.end 'Submission successful.'
-
