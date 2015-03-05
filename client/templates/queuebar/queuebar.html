@@ -1,18 +1,74 @@
 <template name="queuebar">
+{{>newQueueModal}}
 <nav class="navbar navbar-inverse navbar-static-top">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#queueBar">
-        <span class="sr-only">Toggle navigation</span>
-      </button>
-    </div>
-    <div class="collapse navbar-collapse" id="queueBar">
-      <ul class="nav navbar-nav">
-        {{#each queue}}
-        <li><a href="/queue/{{name}}">{{name}}</a></li>
-        {{/each}}
-      </ul>
+<div class="container-fluid">
+  <div class="navbar-header">
+    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#queueBar">
+      <span class="sr-only">Toggle navigation</span>
+    </button>
+  </div>
+  <div class="collapse navbar-collapse" id="queueBar">
+    <ul class="nav navbar-nav">
+      {{#each queue}}
+      <li class="{{active}}"><a href="/queue/{{name}}">{{name}}</a></li>
+      {{/each}}
+    </ul>
+    <ul class="nav navbar-nav navbar-right">
+      <li><a data-toggle="modal" data-target="#newQueueModal">Add Queue</a></li>
+    </ul>
+  </div>
+
+</div>
+</nav>
+</template>
+
+
+<template name="newQueueModal">
+<div class="modal fade" id="newQueueModal" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Add New Queue</h4>
+      </div>
+      <div class="modal-body">
+        <form class="form-horizontal">
+          <div class="form-group">
+            <label for="queueName" class="control-label col-xs-4">Queue Name:</label>
+            <div class="col-xs-8">
+              <input type="text" class="form-control" name="queueName">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="queueAdmins" class="control-label col-xs-4">Administrators:</label>
+            <div class="col-xs-8">
+              <div class="input-group">
+                <input type="text" class="form-control" name="queueAdmins">
+                <span class="input-group-btn"><button type="button" class="btn btn-primary" data-action="checkAdmins"><span class="glyphicon glyphicon-plus"></span></button></span>
+              </div>
+              {{#each queueAdmins}}
+              <span class="label label-success"><a href="#" data-action="removeAdmin" data-user="{{this}}"><span style="color: #ffe6e6" class="glyphicon glyphicon-remove"></span></a>&nbsp; {{this}}</span>
+              {{/each}}
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="queueMembers" class="control-label col-xs-4">Members:</label>
+            <div class="col-xs-8">
+              <div class="input-group">
+                <input type="text" class="form-control" name="queueMembers">
+                <span class="input-group-btn"><button type="button" class="btn btn-primary" data-action="checkMembers"><span class="glyphicon glyphicon-plus"></span></button></span>
+              </div>
+              {{#each queueMembers}}
+              <span class="label label-success"><a href="#" data-action="removeMember" data-user="{{this}}"><span style="color: #ffe6e6" class="glyphicon glyphicon-remove"></span></a>&nbsp; {{this}}</span>
+              {{/each}}
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary pull-right" data-action="submit">Add Queue</button>
+      </div>
     </div>
   </div>
-</nav>
+</div>
 </template>

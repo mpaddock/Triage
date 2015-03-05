@@ -68,3 +68,15 @@
     type: String
     label: "Message"
     optional: true
+
+@Queues = new Mongo.Collection 'queues'
+@Queues.attachSchema new SimpleSchema
+  name:
+    type: String
+    label: "Name"
+  admins:
+    type: [String]
+    label: "Queue Administrators"
+  members:
+    type: [String]
+    label: "Queue Members"
