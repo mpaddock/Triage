@@ -80,3 +80,7 @@
   members:
     type: [String]
     label: "Queue Members"
+    optional: true
+  securityGroups:
+    type: [String]
+    label: "Security Groups"

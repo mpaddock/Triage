@@ -1,4 +1,7 @@
 Meteor.startup ->
+  Meteor.settings.queues.forEach (x) ->
+    Queues.upsert {name: x.name}, {$set: {admins: x.admins, securityGroups: x.securityGroups}}
+
   [
     {
       title: "Printer broken in 723 POT"
