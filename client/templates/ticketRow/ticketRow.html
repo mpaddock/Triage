@@ -29,7 +29,7 @@
         <div class="form-group">
           <label for="body" class="control-label col-xs-4 col-md-1">Ticket Body:</label>
           <div class="col-xs-8 col-md-11">
-            <textarea class="form-control" rows="5" name="body" value="{{body}}" disabled></textarea>
+            <div class="well well-sm" style="text-align: left;">{{body}}</div>
           </div>
         </div>
         {{#each notes}}
@@ -41,7 +41,7 @@
             </label>
           </div>
           <div class="col-xs-8 col-md-11">
-            <textarea class="form-control" name="note-{{_id}}" value="{{message}}" disabled></textarea>
+            <div class="well well-sm" style="text-align: left;">{{message}}</div>
           </div>
         </div>
         {{/each}}
