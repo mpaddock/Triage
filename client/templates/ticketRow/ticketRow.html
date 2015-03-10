@@ -16,6 +16,17 @@
     <div class="accordion-body collapse" id="row{{_id}}" name="{{_id}}">
       <form class="form-horizontal" name="ticketForm">
         <div class="form-group">
+          <label for="showAllFields" class="control-label col-xs-4 col-md-1">More Fields:</label>
+          <div class="col-xs-8 col-md-11">
+            <button type="button" class="btn btn-sm btn-primary pull-left" data-action="showAllFields">{{#unless allFields}}Show{{else}}Hide{{/unless}}</button>
+          </div>
+        </div>
+        {{#if allFields}}
+          {{#each arrayify formFields}}
+            {{>tableFormGroup name=name value=value disabled="disabled"}}
+          {{/each}}
+        {{/if}}
+        <div class="form-group">
           <label for="body" class="control-label col-xs-4 col-md-1">Ticket Body:</label>
           <div class="col-xs-8 col-md-11">
             <textarea class="form-control" rows="5" name="body" value="{{body}}" disabled></textarea>
@@ -23,7 +34,12 @@
         </div>
         {{#each notes}}
         <div class="form-group">
-          <label for="note-{{_id}}" class="control-label col-xs-4 col-md-1">{{authorName}}: </label>
+          <div class="col-xs-4 col-md-1">
+            <label for="note-{{_id}}" class="control-label">
+              {{authorName}}:<br>
+              <small style="font-size: 0.7em">{{>timestampFormatter timestamp=timestamp}}</small>
+            </label>
+          </div>
           <div class="col-xs-8 col-md-11">
             <input class="form-control" name="note-{{_id}}" value="{{message}}" disabled>
           </div>
