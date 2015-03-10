@@ -41,6 +41,19 @@
     optional: true
     type: [String]
 
+@TicketFlags = new Mongo.Collection 'ticketFlags'
+# TODO: SimpleSchema doesnt handle v very well, so skip for now
+###@TicketFlags.attachSchema new SimpleSchema
+  userId:
+    type: String
+  ticketId:
+    type: String
+  k:
+    type: String
+  v:
+    type: Object
+    blackbox: true
+###
 
 @Changelog = new Mongo.Collection 'changelog'
 @Changelog.attachSchema new SimpleSchema

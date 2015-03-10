@@ -9,6 +9,9 @@ Template.ticketRow.events
         type: "note"
         message: e.target.value
 
+      Meteor.call 'setFlag', Meteor.userId(), this._id, 'replied', true
+
+
       $(e.target).val("")
 
 
@@ -17,3 +20,5 @@ Template.ticketRow.rendered = ->
 
 Template.ticketRow.helpers
   notes: -> Changelog.find {ticketId: this._id, type: "note"}
+  repliedTo: ->
+    TicketFlags.findOne({userId: Meteor.userId(), ticketId: this._id, k: 'replied'})
