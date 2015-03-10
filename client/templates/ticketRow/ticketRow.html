@@ -35,13 +35,11 @@
         {{#each notes}}
         <div class="form-group">
           <div class="col-xs-4 col-md-1">
-            <label for="note-{{_id}}" class="control-label">
-              {{authorName}}:<br>
-              <small style="font-size: 0.7em">{{>timestampFormatter timestamp=timestamp}}</small>
-            </label>
+            <label for="note-{{_id}}" class="control-label">{{authorName}}:</label>
           </div>
           <div class="col-xs-8 col-md-11">
             <input class="form-control" name="note-{{_id}}" value="{{message}}" disabled>
+            <small class="pull-right" style="font-size: 0.9em">{{>timeParser date=timestamp}}</small>
           </div>
         </div>
         {{/each}}
