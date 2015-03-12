@@ -1,0 +1,60 @@
+.assign-user-field{
+  width: 200px;
+  vertical-align: middle;
+  white-space: nowrap;
+  position: relative;
+}
+.assign-user-field input{
+  width: 50px;
+  height: 50px;
+  background: #005DAA;
+  border: none;
+  font-size: 10pt;
+  float: left;
+  color: #fff;
+  padding-left: 50px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  
+  -webkit-transition: width .55s ease;
+  -moz-transition: width .55s ease;
+  -ms-transition: width .55s ease;
+  -o-transition: width .55s ease;
+  transition: width .55s ease;
+  
+}
+
+.assign-user-field input::-webkit-input-placeholder {
+   color: #ccc;
+}
+.assign-user-field input:-moz-placeholder { /* Firefox 18- */
+   color: #ccc;  
+}
+.assign-user-field input::-moz-placeholder {  /* Firefox 19+ */
+   color: #ccc;  
+}
+.assign-user-field input:-ms-input-placeholder {  
+   color: #ccc;  
+}
+
+.assign-user-field .icon{
+  position: absolute;
+  top: 50%;
+  margin-left: 17px;
+  margin-top: 17px;
+  z-index: 1;
+  color: #ccc;
+}
+
+  /* ANIMATION EFFECTS */
+.assign-user-field input:focus, .assign-user-field input:active{
+    outline:none;
+}
+  .assign-user-field:hover input{
+    outline:none; 
+    width: 200px;
+  }
+  .assign-user-field:hover .icon{
+    color: #fff;
+  }

@@ -1,4 +1,11 @@
 Template.ticketRow.events
+  'click button[data-action=attachFile]': ->
+    getMediaFunctions().pickLocalFile (fileId) ->
+      console.log "Uploaded a file, got _id: ", fileId
+      Session.set "currentUploadId", fileId
+
+  'click button[data-action=showAllFields]': ->
+    Session.set "allFields", not Session.get "allFields"
   'keyup input[name=newNote]': (e, tmpl) ->
     if e.which is 13
       Changelog.insert
@@ -22,3 +29,10 @@ Template.ticketRow.helpers
   notes: -> Changelog.find {ticketId: this._id, type: "note"}
   repliedTo: ->
     TicketFlags.findOne({userId: Meteor.userId(), ticketId: this._id, k: 'replied'})
+  allFields: -> Session.get "allFields"
+
+getMediaFunctions = () ->
+  if Meteor.isCordova
+    CordovaMedia
+  else
+    WebMedia

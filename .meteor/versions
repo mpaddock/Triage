@@ -14,11 +14,16 @@ check@1.0.4
 coffeescript@1.0.5
 ddp@1.0.14
 deps@1.0.6
+differential:cluster@1.0.1
+differential:workers@2.0.1
 ejson@1.0.5
 fastclick@1.0.2
 follower-livedata@1.0.3
 geojson-utils@1.0.2
 hive:accounts-ldap@0.3.0
+hive:file-registry@0.0.0
+hive:media-capture@0.1.0
+hive:uploads@1.0.0
 html-tools@1.0.3
 htmljs@1.0.3
 http@1.0.10
@@ -47,6 +52,7 @@ mongo@1.0.11
 mrt:moment@2.8.1
 observe-sequence@1.0.4
 ordered-dict@1.0.2
+percolatestudio:synced-cron@1.0.0
 random@1.0.2
 reactive-dict@1.0.5
 reactive-var@1.0.4
@@ -65,3 +71,4 @@ underscore@1.0.2
 url@1.0.3
 webapp@1.1.6
 webapp-hashing@1.0.2
+wizonesolutions:underscore-string@1.0.0
