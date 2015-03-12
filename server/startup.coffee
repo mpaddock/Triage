@@ -10,6 +10,7 @@ Meteor.startup ->
       tags: ["Printer", "Help Desk"]
       formFields:
         dueDate: new Date()
+        otherThings: "Blackboxin it"
       submissionData:
         method: "Web"
         ipAddress: "127.0.0.1"
@@ -23,6 +24,7 @@ Meteor.startup ->
       authorId: "sswwee020"
       formFields:
         dueDate: new Date()
+        otherStuff: "Stuff in fields"
       tags: ["Design", "Event"]
       submissionData:
         method: "Form"

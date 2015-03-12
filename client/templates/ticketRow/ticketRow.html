@@ -15,6 +15,17 @@
   <td colspan='5' class="hiddenRow">
     <div class="accordion-body collapse" id="row{{_id}}" name="{{_id}}">
       <form class="form-horizontal" name="ticketForm">
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <div class="assign-user-field">
+              <span class="icon glyphicon glyphicon-plus"></span>
+              <input type="text" name="assignUser" placeholder="Assign User">
+            </div>
+            {{#each assignedTo}}
+            {{this}}
+            {{/each}}
+          </div>
+        </div>
         <div class="form-group">
           <label for="showAllFields" class="control-label col-xs-4 col-md-1">More Fields:</label>
           <div class="col-xs-8 col-md-11">
