@@ -22,9 +22,9 @@
           </div>
         </div>
         {{#if allFields}}
-          {{#each arrayify formFields}}
-            {{>tableFormGroup name=name value=value disabled="disabled"}}
-          {{/each}}
+        {{#each arrayify formFields}}
+        {{>tableFormGroup name=name value=value disabled="disabled"}}
+        {{/each}}
         {{/if}}
         <div class="form-group">
           <label for="body" class="control-label col-xs-4 col-md-1">Ticket Body:</label>
@@ -47,7 +47,17 @@
         {{/each}}
         <div class="form-group">
           <div class="col-xs-8 col-xs-offset-4 col-md-11 col-md-offset-1">
-            <input class="form-control" name="newNote" placeholder="Add a new note...">
+            <div class="input-group">
+              <input class="form-control" name="newNote" placeholder="Add a new note...">
+              <span class="input-group-btn">
+                <div class="btn-group"><button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="False">Attach File <span class="caret"></span></button>
+                  <ul class="dropdown-menu" role="menu">
+                    <li><a href="#">Upload File</a></li>
+                    <li><a href="#">Take Picture</a></li>
+                  </ul>
+                </div>
+              </span>
+            </div>
           </div>
         </div>
       </form>

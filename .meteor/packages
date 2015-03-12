@@ -15,3 +15,6 @@ aldeed:collection2
 mrt:moment
 accounts-base
 hive:accounts-ldap
+hive:file-registry
+hive:media-capture
+hive:uploads
