@@ -59,15 +59,25 @@
         <div class="form-group">
           <div class="col-xs-8 col-xs-offset-4 col-md-11 col-md-offset-1">
             <div class="input-group">
+              <div class="input-group-btn">
+                <button type="button" class="btn btn-default">@</button>
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                  <span class="caret"></span>
+                  <span class="sr-only">Toggle Dropdown</span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                  <li><a href="#">#</a></li>
+                  <li><a href="#">Note to Author or something</a></li>
+                </ul>
+              </div>
               <input class="form-control" name="newNote" placeholder="Add a new note...">
-              <span class="input-group-btn">
-                <div class="btn-group"><button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="False">Attach File <span class="caret"></span></button>
-                  <ul class="dropdown-menu" role="menu">
-                    <li><a href="#">Upload File</a></li>
-                    <li><a href="#">Take Picture</a></li>
-                  </ul>
-                </div>
-              </span>
+              <div class="input-group-btn">
+                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="False">Attach File <span class="caret"></span></button>
+                <ul class="dropdown-menu" role="menu">
+                  <li><a href="#">Upload File</a></li>
+                  <li><a href="#">Take Picture</a></li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>
