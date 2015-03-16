@@ -3,3 +3,6 @@ Template.queue.helpers
   members: -> ["mdpadd2", "nmad222", "sgcond2", "smbrad3", "shorn2"] #Replaced with actual queue membership.
   queueName: -> Session.get "queueName"
   tickets: -> Tickets.find {queueName: Session.get("queueName")}, {sort: {submittedTimestamp: -1}}
+
+Template.queue.rendered = () ->
+  $('[data-toggle=popover]').popover()

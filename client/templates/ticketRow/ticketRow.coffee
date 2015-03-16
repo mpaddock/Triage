@@ -37,6 +37,7 @@ Template.ticketRow.events
 
 
 Template.ticketRow.rendered = ->
+  $('[data-toggle=tooltip]').tooltip()
   $('form[name=ticketForm]').submit (e) -> e.preventDefault()
 
 Template.ticketRow.helpers
