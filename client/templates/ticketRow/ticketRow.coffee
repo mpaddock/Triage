@@ -1,4 +1,18 @@
 Template.ticketRow.events
+  'keyup input[name=assignUser]': (e, tmpl) ->
+    if e.which is 13
+      item = this
+      console.log e.target.value
+      id = Meteor.call 'checkUsername', e.target.value, (err, res) ->
+        if res
+          users = item.associatedUserIds || []
+          users.push (res)
+          Tickets.update item._id, {$set: {associatedUserIds: users}}
+          $(e.target).val('')
+        else
+          #TODO: Make this better
+          $(e.target).css("background", "red")
+
   'click button[data-action=attachFile]': ->
     getMediaFunctions().pickLocalFile (fileId) ->
       console.log "Uploaded a file, got _id: ", fileId

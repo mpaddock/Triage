@@ -21,8 +21,8 @@
               <span class="icon glyphicon glyphicon-plus"></span>
               <input type="text" name="assignUser" placeholder="Assign User">
             </div>
-            {{#each assignedTo}}
-            {{this}}
+            {{#each associatedUserIds}}
+              {{> userPortrait}}
             {{/each}}
           </div>
         </div>
