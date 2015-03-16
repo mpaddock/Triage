@@ -20,6 +20,9 @@
             <div class="assign-user-field">
               <span class="icon glyphicon glyphicon-plus"></span>
               <input type="text" name="assignUser" placeholder="Assign User">
+              {{#if assignError}}
+              Some error text. Maybe a tooltip?
+              {{/if}}
             </div>
             {{#each associatedUserIds}}
               {{> userPortrait}}

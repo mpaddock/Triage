@@ -2,16 +2,16 @@ Template.ticketRow.events
   'keyup input[name=assignUser]': (e, tmpl) ->
     if e.which is 13
       item = this
-      console.log e.target.value
       id = Meteor.call 'checkUsername', e.target.value, (err, res) ->
         if res
+          Session.set "assignError", false
           users = item.associatedUserIds || []
-          users.push (res)
-          Tickets.update item._id, {$set: {associatedUserIds: users}}
+          unless users.indexOf(res) > -1
+            users.push (res)
+            Tickets.update item._id, {$set: {associatedUserIds: users}}
           $(e.target).val('')
         else
-          #TODO: Make this better
-          $(e.target).css("background", "red")
+          Session.set "assignError", true
 
   'click button[data-action=attachFile]': ->
     getMediaFunctions().pickLocalFile (fileId) ->
@@ -44,6 +44,7 @@ Template.ticketRow.helpers
   repliedTo: ->
     TicketFlags.findOne({userId: Meteor.userId(), ticketId: this._id, k: 'replied'})
   allFields: -> Session.get "allFields"
+  assignError: -> Session.get "assignError"
 
 getMediaFunctions = () ->
   if Meteor.isCordova

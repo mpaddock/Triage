@@ -48,4 +48,6 @@ Meteor.startup ->
       queueName: ["Web Dev", "Design"]
     }
   ].forEach (x) ->
-    Tickets.insert x
+    y = Tickets.findOne {title: x.title}
+    unless y
+      Tickets.insert x

@@ -27,14 +27,14 @@
       </thead>
       <tbody>
         <tr></tr>
-        {{#each this}}
+        {{#each tickets}}
         {{>ticketRow}}
         {{/each}}
       </tbody>
     </table>
   </div>
   <div class="col-sm-2 hidden-xs">
-    {{> sidebar data=this}}
+    {{> sidebar data=tickets}}
   </div>
 </div>
 </template>
