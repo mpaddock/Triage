@@ -5,14 +5,14 @@
   position: relative;
 }
 .assign-user-field input{
-  width: 50px;
-  height: 50px;
+  width: 40px;
+  height: 40px;
   background: #005DAA;
   border: none;
   font-size: 10pt;
   float: left;
   color: #fff;
-  padding-left: 50px;
+  padding-left: 40px;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;
@@ -41,17 +41,17 @@
 .assign-user-field .icon{
   position: absolute;
   top: 50%;
-  margin-left: 17px;
-  margin-top: 17px;
+  margin-left: 12px;
+  margin-top: 12px;
   z-index: 1;
-  color: #ccc;
+  color: #ddd;
 }
 
   /* ANIMATION EFFECTS */
 .assign-user-field input:focus, .assign-user-field input:active{
     outline:none;
 }
-  .assign-user-field:hover input{
+  .assign-user-field input:hover, .assign-user-field input:focus {
     outline:none; 
     width: 200px;
   }
