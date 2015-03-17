@@ -19,10 +19,7 @@
           <div class="panel-body">
             <div class="assign-user-field">
               <span class="icon glyphicon glyphicon-plus"></span>
-              <input type="text" name="assignUser" placeholder="Assign User" data-toggle="tooltip" title="User not found.">
-              {{#if assignError}}
-              Some error text. Maybe a tooltip?
-              {{/if}}
+              <input type="text" name="assignUser" placeholder="Assign User" data-toggle="tooltip" data-trigger="manual" title="User not found.">
             </div>
             {{#each associatedUserIds}}
               {{> userPortrait}}
@@ -49,9 +46,9 @@
         {{#each notes}}
         <div class="form-group">
           <div class="col-xs-4 col-md-1">
-            <label for="note-{{_id}}" class="control-label">
+            <label for="note-{{_id}}" class="control-label pull-right">
               {{authorName}}:<br>
-              <small class="pull-right" style="font-size: 0.7em; font-weight: lighter;">{{>timeParser date=timestamp}}</small>
+              <small style="font-size: 0.7em; font-weight: lighter;">{{>timeParser date=timestamp}}</small>
             </label>
           </div>
           <div class="col-xs-8 col-md-11">

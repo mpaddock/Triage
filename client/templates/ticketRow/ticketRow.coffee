@@ -4,6 +4,7 @@ Template.ticketRow.events
       item = this
       id = Meteor.call 'checkUsername', e.target.value, (err, res) ->
         if res
+          tmpl.$('[data-toggle="tooltip"]').tooltip('hide')
           Session.set "assignError", false
           users = item.associatedUserIds || []
           unless users.indexOf(res) > -1
@@ -11,7 +12,7 @@ Template.ticketRow.events
             Tickets.update item._id, {$set: {associatedUserIds: users}}
           $(e.target).val('')
         else
-          Session.set "assignError", true
+          tmpl.$('[data-toggle="tooltip"]').tooltip('show')
 
   'click button[data-action=attachFile]': ->
     getMediaFunctions().pickLocalFile (fileId) ->
@@ -35,9 +36,15 @@ Template.ticketRow.events
 
       $(e.target).val("")
 
+  'hidden.bs.collapse': (e, tmpl) ->
+    tmpl.$('[data-toggle="tooltip"]').tooltip('hide')
+    tmpl.$('input[name="assignUser"]').val('')
+
+  'focusout input[name="assignUser"]': (e, tmpl) ->
+    tmpl.$('[data-toggle="tooltip"]').tooltip('hide')
+
 
 Template.ticketRow.rendered = ->
-  $('[data-toggle=tooltip]').tooltip()
   $('form[name=ticketForm]').submit (e) -> e.preventDefault()
 
 Template.ticketRow.helpers
@@ -45,7 +52,6 @@ Template.ticketRow.helpers
   repliedTo: ->
     TicketFlags.findOne({userId: Meteor.userId(), ticketId: this._id, k: 'replied'})
   allFields: -> Session.get "allFields"
-  assignError: -> Session.get "assignError"
 
 getMediaFunctions = () ->
   if Meteor.isCordova
