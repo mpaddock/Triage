@@ -1,2 +1,12 @@
 <template name="userDashboard">
+<form class="form-horizontal">
+  <div class="from-group">
+    <label for="defaultQueue">Default Queue:</label>
+    <select>
+      {{#each queue}}
+      <option>{{this}}</option>
+      {{/each}}
+    </select>
+  </div>
+</form>
 </template>
