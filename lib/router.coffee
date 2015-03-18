@@ -9,8 +9,16 @@ Router.onBeforeAction () ->
       @next()
 
 Router.map ->
-  @route 'tickets',
-    path: '/'
+  @route 'default',
+    path: '/',
+    onBeforeAction: ->
+      if Meteor.user().defaultQueue?
+        @redirect 'queue/'+Meteor.user().defaultQueue
+      else
+        queue = Queues.findOne().name
+        Session.set "queueName", queue
+        @redirect 'queue', "queue_name": queue
+      @next()
 
   @route 'queue',
     path: '/queue/:queue_name',

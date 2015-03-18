@@ -7,7 +7,7 @@ Template.queuebar.helpers
           if regex.test(group)
             return x.name
   active: ->
-    if this.name is Session.get("queueName")
+    if this.valueOf() is Session.get("queueName")
       return "active"
     else
       return null
