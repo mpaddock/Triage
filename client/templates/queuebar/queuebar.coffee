@@ -1,13 +1,7 @@
 Template.queuebar.helpers
-  queue: ->
-    Queues.find().fetch().map (x) ->
-      for sg in x.securityGroups
-        regex = new RegExp(sg, 'i')
-        for group in Meteor.user().memberOf
-          if regex.test(group)
-            return x.name
+  queue: -> Queues.find()
   active: ->
-    if this.valueOf() is Session.get("queueName")
+    if this.name is Session.get("queueName")
       return "active"
     else
       return null

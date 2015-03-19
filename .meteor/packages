@@ -5,7 +5,6 @@
 # but you can also edit it by hand.
 
 meteor-platform
-autopublish
 insecure
 twbs:bootstrap
 coffeescript
@@ -18,3 +17,4 @@ hive:accounts-ldap
 hive:file-registry
 hive:media-capture
 hive:uploads
+reywood:publish-composite
