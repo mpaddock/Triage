@@ -15,7 +15,7 @@ Meteor.publishComposite 'queuesByUser',
         },
         {
           find: (ticket) ->
-            TicketFlags.find {ticketId: ticket._id}
+            TicketFlags.find {ticketId: ticket._id, userId: @userId}
         }
       ]
     }

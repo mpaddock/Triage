@@ -14,74 +14,70 @@
 <tr>
   <td colspan='5' class="hiddenRow">
     <div class="accordion-body collapse" id="row{{_id}}" name="{{_id}}">
-      <form class="form-horizontal" name="ticketForm">
-        <div class="panel panel-default">
-          <div class="panel-body">
-            <div class="assign-user-field">
-              <span class="icon glyphicon glyphicon-plus"></span>
-              <input type="text" name="assignUser" placeholder="Assign User" data-toggle="tooltip" data-trigger="manual" title="User not found.">
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <div class="assign-user-field">
+            <span class="icon glyphicon glyphicon-plus"></span>
+            <input type="text" name="assignUser" placeholder="Assign User" data-toggle="tooltip" data-trigger="manual" title="User not found.">
+          </div>
+          {{#each associatedUserIds}}
+          {{> userPortrait}}
+          {{/each}}
+        </div>
+      </div>
+      <div class="col-xs-12 col-md-6">
+        <form class="form-horizontal" name="ticketForm">
+          <div class="form-group">
+            <label for="body" class="control-label col-xs-4 col-md-2">Ticket Body:</label>
+            <div class="col-xs-8 col-md-10">
+              <div class="well well-sm" style="text-align: left;">{{body}}</div>
             </div>
-            {{#each associatedUserIds}}
-              {{> userPortrait}}
-            {{/each}}
           </div>
-        </div>
-        <div class="form-group">
-          <label for="showAllFields" class="control-label col-xs-4 col-md-1">More Fields:</label>
-          <div class="col-xs-8 col-md-11">
-            <button type="button" class="btn btn-sm btn-primary pull-left" data-action="showAllFields">{{#unless allFields}}Show{{else}}Hide{{/unless}}</button>
+          {{#each notes}}
+          <div class="form-group">
+            <div class="col-xs-4 col-md-2">
+              <label for="note-{{_id}}" class="control-label pull-right">
+                {{authorName}}:<br>
+                <small style="font-size: 0.7em; font-weight: lighter;">{{>timeParser date=timestamp}}</small>
+              </label>
+            </div>
+            <div class="col-xs-8 col-md-10">
+              <div class="well well-sm" style="text-align: left;">{{message}}</div>
+            </div>
           </div>
-        </div>
-        {{#if allFields}}
+          {{/each}}
+          <div class="form-group">
+            <div class="col-xs-8 col-xs-offset-4 col-md-10 col-md-offset-2">
+              <div class="input-group">
+                <div class="input-group-btn">
+                  <button type="button" class="btn btn-default">@</button>
+                  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                    <span class="caret"></span>
+                    <span class="sr-only">Toggle Dropdown</span>
+                  </button>
+                  <ul class="dropdown-menu" role="menu">
+                    <li><a href="#">#</a></li>
+                    <li><a href="#">Note to Author or something</a></li>
+                  </ul>
+                </div>
+                <input class="form-control" name="newNote" placeholder="Add a new note...">
+                <div class="input-group-btn">
+                  <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="False">Attach File <span class="caret"></span></button>
+                  <ul class="dropdown-menu" role="menu">
+                    <li><a href="#">Upload File</a></li>
+                    <li><a href="#">Take Picture</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="hidden-xs col-md-6">
         {{#each arrayify formFields}}
         {{>tableFormGroup name=name value=value disabled="disabled"}}
         {{/each}}
-        {{/if}}
-        <div class="form-group">
-          <label for="body" class="control-label col-xs-4 col-md-1">Ticket Body:</label>
-          <div class="col-xs-8 col-md-11">
-            <div class="well well-sm" style="text-align: left;">{{body}}</div>
-          </div>
-        </div>
-        {{#each notes}}
-        <div class="form-group">
-          <div class="col-xs-4 col-md-1">
-            <label for="note-{{_id}}" class="control-label pull-right">
-              {{authorName}}:<br>
-              <small style="font-size: 0.7em; font-weight: lighter;">{{>timeParser date=timestamp}}</small>
-            </label>
-          </div>
-          <div class="col-xs-8 col-md-11">
-            <div class="well well-sm" style="text-align: left;">{{message}}</div>
-          </div>
-        </div>
-        {{/each}}
-        <div class="form-group">
-          <div class="col-xs-8 col-xs-offset-4 col-md-11 col-md-offset-1">
-            <div class="input-group">
-              <div class="input-group-btn">
-                <button type="button" class="btn btn-default">@</button>
-                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                  <span class="caret"></span>
-                  <span class="sr-only">Toggle Dropdown</span>
-                </button>
-                <ul class="dropdown-menu" role="menu">
-                  <li><a href="#">#</a></li>
-                  <li><a href="#">Note to Author or something</a></li>
-                </ul>
-              </div>
-              <input class="form-control" name="newNote" placeholder="Add a new note...">
-              <div class="input-group-btn">
-                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="False">Attach File <span class="caret"></span></button>
-                <ul class="dropdown-menu" role="menu">
-                  <li><a href="#">Upload File</a></li>
-                  <li><a href="#">Take Picture</a></li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      </form>
+      </div>
     </div>
   </td>
 </tr>

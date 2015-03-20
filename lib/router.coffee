@@ -1,11 +1,9 @@
 Router.configure
   layoutTemplate: 'layout'
   loadingTemplate: 'loading'
-
-Router.onBeforeAction () ->
-  if @ready()
-    if not Meteor.userId()
-      @render('login')
+  onBeforeAction: ->
+    unless Meteor.userId()
+      @render 'login'
     else
       @next()
 
@@ -15,11 +13,12 @@ Router.map ->
     onBeforeAction: ->
       if Meteor.user().defaultQueue?
         @redirect 'queue/'+Meteor.user().defaultQueue
-      else
+      else if Meteor.userId()
         queue = Queues.findOne().name
         Session.set "queueName", queue
-        @redirect 'queue', "queue_name": queue
-      @next()
+        @render 'queue'
+      else
+        @render 'login'
 
   @route 'queue',
     path: '/queue/:queue_name',
@@ -27,7 +26,9 @@ Router.map ->
       Session.set "queueName", @params.queue_name #just makes it easier for our sidebar. can't get data context to work at the moment.
       @next()
     waitOn: ->
-      [Meteor.subscribe 'queuesByUser']
+      if Meteor.userId()
+        [Meteor.subscribe 'queuesByUser']
+
 
   @route 'queueDashboard',
     path: '/queue/:queue_name/dashboard',
@@ -37,7 +38,7 @@ Router.map ->
 
   @route 'userDashboard',
     path: '/my/dashboard'
-    
+
   @route 'apiSubmit',
     path: '/api/1.0/submit'
     where: 'server'
