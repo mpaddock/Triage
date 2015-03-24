@@ -6,7 +6,8 @@ Meteor.startup ->
     {
       title: "Printer broken in 723 POT"
       body: "My printer has stopped working. Could someone stop by and take a look?"
-      authorId: "jrsmi222"
+      authorId: 1
+      authorName: "jrsmi222"
       tags: ["Printer", "Help Desk"]
       formFields:
         dueDate: new Date()
@@ -21,7 +22,8 @@ Meteor.startup ->
     {
       title: "Need poster for Event"
       body: "I need a poster for my event in 3 hours."
-      authorId: "sswwee020"
+      authorId: 1
+      authorName: "sswwee020"
       formFields:
         dueDate: new Date()
         otherStuff: "Stuff in fields"
@@ -36,7 +38,8 @@ Meteor.startup ->
     {
       title: "Academic Science Building Site"
       body: "This is a ticket for discussion and planning of the new site for the building."
-      authorId: "nmad222"
+      authorId: 1
+      authorName: "nmad222"
       tags: ["ProjectPlanning", "AcademicScience", "WebDev"]
       formFields:
         dueDate: new Date()

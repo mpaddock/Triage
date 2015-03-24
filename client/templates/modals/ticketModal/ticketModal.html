@@ -8,10 +8,38 @@
       </div>
       <div class="modal-body">
         <form class="form-horizontal">
+          <div class="form-group">
+            <label for="onBehalfOf" class="col-xs-4 control-label">Submit on Behalf Of:</label>
+            <div class="col-xs-8">
+              <div class="input-group">
+                <input type="text" name="onBehalfOf" class="form-control" placeholder="Enter username">
+                <span class="input-group-btn"><button type="button" class="btn btn-primary" data-action="checkUsername">Check</button></span>
+              </div>
+            </div>
+          </div>
+          {{> formGroup name="title" label="Title"}}
+          <div class="form-group">
+            <label for="body" class="col-xs-4 control-label">Body:</label>
+            <div class="col-xs-8">
+              <textarea class="form-control" rows="3" name="body"></textarea>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="queueName" class="col-xs-4 control-label">Queue(s):</label>
+            <div class="col-xs-8">
+              {{#each queues}}
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox" value="{{name}}" name="queueName">{{name}}
+                </label>
+              </div>
+              {{/each}}
+            </div>
+          </div>
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary pull-right" data-action="submit">Add Ticket</button>
+        <button type="button" class="btn btn-primary pull-right" data-action="submit">Submit Ticket</button>
       </div>
     </div>
   </div>

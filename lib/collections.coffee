@@ -10,7 +10,10 @@
     label: "Form Fields"
     type: Object
     blackbox: true
+    optional: true
   authorId:
+    type: String
+  authorName:
     type: String
   status:
     type: String
@@ -24,8 +27,10 @@
     type: String
     allowedValues: ['Web', 'Email', 'Form', 'Mobile']
   'submissionData.ipAddress':
+    optional: true
     type: String
   'submissionData.hostname':
+    optional: true
     type: String
   submittedTimestamp:
     type: new Date()
@@ -63,12 +68,12 @@
   timestamp:
     type: new Date()
     label: "Timestamp"
-  authorName:
-    type: String
-    label: "Author Name"
   authorId:
     type: String
     label: "Author ID"
+  authorName:
+    type: String
+    label: "Author Name"
   type:
     type: String
     allowedValues: ['note', 'field']
