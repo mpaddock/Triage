@@ -1,18 +1,47 @@
+unique = (value, index, self) ->
+  #filter function for unique arrays.
+  self.indexOf(value) is index
+
 Template.ticketModal.events
   'hidden.bs.modal #ticketModal': (e, tmpl) ->
-    tmpl.$(':input').val('')
+    tmpl.$('input[name=title]').val('')
+    tmpl.$('textarea[name=body]').val('')
     tmpl.$('.has-error').removeClass('has-error')
     tmpl.$('button[data-action=checkUsername]').removeClass('btn-success').removeClass('btn-danger').addClass('btn-primary').html('Check')
+    tmpl.$('input[name=queueName]').attr('checked', false)
  
   'click button[data-action=submit]': (e, tmpl) ->
     #Probably need a record of 'true' submitter for on behalf of submissions.
+    
+    #Parsing for tags.
+    body = tmpl.find('textarea[name=body]').value
+    title = tmpl.find('input[name=title]').value
+    hashtags = body.match(/#\S+/g) || []
+    hashtags = hashtags.concat(title.match(/#\S+/g) || [])
+    hashtags = hashtags.filter unique
+
+    #User tagging.
+    usertags = body.match(/\@\S+/g) || []
+    usertags = usertags.concat(title.match(/\@\S+/g) || [])
+    usertags = usertags.filter unique
+    users = []
+    
+    _.each usertags, (username) ->
+      userId = Meteor.users.findOne({username: username.substring(1)})?._id
+      users.push(userId)
+
+    #If no onBehalfOf, submitter is the user.
     submitter = tmpl.find('input[name=onBehalfOf]').value || Meteor.user().username
+
     queueNames = _.pluck tmpl.findAll('input[name=queueName]:checked'), "value"
+
     Meteor.call 'checkUsername', submitter, (err, res) ->
       if res
-        Tickets.insert {
-          title: tmpl.find('input[name=title]').value
-          body: tmpl.find('textarea[name=body]').value
+        id = Tickets.insert {
+          title: title
+          body: body
+          tags: hashtags
+          associatedUserIds: users
           queueName: queueNames
           authorId: res
           authorName: submitter
