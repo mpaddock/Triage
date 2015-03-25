@@ -17,7 +17,7 @@
     type: String
   status:
     type: String
-    defaultValue: 'open'
+    defaultValue: 'Open'
   tags:
     optional: true
     type: [String]

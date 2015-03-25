@@ -1,4 +1,20 @@
 Template.ticketRow.events
+  ### Events for ticket status changes. ###
+  'click .dropdown-menu': (e, tmpl) ->
+    #Needed to stop wacky table row expansion. We have to toggle the dropdown manually as a result in our events.
+    e.stopPropagation()
+  'click .dropdown-menu a': (e, tmpl) ->
+    Meteor.call 'updateStatus', Meteor.userId(), this._id, $(e.target).html()
+    tmpl.$('.dropdown-toggle').dropdown('toggle')
+
+  
+  'keyup input[name=customStatus]': (e, tmpl) ->
+    if e.which is 13
+      Meteor.call 'updateStatus', Meteor.userId(), this._id, e.target.value
+      $(e.target).val("")
+      tmpl.$('.dropdown-toggle').dropdown('toggle')
+    
+  ### Assigning users to tickets. ###
   'keyup input[name=assignUser]': (e, tmpl) ->
     if e.which is 13
       item = this
@@ -21,6 +37,7 @@ Template.ticketRow.events
 
   'click button[data-action=showAllFields]': ->
     Session.set "allFields", not Session.get "allFields"
+  ### Adding notes to tickets. ###
   'keyup input[name=newNote]': (e, tmpl) ->
     if e.which is 13
       Changelog.insert
@@ -33,9 +50,8 @@ Template.ticketRow.events
 
       Meteor.call 'setFlag', Meteor.userId(), this._id, 'replied', true
 
-
       $(e.target).val("")
-
+  # Hide all tooltips on row collapse and focusout of assign user field. 
   'hidden.bs.collapse': (e, tmpl) ->
     tmpl.$('[data-toggle="tooltip"]').tooltip('hide')
     tmpl.$('input[name="assignUser"]').val('')

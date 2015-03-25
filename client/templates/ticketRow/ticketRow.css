@@ -58,3 +58,8 @@
   .assign-user-field:hover .icon{
     color: #fff;
   }
+
+.ticket-status-input {
+  padding-left: 20px;
+  padding-right: 5px;
+}
