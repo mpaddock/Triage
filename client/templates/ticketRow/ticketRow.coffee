@@ -5,14 +5,14 @@ Template.ticketRow.events
     e.stopPropagation()
   'click .dropdown-menu a': (e, tmpl) ->
     Meteor.call 'updateStatus', Meteor.userId(), this._id, $(e.target).html()
-    tmpl.$('.dropdown-toggle').dropdown('toggle')
+    tmpl.$('.dropdown-toggle[name=statusButton]').dropdown('toggle')
 
   
   'keyup input[name=customStatus]': (e, tmpl) ->
     if e.which is 13
       Meteor.call 'updateStatus', Meteor.userId(), this._id, e.target.value
       $(e.target).val("")
-      tmpl.$('.dropdown-toggle').dropdown('toggle')
+      tmpl.$('.dropdown-toggle[name=statusButton]').dropdown('toggle')
     
   ### Assigning users to tickets. ###
   'keyup input[name=assignUser]': (e, tmpl) ->
