@@ -20,6 +20,9 @@ Meteor.publishComposite 'queuesByUser',
       ]
     }
   ]
+
+Meteor.publish 'userData', () ->
+  Meteor.users.find {_id: @userId}
 Meteor.publish 'allUserData', () ->
   Meteor.users.find {}, {fields: {'_id': 1, 'username': 1, 'mail': 1, 'displayName': 1}}
 
