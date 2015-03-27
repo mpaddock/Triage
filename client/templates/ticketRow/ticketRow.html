@@ -11,7 +11,7 @@
   <td>
     <div class="dropdown" data-ticket="{{_id}}">
       <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" name="statusButton" aria-expanded="false">{{status}}<span class="caret"></span></button>
-      <ul class="dropdown-menu" role="menu" aria-labelledby="ticketStatusDropdown">
+      <ul class="dropdown-menu" name="statusMenu" role="menu" aria-labelledby="ticketStatusDropdown">
         <li role="presentation"><a role="menuitem" tabindex="-1">Open</a></li>
         <li role="presentation"><a role="menuitem" tabindex="-1">Closed</a></li>
         <li role="presentation" class="ticket-status-input"><input type="text" name="customStatus" placeholder="Or a custom status"></li>
@@ -73,7 +73,7 @@
                 <div class="input-group-btn">
                   <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="False">Attach File <span class="caret"></span></button>
                   <ul class="dropdown-menu" role="menu">
-                    <li><a href="#">Upload File</a></li>
+                    <li><a data-action="uploadFile">Upload File</a></li>
                     <li><a href="#">Take Picture</a></li>
                   </ul>
                 </div>
@@ -83,6 +83,9 @@
         </form>
       </div>
       <div class="hidden-xs col-md-6">
+        {{#each attachmentIds}}
+        <a href="/file/">{{this}}</a>
+        {{/each}}
         {{#each arrayify formFields}}
         {{>tableFormGroup name=name value=value disabled="disabled"}}
         {{/each}}

@@ -1,9 +1,9 @@
 Template.ticketRow.events
   ### Events for ticket status changes. ###
-  'click .dropdown-menu': (e, tmpl) ->
+  'click .dropdown-menu[name=statusMenu]': (e, tmpl) ->
     #Needed to stop wacky table row expansion. We have to toggle the dropdown manually as a result in our events.
     e.stopPropagation()
-  'click .dropdown-menu a': (e, tmpl) ->
+  'click .dropdown-menu[name=statusMenu] a': (e, tmpl) ->
     Meteor.call 'updateStatus', Meteor.userId(), this._id, $(e.target).html()
     tmpl.$('.dropdown-toggle[name=statusButton]').dropdown('toggle')
 
@@ -30,13 +30,14 @@ Template.ticketRow.events
         else
           tmpl.$('[data-toggle="tooltip"]').tooltip('show')
 
-  'click button[data-action=attachFile]': ->
+  'click a[data-action=uploadFile]': ->
+    item = this
     getMediaFunctions().pickLocalFile (fileId) ->
       console.log "Uploaded a file, got _id: ", fileId
-      Session.set "currentUploadId", fileId
+      attachmentIds = item.attachmentIds || []
+      attachmentIds.push(fileId)
+      Tickets.update item._id, {$set: {attachmentIds: attachmentIds}}
 
-  'click button[data-action=showAllFields]': ->
-    Session.set "allFields", not Session.get "allFields"
   ### Adding notes to tickets. ###
   'keyup input[name=newNote]': (e, tmpl) ->
     if e.which is 13
@@ -68,9 +69,3 @@ Template.ticketRow.helpers
   repliedTo: ->
     TicketFlags.findOne({userId: Meteor.userId(), ticketId: this._id, k: 'replied'})
   allFields: -> Session.get "allFields"
-
-getMediaFunctions = () ->
-  if Meteor.isCordova
-    CordovaMedia
-  else
-    WebMedia
