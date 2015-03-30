@@ -40,7 +40,21 @@ Template.ticketRow.events
 
   ### Adding notes to tickets. ###
   'keyup input[name=newNote]': (e, tmpl) ->
-    if e.which is 13
+    if (e.which is 13) and (e.target.value isnt "")
+      body = e.target.value
+      hashtags = getTags body
+      users = getUsers body
+
+      if users?.length > 0
+        associatedUserIds = this.associatedUserIds?.concat(users) || users
+        associatedUserIds = associatedUserIds.filter unique
+        Tickets.update this._id, {$set: {associatedUserIds: associatedUserIds}}
+
+      if hashtags?.length > 0
+        tags = this.tags?.concat(hashtags) || hashtags
+        tags = tags.filter unique
+        Tickets.update this._id, {$set: {tags: tags}}
+
       Changelog.insert
         ticketId: this._id
         timestamp: new Date()
@@ -69,3 +83,7 @@ Template.ticketRow.helpers
   repliedTo: ->
     TicketFlags.findOne({userId: Meteor.userId(), ticketId: this._id, k: 'replied'})
   allFields: -> Session.get "allFields"
+
+
+unique = (value, index, self) ->
+  self.indexOf(value) is index

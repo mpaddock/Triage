@@ -8,20 +8,15 @@ Template.ticketModal.events
     #Parsing for tags.
     body = tmpl.find('textarea[name=body]').value
     title = tmpl.find('input[name=title]').value
-    hashtags = body.match(/#\S+/g) || []
-    hashtags = hashtags.concat(title.match(/#\S+/g) || [])
-    hashtags = hashtags.filter unique
+    hashtags = getTags body
+    hashtags = hashtags?.concat getTags(title) || []
+    hashtags = hashtags?.filter unique
 
     #User tagging.
-    usertags = body.match(/\@\S+/g) || []
-    usertags = usertags.concat(title.match(/\@\S+/g) || [])
-    usertags = usertags.filter unique
-    users = []
+    users = getUsers body
+    users = users?.concat getUsers(title) || []
+    users = users.filter unique
     
-    _.each usertags, (username) ->
-      userId = Meteor.users.findOne({username: username.substring(1)})?._id
-      users.push(userId)
-
     #If no onBehalfOf, submitter is the user.
     submitter = tmpl.find('input[name=onBehalfOf]').value || Meteor.user().username
 
@@ -82,8 +77,3 @@ Template.ticketModal.events
     tmpl.$('.has-error').removeClass('has-error')
     tmpl.$('button[data-action=checkUsername]').removeClass('btn-success').removeClass('btn-danger').addClass('btn-primary').html('Check')
     tmpl.$('input[name=queueName]').attr('checked', false)
- 
-
-unique = (value, index, self) ->
-  #filter function for unique arrays.
-  self.indexOf(value) is index
