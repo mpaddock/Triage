@@ -8,7 +8,7 @@
     {{/if}}
     <div class="pull-right">
       {{#each members}}
-      <img src="https://as.uky.edu/profile-picture/{{this}}" style="max-height: 40px; max-width: 100px" data-toggle="popover" data-placement="bottom" data-trigger="hover" tabindex="0" title="{{this}}" data-content="This is some information about user {{this}}. I'm sure he/she is a really great person.">
+      {{>userPortrait userId=this}}
       {{/each}}
     </div>
   </div>

@@ -1,2 +1,4 @@
 Template.userPortrait.helpers
-  username: -> Meteor.users.findOne({_id: this.valueOf()}).username
+  user: ->
+    console.log this.userId
+    return Meteor.users.findOne({_id: this.userId})

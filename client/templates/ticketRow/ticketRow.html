@@ -30,7 +30,7 @@
             <input type="text" name="assignUser" placeholder="Assign User" data-toggle="tooltip" data-trigger="manual" title="User not found.">
           </div>
           {{#each associatedUserIds}}
-          {{> userPortrait}}
+          {{> userPortrait userId=this}}
           {{/each}}
         </div>
       </div>
@@ -41,6 +41,9 @@
             <div class="col-xs-8 col-md-10">
               <div class="well well-sm" style="text-align: left;">{{body}}</div>
             </div>
+            {{#each tags}}
+            <a href="{{paramTag}}">{{this}}</a>
+            {{/each}}
           </div>
           {{#each notes}}
           <div class="form-group">
