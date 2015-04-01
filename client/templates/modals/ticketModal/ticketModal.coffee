@@ -41,7 +41,7 @@ Template.ticketModal.events
           queueName: queueNames
           authorId: res
           authorName: submitter
-          status: "open"
+          status: "Open"
           submittedTimestamp: new Date()
           submissionData:
             method: "Web"
