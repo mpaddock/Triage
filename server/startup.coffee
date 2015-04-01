@@ -8,7 +8,7 @@ Meteor.startup ->
       body: "My printer has stopped working. Could someone stop by and take a look?"
       authorId: 1
       authorName: "jrsmi222"
-      tags: ["Printer", "Help Desk"]
+      tags: ["#Printer", "#HelpDesk"]
       formFields:
         dueDate: new Date()
         otherThings: "Blackboxin it"
@@ -27,7 +27,7 @@ Meteor.startup ->
       formFields:
         dueDate: new Date()
         otherStuff: "Stuff in fields"
-      tags: ["Design", "Event"]
+      tags: ["#Design", "#Event"]
       submissionData:
         method: "Form"
         ipAddress: "128.163.1.1"
@@ -40,7 +40,7 @@ Meteor.startup ->
       body: "This is a ticket for discussion and planning of the new site for the building."
       authorId: 1
       authorName: "nmad222"
-      tags: ["ProjectPlanning", "AcademicScience", "WebDev"]
+      tags: ["#ProjectPlanning", "#AcademicScience", "#WebDev"]
       formFields:
         dueDate: new Date()
       submissionData:

@@ -22,10 +22,7 @@ Template.ticketRow.events
         if res
           tmpl.$('[data-toggle="tooltip"]').tooltip('hide')
           Session.set "assignError", false
-          users = item.associatedUserIds || []
-          unless users.indexOf(res) > -1
-            users.push (res)
-            Tickets.update item._id, {$set: {associatedUserIds: users}}
+          Tickets.update item._id, {$addToSet: {associatedUserIds: res}}
           $(e.target).val('')
         else
           tmpl.$('[data-toggle="tooltip"]').tooltip('show')
@@ -34,9 +31,7 @@ Template.ticketRow.events
     item = this
     getMediaFunctions().pickLocalFile (fileId) ->
       console.log "Uploaded a file, got _id: ", fileId
-      attachmentIds = item.attachmentIds || []
-      attachmentIds.push(fileId)
-      Tickets.update item._id, {$set: {attachmentIds: attachmentIds}}
+      Tickets.update item._id, {$addToSet: {attachmentIds: fileId}}
 
   ### Adding notes to tickets. ###
   'keyup input[name=newNote]': (e, tmpl) ->
@@ -46,14 +41,10 @@ Template.ticketRow.events
       users = getUsers body
 
       if users?.length > 0
-        associatedUserIds = this.associatedUserIds?.concat(users) || users
-        associatedUserIds = associatedUserIds.filter unique
-        Tickets.update this._id, {$set: {associatedUserIds: associatedUserIds}}
+        Tickets.update this._id, {$addToSet: {associatedUserIds: $each: users}}
 
       if hashtags?.length > 0
-        tags = this.tags?.concat(hashtags) || hashtags
-        tags = tags.filter unique
-        Tickets.update this._id, {$set: {tags: tags}}
+        Tickets.update this._id, {$addToSet: {tags: $each: hashtags}}
 
       Changelog.insert
         ticketId: this._id
