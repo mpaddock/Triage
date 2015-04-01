@@ -92,10 +92,7 @@
   name:
     type: String
     label: "Name"
-  admins:
-    type: [String]
-    label: "Queue Administrators"
-  members:
+  memberIds:
     type: [String]
     label: "Queue Members"
     optional: true

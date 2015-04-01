@@ -1,8 +1,6 @@
 Meteor.publishComposite 'queuesByUser',
   find: () ->
-    sgs = Meteor.users.findOne({_id: @userId}).memberOf.map (x) ->
-      return new RegExp(x.substr(3, x.indexOf(',')-3), "i")
-    return Queues.find {securityGroups: {$in: sgs}}
+    Queues.find {memberIds: @userId}
 
   children: [
     {
