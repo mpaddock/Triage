@@ -30,13 +30,11 @@
           <div class="form-group">
             <label for="queueName" class="control-label">Queue(s):</label>
             <div>
-              {{#each queues}}
-              <div class="checkbox">
-                <label>
-                  <input type="checkbox" value="{{name}}" name="queueName">{{name}}
-                </label>
-              </div>
-              {{/each}}
+              <select name="queue" data-placeholder="Select queue(s)" multiple tabindex="4" class="chosen-select">
+                {{#each queues}}
+                <option value="{{name}}">{{name}}</option>
+                {{/each}}
+              </select>
             </div>
           </div>
         </form>

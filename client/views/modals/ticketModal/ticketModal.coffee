@@ -20,7 +20,8 @@ Template.ticketModal.events
     #If no onBehalfOf, submitter is the user.
     submitter = tmpl.find('input[name=onBehalfOf]').value || Meteor.user().username
 
-    queueNames = _.pluck tmpl.findAll('input[name=queueName]:checked'), "value"
+    queueNames = tmpl.$('select[name=queue]').val()
+    console.log queueNames
     if queueNames.length is 0
       #Simpleschema validation will pass with an empty array for queueNames...
       queueNames = null
