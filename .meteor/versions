@@ -49,6 +49,7 @@ minimongo@1.0.6
 mobile-status-bar@1.0.2
 mongo@1.0.11
 mrt:moment@2.8.1
+natestrauser:select2@3.5.1
 observe-sequence@1.0.4
 ordered-dict@1.0.2
 percolatestudio:synced-cron@1.0.0

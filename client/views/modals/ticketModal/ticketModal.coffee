@@ -77,4 +77,7 @@ Template.ticketModal.events
     tmpl.$('textarea[name=body]').val('')
     tmpl.$('.has-error').removeClass('has-error')
     tmpl.$('button[data-action=checkUsername]').removeClass('btn-success').removeClass('btn-danger').addClass('btn-primary').html('Check')
-    tmpl.$('input[name=queueName]').attr('checked', false)
+    tmpl.$('select[name=queue]').select2('val', '')
+ 
+Template.ticketModal.rendered = () ->
+  $('select[name=queue]').select2()

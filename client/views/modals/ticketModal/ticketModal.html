@@ -30,7 +30,7 @@
           <div class="form-group">
             <label for="queueName" class="control-label">Queue(s):</label>
             <div>
-              <select name="queue" data-placeholder="Select queue(s)" multiple tabindex="4" class="chosen-select">
+              <select name="queue" data-placeholder="Select queue(s)" multiple="multiple" style="width: 100%">
                 {{#each queues}}
                 <option value="{{name}}">{{name}}</option>
                 {{/each}}
