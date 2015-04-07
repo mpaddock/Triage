@@ -68,9 +68,11 @@ Template.ticketRow.events
 
 Template.ticketRow.rendered = ->
   $('form[name=ticketForm]').submit (e) -> e.preventDefault()
+  $('[data-toggle=popover]').popover()
 
 Template.ticketRow.helpers
-  notes: -> Changelog.find {ticketId: this._id, type: "note"}
+  changelog: -> Changelog.find {ticketId: this._id}, {sort: timestamp: 1}
+  note: -> if this.type is "note" then return true else return false
   repliedTo: ->
     TicketFlags.findOne({userId: Meteor.userId(), ticketId: this._id, k: 'replied'})
   allFields: -> Session.get "allFields"

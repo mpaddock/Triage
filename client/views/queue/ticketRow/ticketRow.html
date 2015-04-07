@@ -50,7 +50,8 @@
 
           <hr/>
 
-          {{#each notes}}
+          {{#each changelog}}
+          {{#if note}}
           <div class="row">
             <div class="col-xs-4 col-md-2">
               <label for="note-{{_id}}" class="control-label pull-right">
@@ -62,6 +63,13 @@
               <div class="well well-sm" style="text-align: left;">{{message}}</div>
             </div>
           </div>
+          {{else}}
+          <div class="row">
+            <div class="col-xs-8 col-xs-offset-4 col-md-10 col-md-offset-2">
+              <small style="font-size: 0.7em;">{{message}} @ {{timestamp}}</small>
+            </div>
+          </div>
+          {{/if}}
           {{/each}}
 
           <div class="form-group">
