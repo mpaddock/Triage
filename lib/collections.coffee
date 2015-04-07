@@ -76,7 +76,7 @@
     label: "Author Name"
   type:
     type: String
-    allowedValues: ['note', 'field']
+    allowedValues: ['note', 'field', 'attachment']
     label: "Type"
   field:
     type: String

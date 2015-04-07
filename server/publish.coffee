@@ -26,3 +26,6 @@ Meteor.publish 'allUserData', () ->
 
 Meteor.publish 'queueNames', () ->
   Queues.find {}, {fields: {'name': 1}}
+
+Meteor.publish 'fileRegistry', () ->
+  FileRegistry.find {}

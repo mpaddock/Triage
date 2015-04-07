@@ -32,6 +32,13 @@ Template.ticketRow.events
     getMediaFunctions().pickLocalFile (fileId) ->
       console.log "Uploaded a file, got _id: ", fileId
       Tickets.update item._id, {$addToSet: {attachmentIds: fileId}}
+      Changelog.insert
+        ticketId: item._id
+        timestamp: new Date()
+        authorId: Meteor.userId()
+        authorName: Meteor.user().username
+        type: "attachment"
+        message: "added file " + FileRegistry.findOne({_id: fileId}).filename
 
   ### Adding notes to tickets. ###
   'keyup input[name=newNote]': (e, tmpl) ->
