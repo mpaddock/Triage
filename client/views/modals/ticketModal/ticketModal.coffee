@@ -59,8 +59,8 @@ Template.ticketModal.events
         tmpl.$('button[data-action=checkUsername]').removeClass('btn-success').removeClass('btn-primary').addClass('btn-danger')
         tmpl.$('button[data-action=checkUsername]').html('<span class="glyphicon glyphicon-remove"></span>')
 
+  #Username checking and DOM manipulation for on behalf of submission field.
   'click button[data-action=checkUsername]': (e, tmpl) ->
-    #Username checking and DOM manipulation for on behalf of submission field.
     unless tmpl.$('input[name="onBehalfOf"]').val() is ""
       Meteor.call 'checkUsername', tmpl.$('input[name=onBehalfOf]').val(), (err, res) ->
         if res
@@ -73,11 +73,26 @@ Template.ticketModal.events
           tmpl.$('button[data-action=checkUsername]').html('<span class="glyphicon glyphicon-remove"></span>')
   
   'hidden.bs.modal #ticketModal': (e, tmpl) ->
-    tmpl.$('input[name=title]').val('')
-    tmpl.$('textarea[name=body]').val('')
+    tmpl.$('input, textarea').val('')
     tmpl.$('.has-error').removeClass('has-error')
     tmpl.$('button[data-action=checkUsername]').removeClass('btn-success').removeClass('btn-danger').addClass('btn-primary').html('Check')
     tmpl.$('select[name=queue]').select2('val', '')
+
+  
+  #When the modal is shown, we get the set of unique tags and update the modal with them.
+  #We can't use a true reactive data source for select2 I don't think, so this is the best we've got.
+  #This tag-getting is still not ideal. Move into a function or discuss a way of storing unique tags. 
+  'shown.bs.modal #ticketModal': (e, tmpl) ->
+    tags = Tickets.find().fetch().map (x) ->
+      return x.tags
+    flattened = []
+    uniqTags = _.uniq flattened.concat.apply(flattened, tags).filter (n) ->
+      return n != undefined
+    tmpl.$('input[name=tags]').select2({
+      tags: uniqTags
+      tokenSeparators: [' ', ',']
+    })
+  
  
 Template.ticketModal.rendered = () ->
   $('select[name=queue]').select2()
