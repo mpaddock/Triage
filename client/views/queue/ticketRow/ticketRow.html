@@ -44,7 +44,12 @@
               {{/each}}
             </div>
             <div class="col-xs-4 col-md-4">
-              Files?
+              Attachments:
+              {{#each attachmentIds}}
+              <div class="row">
+                <a href="/file/{{file.filenameOnDisk}}">{{file.filename}}</a>
+              </div>
+              {{/each}}
             </div>
           </div>
 
@@ -100,9 +105,6 @@
       </div>
 
       <div class="hidden-xs col-md-12">
-        {{#each attachmentIds}}
-        <a href="/file/">{{this}}</a>
-        {{/each}}
         {{#each arrayify formFields}}
         {{>tableFormGroup name=name value=value disabled="disabled"}}
         {{/each}}

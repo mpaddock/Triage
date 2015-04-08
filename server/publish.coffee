@@ -14,6 +14,11 @@ Meteor.publishComposite 'queuesByUser',
         {
           find: (ticket) ->
             TicketFlags.find {ticketId: ticket._id, userId: @userId}
+        },
+        {
+          find: (ticket) ->
+            if ticket.attachmentIds?.length > 0
+              FileRegistry.find {_id: {$in: ticket.attachmentIds}}
         }
       ]
     }
@@ -22,10 +27,7 @@ Meteor.publishComposite 'queuesByUser',
 Meteor.publish 'userData', () ->
   Meteor.users.find {_id: @userId}
 Meteor.publish 'allUserData', () ->
-  Meteor.users.find {}, {fields: {'_id': 1, 'username': 1, 'mail': 1, 'displayName': 1}}
+  Meteor.users.find {}, {fields: {'_id': 1, 'username': 1, 'mail': 1, 'displayName': 1, 'department': 1}}
 
 Meteor.publish 'queueNames', () ->
   Queues.find {}, {fields: {'name': 1}}
-
-Meteor.publish 'fileRegistry', () ->
-  FileRegistry.find {}

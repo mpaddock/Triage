@@ -83,6 +83,7 @@ Template.ticketRow.helpers
   repliedTo: ->
     TicketFlags.findOne({userId: Meteor.userId(), ticketId: this._id, k: 'replied'})
   allFields: -> Session.get "allFields"
+  file: -> FileRegistry.findOne {_id: this.valueOf()}
 
 
 unique = (value, index, self) ->
