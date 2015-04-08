@@ -32,6 +32,7 @@ Template.ticketRow.events
     getMediaFunctions().pickLocalFile (fileId) ->
       console.log "Uploaded a file, got _id: ", fileId
       Tickets.update item._id, {$addToSet: {attachmentIds: fileId}}
+      Meteor.call 'setFlag', Meteor.userId(), item._id, 'attachment', true
       Changelog.insert
         ticketId: item._id
         timestamp: new Date()
@@ -78,13 +79,15 @@ Template.ticketRow.rendered = ->
   $('[data-toggle=popover]').popover()
 
 Template.ticketRow.helpers
-  changelog: -> Changelog.find {ticketId: this._id}, {sort: timestamp: 1}
-  note: -> if this.type is "note" then return true else return false
+  changelog: ->
+    Changelog.find {ticketId: this._id}, {sort: timestamp: 1}
+  note: ->
+    if this.type is "note" then return true else return false
   repliedTo: ->
     TicketFlags.findOne({userId: Meteor.userId(), ticketId: this._id, k: 'replied'})
-  allFields: -> Session.get "allFields"
-  file: -> FileRegistry.findOne {_id: this.valueOf()}
-
-
-unique = (value, index, self) ->
-  self.indexOf(value) is index
+  hasAttachment: ->
+    TicketFlags.findOne({ticketId: this._id, k: 'attachment'})
+  allFields: ->
+    Session.get "allFields"
+  file: ->
+    FileRegistry.findOne {_id: this.valueOf()}
