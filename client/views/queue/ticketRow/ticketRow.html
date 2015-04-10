@@ -94,7 +94,7 @@
                     <li><a href="#">Note to Author or something</a></li>
                   </ul>
                 </div>
-                <input class="form-control" name="newNote" placeholder="Add a new note...">
+                {{> inputAutocomplete name="newnote" class="form-control" placeholder="Add a new note..." settings=settings }}
                 <div class="input-group-btn">
                   <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="False">Attach File <span class="caret"></span></button>
                   <ul class="dropdown-menu" role="menu">

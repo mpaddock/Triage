@@ -1,5 +1,23 @@
 Template.ticketModal.helpers
   queues: -> Queues.find()
+  settings: ->
+    {
+      position: "top"
+      limit: 5
+      rules: [
+        {
+          token: '@'
+          collection: Meteor.users
+          field: "username"
+          template: Template.userPill
+        }
+        {
+          token: '#'
+          #collection: Tags
+          field: "name"
+        }
+      ]
+    }
 
 Template.ticketModal.events
   'click button[data-action=submit]': (e, tmpl) ->

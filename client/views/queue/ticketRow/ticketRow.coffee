@@ -91,3 +91,21 @@ Template.ticketRow.helpers
     Session.get "allFields"
   file: ->
     FileRegistry.findOne {_id: this.valueOf()}
+  settings: ->
+    {
+      position: "top"
+      limit: 5
+      rules: [
+        {
+          token: '@'
+          collection: Meteor.users
+          field: "username"
+          template: Template.userPill
+        }
+        {
+          token: '#'
+          #collection: Tags
+          field: "name"
+        }
+      ]
+    }
