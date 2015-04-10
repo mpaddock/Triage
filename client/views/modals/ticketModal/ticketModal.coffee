@@ -27,19 +27,16 @@ Template.ticketModal.events
     body = tmpl.find('textarea[name=body]').value
     title = tmpl.find('input[name=title]').value
     hashtags = getTags body
-    hashtags = hashtags?.concat getTags(title) || []
-    hashtags = hashtags?.filter unique
+    hashtags = _.uniq hashtags?.concat getTags(title) || []
 
     #User tagging.
     users = getUsers body
-    users = users?.concat getUsers(title) || []
-    users = users.filter unique
+    users = _.uniq users?.concat getUsers(title) || []
     
     #If no onBehalfOf, submitter is the user.
     submitter = tmpl.find('input[name=onBehalfOf]').value || Meteor.user().username
 
     queueNames = tmpl.$('select[name=queue]').val()
-    console.log queueNames
     if queueNames.length is 0
       #Simpleschema validation will pass with an empty array for queueNames...
       queueNames = null

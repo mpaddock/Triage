@@ -6,3 +6,12 @@ Template.queue.helpers
 
 Template.queue.rendered = () ->
   $('[data-toggle=popover]').popover()
+  $(window).scroll () ->
+    if $(window).scrollTop() + $(window).height() is $(document).height()
+      console.log "bottom"
+      Session.set 'limit', Session.get('limit') + 30
+
+Template.queue.created = () ->
+  Session.setDefault 'limit', 30
+  Deps.autorun () ->
+    Meteor.subscribe 'queuesByName', Session.get('queueName'), Session.get('limit')
