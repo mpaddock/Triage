@@ -8,7 +8,7 @@ Meteor.methods
       client = LDAP.createClient Meteor.settings.ldap.serverUrl
       LDAP.bind client, Meteor.settings.ldapDummy.username, Meteor.settings.ldapDummy.password
       userObj = LDAP.search client, username
-      if userObj is false
+      unless userObj?
         return false
       else
         user = Meteor.users.findOne {username: username.toLowerCase()}

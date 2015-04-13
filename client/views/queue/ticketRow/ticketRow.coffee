@@ -17,24 +17,22 @@ Template.ticketRow.events
   ### Assigning users to tickets. ###
   'keyup input[name=assignUser]': (e, tmpl) ->
     if e.which is 13
-      item = this
       id = Meteor.call 'checkUsername', e.target.value, (err, res) ->
         if res
+          console.log res
           tmpl.$('[data-toggle="tooltip"]').tooltip('hide')
-          Session.set "assignError", false
-          Tickets.update item._id, {$addToSet: {associatedUserIds: res}}
+          Tickets.update tmpl.data._id, {$addToSet: {associatedUserIds: res}}
           $(e.target).val('')
         else
           tmpl.$('[data-toggle="tooltip"]').tooltip('show')
 
   'click a[data-action=uploadFile]': ->
-    item = this
     getMediaFunctions().pickLocalFile (fileId) ->
       console.log "Uploaded a file, got _id: ", fileId
-      Tickets.update item._id, {$addToSet: {attachmentIds: fileId}}
-      Meteor.call 'setFlag', Meteor.userId(), item._id, 'attachment', true
+      Tickets.update tmpl.data._id, {$addToSet: {attachmentIds: fileId}}
+      Meteor.call 'setFlag', Meteor.userId(), tmpl.data._id, 'attachment', true
       Changelog.insert
-        ticketId: item._id
+        ticketId: tmpl.data._id
         timestamp: new Date()
         authorId: Meteor.userId()
         authorName: Meteor.user().username
@@ -49,20 +47,20 @@ Template.ticketRow.events
       users = getUsers body
 
       if users?.length > 0
-        Tickets.update this._id, {$addToSet: {associatedUserIds: $each: users}}
+        Tickets.update tmpl.data._id, {$addToSet: {associatedUserIds: $each: users}}
 
       if hashtags?.length > 0
-        Tickets.update this._id, {$addToSet: {tags: $each: hashtags}}
+        Tickets.update tmpl.data._id, {$addToSet: {tags: $each: hashtags}}
 
       Changelog.insert
-        ticketId: this._id
+        ticketId: tmpl.data._id
         timestamp: new Date()
         authorId: Meteor.userId()
         authorName: Meteor.user().username
         type: "note"
         message: e.target.value
 
-      Meteor.call 'setFlag', Meteor.userId(), this._id, 'replied', true
+      Meteor.call 'setFlag', Meteor.userId(), tmpl.data._id, 'replied', true
 
       $(e.target).val("")
   # Hide all tooltips on row collapse and focusout of assign user field. 
@@ -101,11 +99,6 @@ Template.ticketRow.helpers
           collection: Meteor.users
           field: "username"
           template: Template.userPill
-        }
-        {
-          token: '#'
-          #collection: Tags
-          field: "name"
         }
       ]
     }
