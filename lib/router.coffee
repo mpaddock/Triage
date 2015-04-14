@@ -21,20 +21,20 @@ Router.map ->
         @render 'login'
 
   @route 'queue',
-    path: '/queue/:queue_name',
+    path: '/queue/:queueName',
     onBeforeAction: ->
       Session.set 'limit', 30
-      Session.set 'queueName', @params.queue_name #just makes it easier for our sidebar. can't get data context to work at the moment.
+      Session.set 'queueName', @params.queueName #just makes it easier for our sidebar. can't get data context to work at the moment.
       @next()
     waitOn: ->
       if Meteor.userId()
-        [Meteor.subscribe 'queuesByName', @params.queue_name, 30]
+        [Meteor.subscribe 'queuesByName', @params.queueName, 30]
 
 
   @route 'queueDashboard',
-    path: '/queue/:queue_name/dashboard',
+    path: '/queue/:queueName/dashboard',
     onBeforeAction: ->
-      Session.set 'queueName', @params.queue_name #Temporary until we figure out how we're storing queues probably.
+      Session.set 'queueName', @params.queueName #Temporary until we figure out how we're storing queues probably.
       @next()
 
   @route 'userDashboard',
