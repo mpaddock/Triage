@@ -1,5 +1,4 @@
 @Facets = new Mongo.Collection 'facets'
-@Facets._createCappedCollection 16*1024*1024, 1000
 @Facets.attachSchema new SimpleSchema
   facet:
     type: String
@@ -19,7 +18,9 @@
     type: Number
 
 if Meteor.isServer
-  ComputeFacets = (queueName, search, status, tags) ->
+  @Facets._createCappedCollection 16*1024*1024, 1000
+
+  @Facets.compute = (queueName, search, status, tags) ->
     check queueName, String
     check search, String
     check status, String
@@ -39,11 +40,4 @@ if Meteor.isServer
     ]), (s) -> {name: s._id, count: s.count}
 
     return facets
-
-
-  Meteor.startup ->
-    console.log 'Recomputing facets...'
-    @Queues.find().forEach (q) ->
-      console.log "Top level facet for queue #{q.name}..."
-      console.log ComputeFacets q.name, '', '', []
 

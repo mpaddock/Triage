@@ -6,6 +6,14 @@ Meteor.publishComposite 'queuesByName', (queueName, limit) ->
     children: [
       {
         find: (queue) ->
+          facet = queue.name
+          Facets.upsert {facet: facet},
+            {$set: {counts: Facets.compute(queue.name, '', '', [])}}
+
+          Facets.find {facet: queue.name}
+      },
+      {
+        find: (queue) ->
           #Arbitrary maximum of 500 tickets returned at once. Maybe define this somewhere (Meteor.settings?) 
           if limit > 500 then limit = 500
           Tickets.find {queueName: queue.name}, {sort: {submittedTimestamp: -1}, limit: limit}

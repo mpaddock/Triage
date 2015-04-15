@@ -10,7 +10,7 @@
       {{#each tags}}
       <div class="checkbox">
         <label>
-          <input type="checkbox" name="tag">{{this}}
+          <input type="checkbox" name="tag">{{name}} ({{count}})
         </label>
       </div>
       {{/each}}
@@ -28,7 +28,7 @@
       {{#each status}}
       <div class="checkbox">
         <label>
-          <input type="checkbox" name="status">{{this}}<br>
+          <input type="checkbox" name="status">{{name}} ({{count}})<br>
         </label>
       </div>
       {{/each}}
