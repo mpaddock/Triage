@@ -26,7 +26,7 @@ Template.ticketRow.events
         else
           tmpl.$('[data-toggle="tooltip"]').tooltip('show')
 
-  'click a[data-action=uploadFile]': ->
+  'click a[data-action=uploadFile]': (e, tmpl) ->
     getMediaFunctions().pickLocalFile (fileId) ->
       console.log "Uploaded a file, got _id: ", fileId
       Tickets.update tmpl.data._id, {$addToSet: {attachmentIds: fileId}}
