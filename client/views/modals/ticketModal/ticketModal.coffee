@@ -95,16 +95,10 @@ Template.ticketModal.events
 
   
   #When the modal is shown, we get the set of unique tags and update the modal with them.
-  #We can't use a true reactive data source for select2 I don't think, so this is the best we've got.
-  #This tag-getting is still not ideal. Move into a function or discuss a way of storing unique tags. 
   'shown.bs.modal #ticketModal': (e, tmpl) ->
-    tags = Tickets.find().fetch().map (x) ->
-      return x.tags
-    flattened = []
-    uniqTags = _.uniq flattened.concat.apply(flattened, tags).filter (n) ->
-      return n != undefined
+    tags = _.pluck Facets.findOne()?.counts.tags, "name"
     tmpl.$('input[name=tags]').select2({
-      tags: uniqTags
+      tags: tags
       tokenSeparators: [' ', ',']
     })
   
