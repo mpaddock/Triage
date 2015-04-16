@@ -102,15 +102,15 @@ Template.ticketModal.events
     })
 
   'click button[data-dismiss="modal"]': (e, tpl) ->
-    clearDialog tpl
-  
- 
-Template.ticketModal.rendered = () ->
-  $('select[name=queue]').select2()
-
-clearDialog = (tpl) ->
     tpl.$('input, textarea').val('')
     tpl.$('.has-error').removeClass('has-error')
     tpl.$('button[data-action=checkUsername]').removeClass('btn-success').removeClass('btn-danger').addClass('btn-primary').html('Check')
     tpl.$('select[name=queue]').select2('val', '')
+  
+ 
+Template.ticketModal.rendered = () ->
+  $('select[name=queue]').select2()
+  $('select[name=queue]').select2('val', Session.get('queueName'))
 
+Deps.autorun () ->
+  $('select[name=queue]').select2('val', Session.get('queueName'))
