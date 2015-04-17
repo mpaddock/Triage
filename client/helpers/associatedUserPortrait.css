@@ -1,0 +1,33 @@
+.associated-user-profile {
+  display: inline-block;
+  position: relative;
+}
+
+.user-image {
+  max-width: 100px;
+  max-height: 40px;
+}
+
+.associated-user-profile .user-info {
+  position: absolute;
+  display: block;
+  border: 1px solid;
+  left: 50%;
+  z-index: 9999;
+  top: 40px;
+  width: 200px;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 2px 4px 2px 4px;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  opacity: 0;
+  -moz-transition: ease-out opacity 300ms 0ms;
+  -o-transition: ease-out opacity 300ms 0ms;
+  -webkit-transition: ease-out opacity 300ms;
+  -webkit-transition-delay: 0ms;
+  transition: ease-out opacity 300ms 0ms;
+}
+
+.associated-user-profile:hover .user-info {
+  opacity: 1;
+}

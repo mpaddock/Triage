@@ -19,7 +19,6 @@ Template.ticketRow.events
     if e.which is 13
       id = Meteor.call 'checkUsername', e.target.value, (err, res) ->
         if res
-          console.log res
           tmpl.$('[data-toggle="tooltip"]').tooltip('hide')
           Tickets.update tmpl.data._id, {$addToSet: {associatedUserIds: res}}
           $(e.target).val('')

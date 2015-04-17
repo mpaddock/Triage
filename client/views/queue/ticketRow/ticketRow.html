@@ -1,5 +1,5 @@
 <template name="ticketRow">
-<tr data-toggle="collapse" data-target="#row{{_id}}" class="accordion-toggle">
+<tr data-toggle="collapse" data-target="#row{{_id}}" class="accordion-toggle ticket-row" data-ticket="{{_id}}">
   <td>
     <span class="glyphicon glyphicon-plus" name="{{_id}}"></span>
     {{#if repliedTo}}
@@ -25,7 +25,7 @@
 </tr>
 <tr>
   <td colspan='5' class="hiddenRow">
-    <div class="accordion-body collapse" id="row{{_id}}" name="{{_id}}">
+    <div class="accordion-body collapse" id="row{{_id}}" data-ticket="{{_id}}">
       <div class="col-xs-12 col-md-12">
         <blockquote>
           {{body}}
@@ -47,7 +47,7 @@
                     <input type="text" name="assignUser" placeholder="Assign User" data-toggle="tooltip" data-trigger="manual" title="User not found.">
                   </div>
                   {{#each associatedUserIds}}
-                  {{> userPortrait userId=this}}
+                  {{> associatedUserPortrait userId=this}}
                   {{/each}}
                 </td>
                 <td>
