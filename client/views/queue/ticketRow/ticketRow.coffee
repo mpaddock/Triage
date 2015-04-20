@@ -76,6 +76,9 @@ Template.ticketRow.rendered = ->
   $('[data-toggle=popover]').popover()
 
 Template.ticketRow.helpers
+  multiqueues: ->
+    q = @queueName
+    if q.length > 1 then q.slice(0,q.length-1).join(', ')+' and '+q[q.length-1]
   changelog: ->
     Changelog.find {ticketId: this._id}, {sort: timestamp: 1}
   note: ->

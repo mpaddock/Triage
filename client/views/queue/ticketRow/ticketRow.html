@@ -30,6 +30,13 @@
         <blockquote>
           {{body}}
         </blockquote>
+
+        <div class="row">
+          {{#if multiqueues}}
+            This ticket is part of {{multiqueues}} queues.
+          {{/if}}
+        </div>
+
         <div class="row">
           <table class="table table-bordered">
             <thead>
