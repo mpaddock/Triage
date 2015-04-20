@@ -1,6 +1,6 @@
 <template name="queue">
-<div class="row">
-  <div class="col-xs-12 col-sm-10">
+<div class="col-xs-12 col-sm-10">
+  <div class="row">
     {{#if queueAdmin}}
     <div class="pull-left">
       <a role="button" href="/queue/{{queueName}}/dashboard" class="btn btn-sm btn-success">Manage This Queue</a>
@@ -12,9 +12,7 @@
       {{/each}}
     </div>
   </div>
-</div>
-<div class="row">
-  <div class="col-xs-12 col-sm-10">
+  <div class="row">
     <table class="table table-striped table-condensed" style="border-collapse:collapse;">
       <thead>
         <tr>
@@ -33,8 +31,8 @@
       </tbody>
     </table>
   </div>
-  <div class="col-sm-2 hidden-xs">
-    {{> sidebar data=tickets}}
-  </div>
+</div>
+<div class="col-sm-2 hidden-xs">
+  {{> sidebar data=tickets}}
 </div>
 </template>
