@@ -20,7 +20,6 @@ Router.map ->
       Session.set 'limit', 30
       Session.set 'queueName', @params.queueName #just makes it easier for our sidebar. can't get data context to work at the moment.
       @next()
-    waitOn: ->
       if Meteor.userId()
         [Meteor.subscribe 'queuesByName', @params.queueName, {
           search: Iron.query.get 'search'
