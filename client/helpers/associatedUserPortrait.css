@@ -18,16 +18,11 @@
   width: 200px;
   background: rgba(255, 255, 255, 0.9);
   padding: 2px 4px 2px 4px;
+  visibility: hidden;
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
-  opacity: 0;
-  -moz-transition: ease-out opacity 300ms 0ms;
-  -o-transition: ease-out opacity 300ms 0ms;
-  -webkit-transition: ease-out opacity 300ms;
-  -webkit-transition-delay: 0ms;
-  transition: ease-out opacity 300ms 0ms;
 }
 
 .associated-user-profile:hover .user-info {
-  opacity: 1;
+  visibility: visible;
 }
