@@ -1,19 +1,18 @@
 Template.sidebar.helpers
   tags: ->
-    _.sortBy Facets.findOne()?.counts.tags, (f) -> -f.count
+    active = Iron.query.get('tag')?.split(',') || []
+    _.map _.sortBy(Facets.findOne()?.counts.tags, (f) -> -f.count), (l) ->
+      _.extend l,
+        checked: if l.name in active then 'checked'
+        type: 'tag'
   status: ->
-    _.sortBy Facets.findOne()?.counts.status, (f) -> -f.count
+    active = Iron.query.get('status')?.split(',') || []
+    _.map _.sortBy(Facets.findOne()?.counts.status, (f) -> -f.count), (l) ->
+      _.extend l,
+        checked: if l.name in active then 'checked'
+        type: 'status'
   search: ->
     Iron.query.get('search')?.split(',')
-  checkedTag: ->
-    #Can we combine these two?
-    filters = Iron.query.get('tag')?.split(',') || []
-    if this.name in filters
-      return 'checked'
-  checkedStatus: ->
-    filters = Iron.query.get('status')?.split(',') || []
-    if this.name in filters
-      return 'checked'
 
 Template.sidebar.events
   'keyup input[name=textSearch]': (e, tpl) ->
@@ -25,19 +24,19 @@ Template.sidebar.events
       Iron.query.set 'search', terms.join()
       $(e.target).val('')
 
-  'change input:checkbox': (e, tpl) ->
-    type = e.target.name #Type of filter we're setting.
-    filter = Iron.query.get(type)?.split(',') || []
-    if $(e.target).is(':checked')
-      filter.push $(e.target).data(type)
-      filter = _.uniq filter #Just in case something got in there twice.
-    else
-      filter = _.without filter, $(e.target).data(type)
-    Iron.query.set type, filter.join()
-
   'click a[data-action="removeFilter"]': (e, tpl) ->
     e.preventDefault()
     value = this.valueOf()
     filter = Iron.query.get('search')?.split(',') || []
     filter = _.without filter, value
     Iron.query.set 'search', filter.join()
+
+  'change input:checkbox': (e, tpl) ->
+    filter = Iron.query.get(@type)?.split(',') || []
+    if $(e.target).is(':checked')
+      filter.push @name
+      filter = _.uniq filter #Just in case something got in there twice.
+    else
+      filter = _.without filter, @name
+    Iron.query.set @type, filter.join()
+

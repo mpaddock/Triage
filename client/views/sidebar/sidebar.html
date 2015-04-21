@@ -18,7 +18,7 @@
       {{#each tags}}
       <div class="checkbox">
         <label>
-          <input type="checkbox" name="tag" data-tag="{{name}}" {{checkedTag}}>{{name}} ({{count}})
+          <input type="checkbox" data-field="tag" checked={{checked}}>{{name}} ({{count}})
         </label>
       </div>
       {{/each}}
@@ -36,7 +36,7 @@
       {{#each status}}
       <div class="checkbox">
         <label>
-          <input type="checkbox" name="status" data-status="{{name}}" {{checkedStatus}}>{{name}} ({{count}})<br>
+          <input type="checkbox" data-field="status" checked={{checked}}>{{name}} ({{count}})<br>
         </label>
       </div>
       {{/each}}
