@@ -19,7 +19,6 @@ Template.ticketRow.events
     if e.which is 13
       id = Meteor.call 'checkUsername', e.target.value, (err, res) ->
         if res
-          console.log res
           tmpl.$('[data-toggle="tooltip"]').tooltip('hide')
           Tickets.update tmpl.data._id, {$addToSet: {associatedUserIds: res}}
           $(e.target).val('')
@@ -77,6 +76,9 @@ Template.ticketRow.rendered = ->
   $('[data-toggle=popover]').popover()
 
 Template.ticketRow.helpers
+  multiqueues: ->
+    q = @queueName
+    if q.length > 1 then q.slice(0,q.length-1).join(', ')+' and '+q[q.length-1]
   changelog: ->
     Changelog.find {ticketId: this._id}, {sort: timestamp: 1}
   note: ->

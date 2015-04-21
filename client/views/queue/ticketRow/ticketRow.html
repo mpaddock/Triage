@@ -1,5 +1,5 @@
 <template name="ticketRow">
-<tr data-toggle="collapse" data-target="#row{{_id}}" class="accordion-toggle">
+<tr data-toggle="collapse" data-target="#row{{_id}}" class="accordion-toggle ticket-row" data-ticket="{{_id}}">
   <td>
     <span class="glyphicon glyphicon-plus" name="{{_id}}"></span>
     {{#if repliedTo}}
@@ -25,86 +25,89 @@
 </tr>
 <tr>
   <td colspan='5' class="hiddenRow">
-    <div class="accordion-body collapse" id="row{{_id}}" name="{{_id}}">
+    <div class="accordion-body collapse" id="row{{_id}}" data-ticket="{{_id}}">
       <div class="col-xs-12 col-md-12">
-          <blockquote>
-            {{body}}
-          </blockquote>
+        <blockquote>
+          {{body}}
+        </blockquote>
 
-          <div class="row">
-            <div class="col-xs-4 col-md-4">
-              <div class="assign-user-field">
-                <span class="icon glyphicon glyphicon-plus"></span>
-                <input type="text" name="assignUser" placeholder="Assign User" data-toggle="tooltip" data-trigger="manual" title="User not found.">
-              </div>
-              {{#each associatedUserIds}}
-              {{> userPortrait userId=this}}
-              {{/each}}
-            </div>
-            <div class="col-xs-4 col-md-4">
-              {{#each tags}}
-              <a href="{{paramTag}}">{{this}}</a>
-              {{/each}}
-            </div>
-            <div class="col-xs-4 col-md-4">
-              Attachments:
-              {{#each attachmentIds}}
-              <div class="row">
-                <a href="/file/{{file.filenameOnDisk}}">{{file.filename}}</a>
-              </div>
-              {{/each}}
-            </div>
-          </div>
-
-          <hr/>
-
-          {{#each changelog}}
-          {{#if note}}
-          <div class="row">
-            <div class="col-xs-4 col-md-2">
-              <label for="note-{{_id}}" class="control-label pull-right">
-                {{> userPortrait userId=authorId}}
-                <small style="font-size: 0.7em; font-weight: lighter;">{{>timeParser date=timestamp}}</small>
-              </label>
-            </div>
-            <div class="col-xs-8 col-md-10">
-              <div class="well well-sm" style="text-align: left;">{{message}}</div>
-            </div>
-          </div>
-          {{else}}
-          <div class="row">
-            <div class="col-xs-8 col-xs-offset-4 col-md-10 col-md-offset-2">
-              <small style="font-size: 0.7em;">User {{authorName}} {{message}} @ {{timestamp}}</small>
-            </div>
-          </div>
+        <div class="row">
+          {{#if multiqueues}}
+            This ticket is part of {{multiqueues}} queues.
           {{/if}}
-          {{/each}}
+        </div>
 
-          <div class="form-group">
-            <div class="col-xs-12 col-md-10 col-md-offset-2">
-              <div class="input-group">
-                <div class="input-group-btn">
-                  <button type="button" class="btn btn-default">@</button>
-                  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                    <span class="caret"></span>
-                    <span class="sr-only">Toggle Dropdown</span>
-                  </button>
-                  <ul class="dropdown-menu" role="menu">
-                    <li><a href="#">#</a></li>
-                    <li><a href="#">Note to Author or something</a></li>
-                  </ul>
-                </div>
-                {{> inputAutocomplete name="newNote" class="form-control" placeholder="Add a new note..." settings=settings }}
-                <div class="input-group-btn">
-                  <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="False">Attach File <span class="caret"></span></button>
-                  <ul class="dropdown-menu" role="menu">
-                    <li><a data-action="uploadFile">Upload File</a></li>
-                    <li><a href="#">Take Picture</a></li>
-                  </ul>
-                </div>
+        <div class="row">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th width="33%">Assigned Users</th>
+                <th width="33%">Tags</th>
+                <th width="33%">Attachments</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <div class="assign-user-field">
+                    <span class="icon glyphicon glyphicon-plus"></span>
+                    <input type="text" name="assignUser" placeholder="Assign User" data-toggle="tooltip" data-trigger="manual" title="User not found.">
+                  </div>
+                  {{#each associatedUserIds}}
+                  {{> associatedUserPortrait userId=this}}
+                  {{/each}}
+                </td>
+                <td>
+                  {{#each tags}}
+                  <a href="{{paramTag}}">{{this}}</a>
+                  {{/each}}
+                </td>
+                <td>
+                  {{#each attachmentIds}}
+                  <a href="/file/{{file.filenameOnDisk}}">{{file.filename}}</a><br />
+                  {{/each}}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        {{#each changelog}}
+        {{#if note}}
+        <div class="row">
+          <div class="col-xs-4 col-md-2">
+            <label for="note-{{_id}}" class="control-label pull-right">
+              {{> userPortrait userId=authorId}}
+              <small style="font-size: 0.7em; font-weight: lighter;">{{>timeParser date=timestamp}}</small>
+            </label>
+          </div>
+          <div class="col-xs-8 col-md-10">
+            <div class="well well-sm" style="text-align: left;">{{message}}</div>
+          </div>
+        </div>
+        {{else}}
+        <div class="row">
+          <div class="col-xs-8 col-xs-offset-4 col-md-10 col-md-offset-2">
+            <small style="font-size: 0.7em;">User {{authorName}} {{message}} @ {{timestamp}}</small>
+          </div>
+        </div>
+        {{/if}}
+        {{/each}}
+
+        <div class="form-group">
+          <div class="col-xs-12 col-md-10 col-md-offset-2">
+            <div class="input-group">
+              {{> inputAutocomplete name="newNote" class="form-control" placeholder="Add a new note..." settings=settings }}
+              <div class="input-group-btn">
+                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="False">Attach File <span class="caret"></span></button>
+                <ul class="dropdown-menu" role="menu">
+                  <li><a data-action="uploadFile">Upload File</a></li>
+                  <li><a href="#">Take Picture</a></li>
+                </ul>
               </div>
             </div>
           </div>
+        </div>
       </div>
 
       <div class="hidden-xs col-md-12">

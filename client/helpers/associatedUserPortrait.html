@@ -1,0 +1,13 @@
+<template name="associatedUserPortrait">
+<div class="associated-user-profile">
+  <div class="user-picture">
+    <img src="https://as.uky.edu/profile-picture/{{user.username}}" class="user-image" alt="Photo of {{user.displayName}}" title="{{user.givenName}}">
+  </div>
+  <div class="user-info">
+    <div class="name">{{user.displayName}}</div>
+    <div class="email">{{user.mail}}</div>
+    <div class="department">{{user.department}}</div>
+    <div class="remove"><a href="#" data-action="removeUser">Remove</a></div>
+  </div>
+</div>
+</template>

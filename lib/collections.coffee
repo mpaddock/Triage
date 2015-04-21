@@ -23,7 +23,9 @@
     type: [String]
   submissionData:
     type: Object
+    optional: true
   'submissionData.method':
+    optional: true
     type: String
     allowedValues: ['Web', 'Email', 'Form', 'Mobile']
   'submissionData.ipAddress':
@@ -34,6 +36,7 @@
     type: String
   submittedTimestamp:
     type: new Date()
+    defaultValue: Date.now
   closedTimestamp:
     optional: true
     type: new Date()
