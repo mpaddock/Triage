@@ -18,3 +18,5 @@ hive:file-registry
 reywood:publish-composite
 natestrauser:select2
 mizzao:autocomplete
+meteorhacks:aggregate
+cottz:iron-query
