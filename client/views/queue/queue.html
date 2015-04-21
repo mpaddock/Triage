@@ -1,11 +1,9 @@
 <template name="queue">
 <div class="col-xs-12 col-sm-10">
   <div class="row">
-    {{#if queueAdmin}}
     <div class="pull-left">
       <a role="button" href="/queue/{{queueName}}/dashboard" class="btn btn-sm btn-success">Manage This Queue</a>
     </div>
-    {{/if}}
     <div class="pull-right">
       {{#each members}}
       {{>userPortrait userId=this}}
