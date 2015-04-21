@@ -8,13 +8,6 @@ Handlebars.registerHelper 'arrayify', (obj) ->
     }
   return result
 
-(exports ? this).getMediaFunctions = ->
-  requiredFunctions = ['pickLocalFile', 'capturePhoto', 'captureAudio', 'captureVideo']
-  if Meteor.isCordova
-    CordovaMedia
-  else
-    WebMedia
-
 #Scans a body of text for hashtags (#hashtag), returns an array of unique results.
 (exports ? this).getTags = (text) ->
   _.uniq text.match(/#\S+/g)

@@ -26,7 +26,7 @@ Template.ticketRow.events
           tmpl.$('[data-toggle="tooltip"]').tooltip('show')
 
   'click a[data-action=uploadFile]': (e, tmpl) ->
-    getMediaFunctions().pickLocalFile (fileId) ->
+    Media.pickLocalFile (fileId) ->
       console.log "Uploaded a file, got _id: ", fileId
       Tickets.update tmpl.data._id, {$addToSet: {attachmentIds: fileId}}
       Meteor.call 'setFlag', Meteor.userId(), tmpl.data._id, 'attachment', true
@@ -36,7 +36,8 @@ Template.ticketRow.events
         authorId: Meteor.userId()
         authorName: Meteor.user().username
         type: "attachment"
-        message: "added file " + FileRegistry.findOne({_id: fileId}).filename
+        message: "added file " + FileRegistry.findOne({_id: fileId})?.filename
+        otherId: fileId
 
   ### Adding notes to tickets. ###
   'keyup input[name=newNote]': (e, tmpl) ->
@@ -81,6 +82,8 @@ Template.ticketRow.helpers
     if q.length > 1 then q.slice(0,q.length-1).join(', ')+' and '+q[q.length-1]
   changelog: ->
     Changelog.find {ticketId: this._id}, {sort: timestamp: 1}
+  changeIsType: (type) ->
+    @type is type
   note: ->
     if this.type is "note" then return true else return false
   repliedTo: ->

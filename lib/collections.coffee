@@ -89,6 +89,9 @@
     type: String
     label: "Message"
     optional: true
+  otherId:
+    type: String
+    optional: true
 
 @Queues = new Mongo.Collection 'queues'
 @Queues.attachSchema new SimpleSchema
