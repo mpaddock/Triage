@@ -33,7 +33,7 @@
     if filter.tag?
       tags = filter.tag.split(',')
       sorted = _.sortBy(tags).join(',')
-      mongoFilter.tags = {$in: tags}
+      mongoFilter.tags = {$all: tags}
     return mongoFilter
 
   toFacetString: (queueName, filter) ->
