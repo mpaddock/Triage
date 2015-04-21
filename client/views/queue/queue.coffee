@@ -12,5 +12,3 @@ Template.queue.rendered = () ->
 
 Template.queue.created = () ->
   Session.setDefault 'limit', 30
-  Deps.autorun () ->
-    Meteor.subscribe 'queuesByName', Session.get('queueName'), Session.get('limit')

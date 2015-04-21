@@ -22,7 +22,11 @@ Router.map ->
       @next()
     waitOn: ->
       if Meteor.userId()
-        [Meteor.subscribe 'queuesByName', @params.queueName, 30]
+        [Meteor.subscribe 'queuesByName', @params.queueName, {
+          search: Iron.query.get 'search'
+          status: Iron.query.get 'status'
+          tag: Iron.query.get 'tag'
+        }, 30]
 
 
   @route 'queueDashboard',
