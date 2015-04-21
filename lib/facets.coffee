@@ -23,9 +23,11 @@
     check filter, Object
 
     mongoFilter = queueName: queueName
-    if filter.search?
-      mongoFilter.title = new RegExp(filter.search.replace(',','|'), 'i')
-      mongoFilter.body = new RegExp(filter.search.replace(',','|'), 'i')
+    if filter.search?.trim().length
+      mongoFilter['$or'] = [
+        { title: new RegExp(filter.search.replace(',','|'), 'i') },
+        { body: new RegExp(filter.search.replace(',','|'), 'i') }
+      ]
     if filter.status?
       mongoFilter.status = filter.status || ''
     if filter.tag?
