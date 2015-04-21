@@ -8,13 +8,8 @@ Template.ticketModal.helpers
         {
           token: '@'
           collection: Meteor.users
-          field: "username"
+          field: 'username'
           template: Template.userPill
-        }
-        {
-          token: '#'
-          #collection: Tags
-          field: "name"
         }
       ]
     }
@@ -26,8 +21,12 @@ Template.ticketModal.events
     #Parsing for tags.
     body = tpl.find('textarea[name=body]').value
     title = tpl.find('input[name=title]').value
+    tags = tpl.find('input[name=tags]').value
+    splitTags = []
+    unless tags is ""
+      splitTags = tags.split(',')
     hashtags = getTags body
-    hashtags = _.uniq hashtags?.concat getTags(title) || []
+    hashtags = _.uniq hashtags?.concat(getTags(title)).concat(splitTags) || []
 
     #User tagging.
     users = getUsers body
@@ -37,7 +36,7 @@ Template.ticketModal.events
     submitter = tpl.find('input[name=onBehalfOf]').value || Meteor.user().username
 
     queueNames = tpl.$('select[name=queue]').val()
-    if queueNames.length is 0
+    if queueNames?.length is 0
       #Simpleschema validation will pass with an empty array for queueNames...
       queueNames = null
 
@@ -89,6 +88,7 @@ Template.ticketModal.events
   
   #When the modal is shown, we get the set of unique tags and update the modal with them.
   'shown.bs.modal #ticketModal': (e, tmpl) ->
+    $('select[name=queue]').select2('val', Session.get('queueName'))
     tags = _.pluck Facets.findOne()?.counts.tags, "name"
     tmpl.$('input[name=tags]').select2({
       tags: tags
@@ -104,7 +104,6 @@ Template.ticketModal.events
  
 Template.ticketModal.rendered = () ->
   $('select[name=queue]').select2()
-  $('select[name=queue]').select2('val', Session.get('queueName'))
 
 Deps.autorun () ->
   $('select[name=queue]').select2('val', Session.get('queueName'))
