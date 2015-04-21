@@ -18,8 +18,6 @@
     type: Number
 
 if Meteor.isServer
-  @Facets._createCappedCollection 16*1024*1024, 1000
-
   @Facets.compute = (queueName, search, status, tags) ->
     check queueName, String
     check search, String
