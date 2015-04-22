@@ -24,7 +24,8 @@ Template.ticketModal.events
     tags = tpl.find('input[name=tags]').value
     splitTags = []
     unless tags is ""
-      splitTags = tags.split(',')
+      splitTags = tags.split(',').map (x) ->
+        x.replace('#', '')
     hashtags = getTags body
     hashtags = _.uniq hashtags?.concat(getTags(title)).concat(splitTags) || []
 

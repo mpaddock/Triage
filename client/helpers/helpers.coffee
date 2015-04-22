@@ -10,7 +10,8 @@ Handlebars.registerHelper 'arrayify', (obj) ->
 
 #Scans a body of text for hashtags (#hashtag), returns an array of unique results.
 (exports ? this).getTags = (text) ->
-  _.uniq text.match(/#\S+/g)
+  _.uniq(text.match(/#\S+/g)).map (x) ->
+    x.replace('#', '') #Strip out hash
 
 #Scans a body of text for user tags (@username), and then searches Meteor.users by username and returns an array of unique userIds.
 (exports ? this).getUsers = (text) ->
