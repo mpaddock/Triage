@@ -47,6 +47,11 @@
   color: #ddd;
 }
 
+.ticket-requester-portrait{
+  float: left;
+  padding-right: 5px;
+}
+
   /* ANIMATION EFFECTS */
 .assign-user-field input:focus, .assign-user-field input:active{
     outline:none;

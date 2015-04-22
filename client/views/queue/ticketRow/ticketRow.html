@@ -10,7 +10,12 @@
     {{/if}}
   </td>
   <td>{{title}}</td>
-  <td>{{authorName}}</td>
+  <td>
+    <div class="ticket-requester-portrait">
+      {{>requesterPortrait userId=this.authorId}}
+    </div>
+    {{authorName}}
+  </td>
   <td>
     <div class="dropdown" data-ticket="{{_id}}">
       <button class="btn btn-default btn-xs dropdown-toggle" type="button" data-toggle="dropdown" name="statusButton" aria-expanded="false">{{status}}<span class="caret"></span></button>
