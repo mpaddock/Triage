@@ -41,7 +41,8 @@
     check filter, Object
 
     facetPath = "queueName:#{queueName}"
-    facetPath += filter.search? "|search:#{filter.search}"
+    if filter.search?.trim().length
+      facetPath += "|search:#{filter.search}"
     if filter.status?.trim().length
       facetPath += "|status:#{filter.status}"
     if filter.tag?.length
@@ -56,7 +57,7 @@
       search: ''
       status: ''
       tags: []
-    for fs in facetString.split('|')
+    for f in facetString.split('|')
       f = f.split(':')
       if f[0] is 'tags'
         filter[f[0]] = f[1].split(',')
