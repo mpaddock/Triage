@@ -12,7 +12,7 @@
   <td>{{title}}</td>
   <td>
     <div class="ticket-requester-portrait">
-      {{>requesterPortrait userId=this.authorId}}
+      {{>userPortrait userId=this.authorId class="requester-image"}}
     </div>
     {{authorName}}
   </td>
@@ -59,7 +59,7 @@
                     <input type="text" name="assignUser" placeholder="Assign User" data-toggle="tooltip" data-trigger="manual" title="User not found.">
                   </div>
                   {{#each associatedUserIds}}
-                  {{> associatedUserPortrait}}
+                  {{> userPortrait userId=this associated=true class="user-image"}}
                   {{/each}}
                 </td>
                 <td>
@@ -83,7 +83,7 @@
             <div class="row">
               <div class="col-xs-4 col-md-2">
                 <label for="note-{{_id}}" class="control-label pull-right">
-                  {{> userPortrait userId=authorId}}
+                  {{> userPortrait userId=authorId class="user-image"}}
                   <small style="font-size: 0.7em; font-weight: lighter;">{{>timeParser date=timestamp}}</small>
                 </label>
               </div>

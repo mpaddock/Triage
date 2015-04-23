@@ -50,6 +50,8 @@
 .ticket-requester-portrait{
   float: left;
   padding-right: 5px;
+  max-height: 24px;
+  max-width: 96px;
 }
 
   /* ANIMATION EFFECTS */

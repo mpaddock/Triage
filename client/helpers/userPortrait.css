@@ -1,14 +1,19 @@
-.associated-user-profile {
+.user-profile {
   display: inline-block;
   position: relative;
 }
 
 .user-image {
-  max-width: 100px;
+  max-width: 96px;
   max-height: 40px;
 }
 
-.associated-user-profile .user-info {
+.requester-image {
+  max-height: 24px;
+  max-width: 96px;
+}
+
+.user-profile .user-info {
   position: absolute;
   display: block;
   border: 1px solid;
@@ -23,6 +28,6 @@
   -webkit-border-radius: 3px;
 }
 
-.associated-user-profile:hover .user-info {
+.user-profile:hover .user-info {
   visibility: visible;
 }

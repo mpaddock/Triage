@@ -1,8 +1,8 @@
 Template.queue.helpers
   members: ->
-    Queues.findOne({name: Session.get("queueName")})?.memberIds
+    Queues.findOne({name: Session.get('queueName')})?.memberIds
   queueName: ->
-    Session.get "queueName"
+    Session.get 'queueName'
   tickets: ->
     Tickets.find {queueName: Session.get("queueName")}, {sort: {submittedTimestamp: -1}}
 
