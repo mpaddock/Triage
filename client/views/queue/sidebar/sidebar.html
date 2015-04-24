@@ -1,6 +1,6 @@
 <template name="sidebar">
 <label for="textSearch" class="control-label">Search:</label>
-<input type="text" name="textSearch" class="form-control">
+{{>inputAutocomplete name="textSearch" class="form-control" settings=settings}}
 <ul class="list-unstyled animated">
   {{#each search}}
   <li class="fade"><a data-action="removeFilter" data-value="{{this}}"><span class="glyphicon glyphicon-remove"></span></a>search: {{this}}</li>

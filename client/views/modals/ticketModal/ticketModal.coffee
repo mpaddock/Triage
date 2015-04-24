@@ -11,6 +11,13 @@ Template.ticketModal.helpers
           field: 'username'
           template: Template.userPill
         }
+        {
+          token: '#'
+          collection: Tags
+          field: 'name'
+          template: Template.tagPill
+          template: Template.noMatchTagPill
+        }
       ]
     }
 
@@ -67,6 +74,7 @@ Template.ticketModal.events
             for key in err.invalidKeys
               tpl.$('[name='+key.name+']').closest('div .form-group').addClass('has-error')
           else
+            clearFields tpl
             $('#ticketModal').modal('hide')
             
       else
@@ -90,17 +98,14 @@ Template.ticketModal.events
   #When the modal is shown, we get the set of unique tags and update the modal with them.
   'shown.bs.modal #ticketModal': (e, tmpl) ->
     $('select[name=queue]').select2('val', Session.get('queueName'))
-    tags = _.pluck Facets.findOne()?.counts.tags, "name"
+    tags = _.pluck Tags.find().fetch(), 'name'
     tmpl.$('input[name=tags]').select2({
       tags: tags
       tokenSeparators: [' ', ',']
     })
 
   'click button[data-dismiss="modal"]': (e, tpl) ->
-    tpl.$('input, textarea').val('')
-    tpl.$('.has-error').removeClass('has-error')
-    tpl.$('button[data-action=checkUsername]').removeClass('btn-success').removeClass('btn-danger').addClass('btn-primary').html('Check')
-    tpl.$('select[name=queue]').select2('val', '')
+    clearFields tpl
   
  
 Template.ticketModal.rendered = () ->
@@ -108,3 +113,9 @@ Template.ticketModal.rendered = () ->
 
 Deps.autorun () ->
   $('select[name=queue]').select2('val', Session.get('queueName'))
+
+clearFields = (tpl) ->
+    tpl.$('input, textarea').val('')
+    tpl.$('.has-error').removeClass('has-error')
+    tpl.$('button[data-action=checkUsername]').removeClass('btn-success').removeClass('btn-danger').addClass('btn-primary').html('Check')
+    tpl.$('select[name=queue]').select2('val', '')
