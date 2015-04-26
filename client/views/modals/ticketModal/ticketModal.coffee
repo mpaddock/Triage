@@ -110,5 +110,6 @@ Deps.autorun () ->
 clearFields = (tpl) ->
   tpl.$('input, textarea').val('')
   tpl.$('.has-error').removeClass('has-error')
+  tpl.$('.has-success').removeClass('has-success')
   tpl.$('button[data-action=checkUsername]').removeClass('btn-success').removeClass('btn-danger').addClass('btn-primary').html('Check')
   tpl.$('select[name=queue]').select2('val', '')
