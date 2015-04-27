@@ -11,6 +11,13 @@ Template.ticketModal.helpers
           field: 'username'
           template: Template.userPill
         }
+        {
+          token: '#'
+          collection: Tags
+          field: 'name'
+          template: Template.tagPill
+          template: Template.noMatchTagPill
+        }
       ]
     }
 
@@ -91,7 +98,7 @@ Template.ticketModal.events
   #When the modal is shown, we get the set of unique tags and update the modal with them.
   'shown.bs.modal #ticketModal': (e, tmpl) ->
     $('select[name=queue]').select2('val', Session.get('queueName'))
-    tags = _.pluck Facets.findOne()?.counts.tags, "name"
+    tags = _.pluck Tags.find().fetch(), 'name'
     tmpl.$('input[name=tags]').select2({
       tags: tags
       tokenSeparators: [' ', ',']

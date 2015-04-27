@@ -13,6 +13,26 @@ Template.sidebar.helpers
         type: 'status'
   search: ->
     Iron.query.get('search')?.split(',')
+  settings: ->
+    {
+      position: "bottom"
+      limit: 5
+      rules: [
+        {
+          token: '@'
+          collection: Meteor.users
+          field: 'username'
+          template: Template.userPill
+        }
+        {
+          token: '#'
+          collection: Tags
+          field: 'name'
+          template: Template.tagPill
+          noMatchTemplate: Template.noMatchTagPill
+        }
+      ]
+    }
 
 Template.sidebar.events
   'keyup input[name=textSearch]': (e, tpl) ->

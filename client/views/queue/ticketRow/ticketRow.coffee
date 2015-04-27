@@ -102,8 +102,15 @@ Template.ticketRow.helpers
         {
           token: '@'
           collection: Meteor.users
-          field: "username"
+          field: 'username'
           template: Template.userPill
+        }
+        {
+          token: '#'
+          collection: Tags
+          field: 'name'
+          template: Template.tagPill
+          noMatchTemplate: Template.noMatchTagPill
         }
       ]
     }
