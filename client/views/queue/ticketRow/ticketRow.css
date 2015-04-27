@@ -49,9 +49,10 @@
 
 .ticket-requester-portrait{
   float: left;
+  text-align: center;
   padding-right: 5px;
   max-height: 24px;
-  max-width: 96px;
+  width: 40px;
 }
 
   /* ANIMATION EFFECTS */

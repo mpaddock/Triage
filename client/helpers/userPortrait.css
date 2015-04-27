@@ -3,29 +3,38 @@
   position: relative;
 }
 
-.user-image {
+.user-profile img{
   max-width: 96px;
   max-height: 40px;
 }
 
-.requester-image {
+.requester img  {
   max-height: 24px;
-  max-width: 96px;
 }
 
 .user-profile .user-info {
   position: absolute;
   display: block;
+  text-align: left;
   border: 1px solid;
   left: 50%;
   z-index: 9999;
   top: 40px;
   width: 200px;
+  font-size: .85em;
   background: rgba(255, 255, 255, 0.9);
   padding: 2px 4px 2px 4px;
   visibility: hidden;
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
+}
+
+.requester .user-info {
+  top: 26px;
+}
+
+.user-info .name {
+  font-weight: bold;
 }
 
 .user-profile:hover .user-info {

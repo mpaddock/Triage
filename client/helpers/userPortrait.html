@@ -1,13 +1,15 @@
 <template name="userPortrait">
-<div class="user-profile">
+{{#if user}}
+<div class="user-profile {{class}}">
   <div class="user-picture">
-    <img src="https://as.uky.edu/profile-picture/{{user.username}}" class="{{class}}" alt="Photo of {{user.displayName}}" title="{{user.givenName}}">
+    <img src="https://as.uky.edu/profile-picture/{{user.username}}" alt="Photo of {{user.displayName}}">
   </div>
   <div class="user-info">
-    <div class="name">{{user.displayName}}</div>
+    <div class="name">{{user.displayName}} ({{user.username}})</div>
     <div class="email">{{user.mail}}</div>
     <div class="department">{{user.department}}</div>
     {{#if associated}}<div class="remove"><a href="#" data-action="removeUser">Remove</a></div>{{/if}}
   </div>
 </div>
+{{/if}}
 </template>
