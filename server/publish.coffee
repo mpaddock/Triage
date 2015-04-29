@@ -1,29 +1,29 @@
-Meteor.publishComposite 'queuesByName', (queueName, filter, limit) ->
+Meteor.publishComposite 'tickets', (filter, limit) ->
   check filter, Object
-
-  mongoFilter = Filter.toMongoSelector queueName, filter
-  facetPath = Filter.toFacetString queueName, filter
-
+  mongoFilter = Filter.toMongoSelector filter
+  facetPath = Filter.toFacetString filter
+  queueFilter = mongoFilter.queueName?
   {
     find: () ->
-      Queues.find {name: queueName, memberIds: @userId}
+      Queues.find {memberIds: @userId}
 
     children: [
       {
         find: (queue) ->
           Facets.upsert {facet: facetPath},
-            {$set: {counts: Facets.compute(queue.name, filter)}}
+            {$set: {counts: Facets.compute(filter)}}
           cursor = Facets.find({facet: facetPath})
           cursor.observe
             removed: (oldDoc) ->
               Facets.upsert {facet: oldDoc.facet},
-                {$set: {counts: Facets.compute(queue.name, filter)}}
+                {$set: {counts: Facets.compute(filter)}}
           return cursor
       },
       {
         find: (queue) ->
-          #Arbitrary maximum of 500 tickets returned at once. Maybe define this somewhere (Meteor.settings?) 
-          if limit > 500 then limit = 500
+          #If there's no defined queue filter, make sure we're still only returning accessibly queued tickets.
+          unless queueFilter
+            mongoFilter.queueName = queue.name
           Tickets.find mongoFilter, {sort: {submittedTimestamp: -1}, limit: limit}
         children: [
           {

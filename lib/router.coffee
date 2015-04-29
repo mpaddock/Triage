@@ -11,7 +11,7 @@ Router.map ->
   @route 'default',
     path: '/'
     action: ->
-      queue = Meteor.user().defaultQueue? || Queues.findOne().name
+      queue = Meteor.user().defaultQueue? || Queues.findOne({memberIds: Meteor.userId()}).name
       @redirect '/queue/'+queue
 
   @route 'queue',
@@ -21,7 +21,8 @@ Router.map ->
       Session.set 'queueName', @params.queueName #just makes it easier for our sidebar. can't get data context to work at the moment.
       @next()
       if Meteor.userId()
-        [Meteor.subscribe 'queuesByName', @params.queueName, {
+        [Meteor.subscribe 'tickets', {
+          queueName: @params.queueName
           search: Iron.query.get 'search'
           status: Iron.query.get 'status'
           tag: Iron.query.get 'tag'
@@ -36,6 +37,34 @@ Router.map ->
 
   @route 'userDashboard',
     path: '/my/dashboard'
+
+  @route 'userQueue',
+    path: '/my/tickets'
+    template: 'queue'
+    onBeforeAction: ->
+      Session.set 'queueName', 'userQueue'
+      @next()
+      if Meteor.userId()
+        [Meteor.subscribe 'tickets', {
+          userId: Meteor.userId()
+          search: Iron.query.get 'search'
+          status: Iron.query.get 'status'
+          tag: Iron.query.get 'tag'
+        }, 30]
+
+  @route 'globalQueue',
+    path: '/all/tickets'
+    template: 'queue'
+    onBeforeAction: ->
+      Session.set 'queueName', 'globalQueue'
+      @next()
+      if Meteor.userId()
+        [Meteor.subscribe 'tickets', {
+          search: Iron.query.get 'search'
+          status: Iron.query.get 'status'
+          tag: Iron.query.get 'tag'
+        }, 30]
+
 
   @route 'apiSubmit',
     path: '/api/1.0/submit'

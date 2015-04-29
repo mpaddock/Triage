@@ -4,7 +4,7 @@ Template.queue.helpers
   queueName: ->
     Session.get 'queueName'
   tickets: ->
-    Tickets.find {queueName: Session.get("queueName")}, {sort: {submittedTimestamp: -1}}
+    Tickets.find {}, {sort: {submittedTimestamp: -1}}
 
 Template.queue.rendered = () ->
   $('[data-toggle=popover]').popover()
