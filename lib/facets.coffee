@@ -20,8 +20,6 @@
 @Filter =
   toMongoSelector: (filter) ->
     mongoFilter = {}
-    if filter.queueName?
-      mongoFilter.queueName = filter.queueName
     if filter.userId?
       userFilter = [
         { associatedUserIds: filter.userId },
@@ -44,12 +42,14 @@
       mongoFilter.tags = {$all: tags}
     return mongoFilter
 
-  toFacetString: (filter) ->
+  toFacetString: (filter, userId) ->
     check filter, Object
     if filter.queueName?
       facetPath = "queueName:#{filter.queueName}"
     else
-      facetPath = "queueName:*"
+      console.log this
+      queues = _.pluck Queues.find({memberIds: userId}).fetch(), 'name'
+      facetPath = "queueName:#{queues.join(',')}"
     if filter.search?.trim().length
       facetPath += "|search:#{filter.search}"
     if filter.status?.trim().length
@@ -70,9 +70,8 @@
       tags: []
       userId: ''
     for f in facetString.split('|')
-      console.log f
       f = f.split(':')
-      if f[0] is 'tags'
+      if f[0] is 'tags' or 'queueName'
         filter[f[0]] = f[1].split(',')
       else
         filter[f[0]] = f[1]

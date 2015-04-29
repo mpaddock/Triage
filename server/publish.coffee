@@ -1,11 +1,13 @@
 Meteor.publishComposite 'tickets', (filter, limit) ->
   check filter, Object
   mongoFilter = Filter.toMongoSelector filter
-  facetPath = Filter.toFacetString filter
-  queueFilter = mongoFilter.queueName?
+  facetPath = Filter.toFacetString filter, @userId
   {
     find: () ->
-      Queues.find {memberIds: @userId}
+      if filter.queueName
+        Queues.find { name: filter.queueName, memberIds: @userId }
+      else
+        Queues.find { memberIds: @userId }
 
     children: [
       {
@@ -22,9 +24,12 @@ Meteor.publishComposite 'tickets', (filter, limit) ->
       {
         find: (queue) ->
           #If there's no defined queue filter, make sure we're still only returning accessibly queued tickets.
-          unless queueFilter
-            mongoFilter.queueName = queue.name
-          Tickets.find mongoFilter, {sort: {submittedTimestamp: -1}, limit: limit}
+          if filter.queueName
+            queueFilter = _.extend {queueName: filter.queueName}, mongoFilter
+          else
+            queueFilter = _.extend {queueName: queue.name}, mongoFilter
+
+          Tickets.find queueFilter, {sort: {submittedTimestamp: -1}, limit: limit}
         children: [
           {
             find: (ticket) ->
