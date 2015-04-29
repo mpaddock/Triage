@@ -18,16 +18,22 @@
     type: Number
 
 @Filter =
-  toMongoSelector: (queueName, filter) ->
-    check queueName, String
-    check filter, Object
-
-    mongoFilter = queueName: queueName
+  toMongoSelector: (filter) ->
+    mongoFilter = {}
+    if filter.userId?
+      userFilter = [
+        { associatedUserIds: filter.userId },
+        { authorId: filter.userId }
+      ]
     if filter.search?.trim().length
-      mongoFilter['$or'] = [
+      searchFilter = [
         { title: new RegExp(filter.search.replace(',','|'), 'i') },
         { body: new RegExp(filter.search.replace(',','|'), 'i') }
       ]
+    if searchFilter and userFilter
+      mongoFilter['$and'] = [ $or: userFilter, $or: searchFilter ]
+    else if searchFilter or userFilter
+      mongoFilter['$or'] = userFilter or searchFilter
     if filter.status?
       mongoFilter.status = filter.status || ''
     if filter.tag?
@@ -36,18 +42,23 @@
       mongoFilter.tags = {$all: tags}
     return mongoFilter
 
-  toFacetString: (queueName, filter) ->
-    check queueName, String
+  toFacetString: (filter, userId) ->
     check filter, Object
-
-    facetPath = "queueName:#{queueName}"
+    if filter.queueName?
+      facetPath = "queueName:#{filter.queueName}"
+    else
+      console.log this
+      queues = _.pluck Queues.find({memberIds: userId}).fetch(), 'name'
+      facetPath = "queueName:#{queues.join(',')}"
     if filter.search?.trim().length
       facetPath += "|search:#{filter.search}"
     if filter.status?.trim().length
       facetPath += "|status:#{filter.status}"
     if filter.tag?.length
       sortedTags = _.sortBy(filter.tag.split(',')).join(',')
-      facetPath += "tags:#{sortedTags}"
+      facetPath += "|tags:#{sortedTags}"
+    if filter.userId?
+      facetPath += "|user:#{filter.userId}"
     return facetPath
 
   fromFacetString: (facetString) ->
@@ -57,9 +68,10 @@
       search: ''
       status: ''
       tags: []
+      userId: ''
     for f in facetString.split('|')
       f = f.split(':')
-      if f[0] is 'tags'
+      if f[0] is 'tags' or 'queueName'
         filter[f[0]] = f[1].split(',')
       else
         filter[f[0]] = f[1]
@@ -82,13 +94,11 @@ if Meteor.isServer
         removed: (oldDoc) ->
           refreshFacetQueues oldDoc.queueName
       ready = true
-  @Facets.compute = (queueName, filter) ->
-    check queueName, String
+  @Facets.compute = (filter) ->
     check filter, Object
 
     facets = {}
-    match = Filter.toMongoSelector queueName, filter
-
+    match = Filter.toMongoSelector filter
     facets.status = _.map Tickets.aggregate([
       {$match: match},
       {$group: {_id: "$status", count: {$sum: 1}}}
