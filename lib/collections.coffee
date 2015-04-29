@@ -41,7 +41,7 @@
     optional: true
     type: new Date()
   queueName:
-    type: [String]
+    type: String
   associatedUserIds:
     optional: true
     type: [String]

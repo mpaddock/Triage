@@ -7,7 +7,7 @@ Meteor.startup ->
       title: "Printer broken in 723 POT"
       body: "My printer has stopped working. Could someone stop by and take a look?"
       authorId: 1
-      authorName: "jrsmi222"
+      authorName: "smbr233"
       tags: ["Printer", "HelpDesk"]
       formFields:
         dueDate: new Date()
@@ -17,13 +17,13 @@ Meteor.startup ->
         ipAddress: "127.0.0.1"
         hostname: "localhost"
       submittedTimestamp: new Date()
-      queueName: ["Help Desk"]
+      queueName: "Help Desk"
     },
     {
       title: "Need poster for Event"
       body: "I need a poster for my event in 3 hours."
       authorId: 1
-      authorName: "sswwee020"
+      authorName: "shorn2"
       formFields:
         dueDate: new Date()
         otherStuff: "Stuff in fields"
@@ -33,7 +33,7 @@ Meteor.startup ->
         ipAddress: "128.163.1.1"
         hostname: "pot001.ad.uky.edu"
       submittedTimestamp: new Date("2015-02-20")
-      queueName: ["Design"]
+      queueName: "Design"
     },
     {
       title: "Academic Science Building Site"
@@ -48,7 +48,7 @@ Meteor.startup ->
         ipAddress: "128.163.133.222"
         hostname: "pot931.ad.uky.edu"
       submittedTimestamp: new Date('2015-01-33')
-      queueName: ["Web Dev", "Design"]
+      queueName: "Web Dev"
     }
   ].forEach (x) ->
     y = Tickets.findOne {title: x.title}

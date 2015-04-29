@@ -47,7 +47,6 @@
     if filter.queueName?
       facetPath = "queueName:#{filter.queueName}"
     else
-      console.log this
       queues = _.pluck Queues.find({memberIds: userId}).fetch(), 'name'
       facetPath = "queueName:#{queues.join(',')}"
     if filter.search?.trim().length
@@ -71,7 +70,7 @@
       userId: ''
     for f in facetString.split('|')
       f = f.split(':')
-      if f[0] is 'tags' or 'queueName'
+      if f[0] is 'tags' or f[0] is 'queueName'
         filter[f[0]] = f[1].split(',')
       else
         filter[f[0]] = f[1]
