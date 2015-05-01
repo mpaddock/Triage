@@ -74,7 +74,6 @@ Template.ticketRow.events
 
 Template.ticketRow.rendered = ->
   $('form[name=ticketForm]').submit (e) -> e.preventDefault()
-  $('[data-toggle=popover]').popover()
 
 Template.ticketRow.helpers
   changelog: ->
@@ -87,8 +86,6 @@ Template.ticketRow.helpers
     TicketFlags.findOne({userId: Meteor.userId(), ticketId: this._id, k: 'replied'})
   hasAttachment: ->
     TicketFlags.findOne({ticketId: this._id, k: 'attachment'})
-  allFields: ->
-    Session.get "allFields"
   file: ->
     FileRegistry.findOne {_id: this.valueOf()}
   settings: ->

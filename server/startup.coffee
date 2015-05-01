@@ -48,7 +48,7 @@ Meteor.startup ->
         ipAddress: "128.163.133.222"
         hostname: "pot931.ad.uky.edu"
       submittedTimestamp: new Date('2015-01-33')
-      queueName: "Web Dev"
+      queueName: "Web"
     }
   ].forEach (x) ->
     y = Tickets.findOne {title: x.title}

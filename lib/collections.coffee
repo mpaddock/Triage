@@ -48,6 +48,19 @@
   attachmentIds:
     optional: true
     type: [String]
+  ticketNumber:
+    type: Number
+    unique: true
+    optional: true
+
+if Meteor.isServer && Npm.require('cluster').isMaster
+  ready = false
+  Tickets.find().observe
+    added: (doc) ->
+      if ready
+        max = Tickets.findOne({}, {sort:{ticketNumber:-1}})?.ticketNumber || 0
+        Tickets.update doc._id, {$set: {ticketNumber: max+1}}
+  ready = true
 
 @TicketFlags = new Mongo.Collection 'ticketFlags'
 # TODO: SimpleSchema doesnt handle v very well, so skip for now

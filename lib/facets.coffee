@@ -20,6 +20,10 @@
 @Filter =
   toMongoSelector: (filter) ->
     mongoFilter = {}
+    if typeof filter.queueName is 'string'
+      mongoFilter.queueName = filter.queueName
+    else
+      mongoFilter.queueName = {$in: filter.queueName}
     if filter.userId?
       userFilter = [
         { associatedUserIds: filter.userId },
@@ -40,15 +44,16 @@
       tags = filter.tag.split(',')
       sorted = _.sortBy(tags).join(',')
       mongoFilter.tags = {$all: tags}
+    if filter.ticketNumber?
+      mongoFilter.ticketNumber = Number(filter.ticketNumber)
     return mongoFilter
 
-  toFacetString: (filter, userId) ->
+  toFacetString: (filter) ->
     check filter, Object
-    if filter.queueName?
+    if typeof filter.queueName is 'string'
       facetPath = "queueName:#{filter.queueName}"
     else
-      queues = _.pluck Queues.find({memberIds: userId}).fetch(), 'name'
-      facetPath = "queueName:#{queues.join(',')}"
+      facetPath = "queueName:#{filter.queueName.join(',')}"
     if filter.search?.trim().length
       facetPath += "|search:#{filter.search}"
     if filter.status?.trim().length
