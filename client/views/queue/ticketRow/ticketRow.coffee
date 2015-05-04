@@ -10,38 +10,37 @@ Template.ticketRow.events
       Meteor.setTimeout ->
         $('html, body').animate({scrollTop: target.offset().top}, 375)
       , 200
-  'click .dropdown-menu[name=statusMenu]': (e, tmpl) ->
-    #Needed to stop wacky table row expansion. We have to toggle the dropdown manually as a result in our events.
-    e.stopPropagation()
-  'click .dropdown-menu[name=statusMenu] a': (e, tmpl) ->
+  'click .dropdown-menu[name=statusMenu]': (e, tpl) ->
+    e.stopPropagation() #Stops table row expanding on dropdown click. Have to trigger dropdown manually below.
+  'click .dropdown-menu[name=statusMenu] a': (e, tpl) ->
     Meteor.call 'updateStatus', Meteor.userId(), this._id, $(e.target).html()
-    tmpl.$('.dropdown-toggle[name=statusButton]').dropdown('toggle')
+    tpl.$('.dropdown-toggle[name=statusButton]').dropdown('toggle')
 
-  
-  'keyup input[name=customStatus]': (e, tmpl) ->
+  'keyup input[name=customStatus]': (e, tpl) ->
     if e.which is 13
       Meteor.call 'updateStatus', Meteor.userId(), this._id, e.target.value
       $(e.target).val("")
-      tmpl.$('.dropdown-toggle[name=statusButton]').dropdown('toggle')
+      tpl.$('.dropdown-toggle[name=statusButton]').dropdown('toggle')
     
   ### Assigning users to tickets. ###
-  'keyup input[name=assignUser]': (e, tmpl) ->
+  'keyup input[name=assignUser]': (e, tpl) ->
     if e.which is 13
       id = Meteor.call 'checkUsername', e.target.value, (err, res) ->
         if res
-          tmpl.$('[data-toggle="tooltip"]').tooltip('hide')
-          Tickets.update tmpl.data._id, {$addToSet: {associatedUserIds: res}}
+          tpl.$('[data-toggle="tooltip"]').tooltip('hide')
+          Tickets.update tpl.data._id, {$addToSet: {associatedUserIds: res}}
           $(e.target).val('')
         else
-          tmpl.$('[data-toggle="tooltip"]').tooltip('show')
+          tpl.$('[data-toggle="tooltip"]').tooltip('show')
 
-  'click a[data-action=uploadFile]': (e, tmpl) ->
+  ### Uploading files. ###
+  'click a[data-action=uploadFile]': (e, tpl) ->
     Media.pickLocalFile (fileId) ->
       console.log "Uploaded a file, got _id: ", fileId
-      Tickets.update tmpl.data._id, {$addToSet: {attachmentIds: fileId}}
-      Meteor.call 'setFlag', Meteor.userId(), tmpl.data._id, 'attachment', true
+      Tickets.update tpl.data._id, {$addToSet: {attachmentIds: fileId}}
+      Meteor.call 'setFlag', Meteor.userId(), tpl.data._id, 'attachment', true
       Changelog.insert
-        ticketId: tmpl.data._id
+        ticketId: tpl.data._id
         timestamp: new Date()
         authorId: Meteor.userId()
         authorName: Meteor.user().username
@@ -50,36 +49,37 @@ Template.ticketRow.events
         otherId: fileId
 
   ### Adding notes to tickets. ###
-  'keyup input[name=newNote]': (e, tmpl) ->
+  'keyup input[name=newNote]': (e, tpl) ->
     if (e.which is 13) and (e.target.value isnt "")
       body = e.target.value
       hashtags = getTags body
       users = getUsers body
 
       if users?.length > 0
-        Tickets.update tmpl.data._id, {$addToSet: {associatedUserIds: $each: users}}
+        Tickets.update tpl.data._id, {$addToSet: {associatedUserIds: $each: users}}
 
       if hashtags?.length > 0
-        Tickets.update tmpl.data._id, {$addToSet: {tags: $each: hashtags}}
+        Tickets.update tpl.data._id, {$addToSet: {tags: $each: hashtags}}
 
       Changelog.insert
-        ticketId: tmpl.data._id
+        ticketId: tpl.data._id
         timestamp: new Date()
         authorId: Meteor.userId()
         authorName: Meteor.user().username
         type: "note"
         message: e.target.value
 
-      Meteor.call 'setFlag', Meteor.userId(), tmpl.data._id, 'replied', true
+      Meteor.call 'setFlag', Meteor.userId(), tpl.data._id, 'replied', true
 
       $(e.target).val("")
-  # Hide all tooltips on row collapse and focusout of assign user field. 
-  'hidden.bs.collapse': (e, tmpl) ->
-    tmpl.$('[data-toggle="tooltip"]').tooltip('hide')
-    tmpl.$('input[name="assignUser"]').val('')
 
-  'focusout input[name="assignUser"]': (e, tmpl) ->
-    tmpl.$('[data-toggle="tooltip"]').tooltip('hide')
+  ### Hide all tooltips on row collapse and focusout of assign user field. ###
+  'hidden.bs.collapse': (e, tpl) ->
+    tpl.$('[data-toggle="tooltip"]').tooltip('hide')
+    tpl.$('input[name="assignUser"]').val('')
+
+  'focusout input[name="assignUser"]': (e, tpl) ->
+    tpl.$('[data-toggle="tooltip"]').tooltip('hide')
 
 
 Template.ticketRow.rendered = ->

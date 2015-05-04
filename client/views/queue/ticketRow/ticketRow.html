@@ -64,7 +64,7 @@
                 <td>
                   {{#each attachmentIds}}
                   <img style="max-width: 64px; max-height:24px;" src="/file/{{file.thumbnail}}" />
-                  <a href="/file/{{file.filenameOnDisk}}">{{file.filename}}</a><br />
+                  <a data-action="downloadAttachment" href="/file/{{file.filenameOnDisk}}">{{file.filename}}</a><br />
                   {{/each}}
                 </td>
               </tr>
