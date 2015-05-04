@@ -35,7 +35,7 @@
         { body: new RegExp(filter.search.replace(',','|'), 'i') }
       ]
     if searchFilter and userFilter
-      mongoFilter['$and'] = [ $or: userFilter, $or: searchFilter ]
+      mongoFilter['$and'] = [ {$or: userFilter}, {$or: searchFilter} ]
     else if searchFilter or userFilter
       mongoFilter['$or'] = userFilter or searchFilter
     if filter.status?
