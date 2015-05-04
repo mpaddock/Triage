@@ -1,3 +1,7 @@
 .hiddenRow {
-    padding: 0 !important;
-  }
+  padding: 0 !important;
+}
+
+.top-buffer {
+  margin-top: 10px;
+}

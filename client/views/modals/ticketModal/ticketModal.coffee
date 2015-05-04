@@ -2,7 +2,7 @@ Template.ticketModal.helpers
   queues: -> Queues.find()
   settings: ->
     {
-      position: "top"
+      position: "bottom"
       limit: 5
       rules: [
         {
@@ -16,7 +16,7 @@ Template.ticketModal.helpers
           collection: Tags
           field: 'name'
           template: Template.tagPill
-          template: Template.noMatchTagPill
+          noMatchTemplate: Template.noMatchTagPill
         }
       ]
     }
@@ -43,10 +43,7 @@ Template.ticketModal.events
     #If no onBehalfOf, submitter is the user.
     submitter = tpl.find('input[name=onBehalfOf]').value || Meteor.user().username
 
-    queueNames = tpl.$('select[name=queue]').val()
-    if queueNames?.length is 0
-      #Simpleschema validation will pass with an empty array for queueNames...
-      queueNames = null
+    queueName = tpl.$('select[name=queue]').val()
 
     Meteor.call 'checkUsername', submitter, (err, res) ->
       if res
@@ -61,7 +58,7 @@ Template.ticketModal.events
           body: body
           tags: hashtags
           associatedUserIds: users
-          queueName: queueNames
+          queueName: queueName
           authorId: res
           authorName: submitter
           status: "Open"
@@ -97,7 +94,6 @@ Template.ticketModal.events
   
   #When the modal is shown, we get the set of unique tags and update the modal with them.
   'shown.bs.modal #ticketModal': (e, tmpl) ->
-    $('select[name=queue]').select2('val', Session.get('queueName'))
     tags = _.pluck Tags.find().fetch(), 'name'
     tmpl.$('input[name=tags]').select2({
       tags: tags
@@ -107,12 +103,16 @@ Template.ticketModal.events
   'click button[data-dismiss="modal"]': (e, tpl) ->
     clearFields tpl
   
- 
-Template.ticketModal.rendered = () ->
-  $('select[name=queue]').select2()
 
 Deps.autorun () ->
-  $('select[name=queue]').select2('val', Session.get('queueName'))
+  $('select[name=queue').val(Session.get('queueName'))
+
+Template.ticketModal.rendered = () ->
+  tags = _.pluck Tags.find().fetch(), 'name'
+  $('input[name=tags]').select2({
+    tags: tags
+    tokenSeparators: [' ', ',']
+  })
 
 clearFields = (tpl) ->
   tpl.$('input, textarea').val('')

@@ -2,7 +2,8 @@
 <div class="col-xs-12 col-sm-10">
   <div class="row">
     <div class="pull-left">
-      <button class="btn btn-success" type="button" data-toggle="modal" data-target="#ticketModal">Add New Ticket</button>
+      <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#ticketModal">Add New Ticket</button>
+      <button class="btn btn-success" type="button" data-action="openQuickAdd">Quick Add Ticket</button>
     </div>
     <div class="pull-right">
       {{#each members}}
@@ -10,6 +11,33 @@
       {{/each}}
     </div>
   </div>
+  {{#if addingTicket}}
+  <div class="row top-buffer">
+    <div class="col-sm-9">
+      <form class="form-horizontal">
+        <div class="form-group">
+          <label for="body" class="col-sm-1 control-label">Title:</label>
+          <div class="col-sm-11">
+            {{>inputAutocomplete settings=settings name="newTicket" class="form-control"}}
+          </div>
+        </div>
+        {{#if psuedoqueue}}
+        <div class="form-group">
+          <label for="queue" class="col-sm-1 control-label">Queue:</label>
+          <div class="col-sm-11">
+            <select name="queue" class="form-control" data-placeholder="Select queue">
+              {{#each queues}}
+              <option value="{{name}}">{{name}}</option>
+              {{/each}}
+            </select>
+          </div>
+        </div>
+        {{/if}}
+        <button type="button" class="btn btn-primary pull-right" data-action="addTicket">Submit</button>
+      </form>
+    </div>
+  </div>
+  {{/if}}
   <div class="row">
     <table class="table table-striped table-condensed" style="border-collapse:collapse;">
       <thead>
@@ -17,6 +45,7 @@
           <th>&nbsp;</th>
           <th>Subject</th>
           <th>Requester</th>
+          <th>Associated Users</th>
           <th>Status</th>
           <th>Submitted</th>
         </tr>

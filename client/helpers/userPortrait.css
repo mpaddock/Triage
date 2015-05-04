@@ -8,7 +8,7 @@
   max-height: 40px;
 }
 
-.requester img  {
+.in-row img  {
   max-height: 24px;
 }
 
@@ -29,7 +29,7 @@
   -webkit-border-radius: 3px;
 }
 
-.requester .user-info {
+.in-row .user-info {
   top: 26px;
 }
 

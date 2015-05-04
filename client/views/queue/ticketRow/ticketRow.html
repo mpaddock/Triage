@@ -12,9 +12,14 @@
   <td>{{title}}</td>
   <td>
     <div class="ticket-requester-portrait">
-      {{>userPortrait userId=this.authorId class="requester"}}
+      {{>userPortrait userId=this.authorId class="in-row"}}
     </div>
     {{authorName}}
+  </td>
+  <td>
+    {{#each associatedUserIds}}
+      {{>userPortrait userId=this associated=true class="in-row"}}
+    {{/each}}
   </td>
   <td>
     <div class="dropdown" data-ticket="{{_id}}">
@@ -26,10 +31,10 @@
       </ul>
     </div>
   </td>
-  <td>{{>dateFormatter date=submittedTimestamp}}</td>
+  <td>{{>timeParser date=submittedTimestamp}}</td>
 </tr>
 <tr>
-  <td colspan='5' class="hiddenRow">
+  <td colspan='6' class="hiddenRow">
     <div class="accordion-body collapse" id="row{{_id}}" data-ticket="{{_id}}">
       <div class="col-xs-12 col-md-12">
         <blockquote>
