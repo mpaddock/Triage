@@ -50,7 +50,7 @@ Meteor.publish 'allUserData', () ->
   Meteor.users.find {}, {fields: {'_id': 1, 'username': 1, 'mail': 1, 'displayName': 1, 'department': 1, 'physicalDeliveryOfficeName': 1}}
 
 Meteor.publish 'queueNames', () ->
-  #Consider only publishing memberIds for queues that the uesr is a member of. Probably not a huge deal. 
+  #Consider only publishing memberIds for queues that the uesr is a member of. Probably not a huge deal.
   Queues.find {}, {fields: {'name': 1, 'memberIds': 1}}
 
 Meteor.publish 'tags', () ->
