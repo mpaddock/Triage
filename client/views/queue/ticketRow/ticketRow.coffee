@@ -1,5 +1,15 @@
 Template.ticketRow.events
   ### Events for ticket status changes. ###
+  'click .ticket-row': (e) ->
+    collapsing = $(e.currentTarget).next().find('.accordion-body').attr('aria-expanded')
+    $('html, body').clearQueue()
+    if collapsing is 'true'
+      $('html, body').animate({scrollTop: $(e.currentTarget).offset().top - $(window).height()/2}, 600)
+    else
+      target = $(e.currentTarget)
+      Meteor.setTimeout ->
+        $('html, body').animate({scrollTop: target.offset().top}, 375)
+      , 200
   'click .dropdown-menu[name=statusMenu]': (e, tmpl) ->
     #Needed to stop wacky table row expansion. We have to toggle the dropdown manually as a result in our events.
     e.stopPropagation()
