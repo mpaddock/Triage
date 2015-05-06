@@ -47,7 +47,7 @@ Meteor.publishComposite 'ticketsByQueue', (filter, limit) ->
 Meteor.publish 'userData', () ->
   Meteor.users.find {_id: @userId}
 Meteor.publish 'allUserData', () ->
-  Meteor.users.find {}, {fields: {'_id': 1, 'username': 1, 'mail': 1, 'displayName': 1, 'department': 1, 'physicalDeliveryOfficeName': 1}}
+  Meteor.users.find {}, {fields: {'_id': 1, 'username': 1, 'mail': 1, 'displayName': 1, 'department': 1, 'physicalDeliveryOfficeName': 1, 'status.online': 1}}
 
 Meteor.publish 'queueNames', () ->
   #Consider only publishing memberIds for queues that the uesr is a member of. Probably not a huge deal. 

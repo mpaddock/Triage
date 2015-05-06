@@ -7,7 +7,7 @@
     </div>
     <div class="pull-right">
       {{#each members}}
-      {{>userPortrait userId=this class="user-image"}}
+      {{>userPortrait userId=this class="user-image" fadeIfOffline=true}}
       {{/each}}
     </div>
   </div>

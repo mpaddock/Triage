@@ -3,13 +3,17 @@
   position: relative;
 }
 
-.user-profile img{
+.user-profile img {
   max-width: 96px;
   max-height: 40px;
 }
 
 .in-row img  {
   max-height: 24px;
+}
+
+.offline {
+  opacity: 0.3;
 }
 
 .user-profile .user-info {
@@ -30,7 +34,7 @@
 }
 
 .in-row .user-info {
-  top: 26px;
+  top: 24px;
 }
 
 .user-info .name {
