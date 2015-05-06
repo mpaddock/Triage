@@ -43,7 +43,7 @@ Template.sidebar.events
       users = Iron.query.get('user')?.split(',') || []
 
       terms = _.without text.split(' '), "" #Remove trailing spaces.
-      terms = _.difference terms, text.match(/status:(\w+|"[^"]*"+|'[^']*')|#\S+|\@\S+/g) #Not the best way of doing this.  
+      terms = _.difference terms, text.match(/status:(\w+|"[^"]*"+|'[^']*')|#\S+|\@\S+/g) #Not the best way of doing this.
       newFilter = _.union terms, filter
       newTags = _.union tags, getTags(text)
       newStatus = _.union statuses, getStatuses(text)
