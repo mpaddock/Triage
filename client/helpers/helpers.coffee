@@ -21,3 +21,7 @@ Handlebars.registerHelper 'arrayify', (obj) ->
     userId = Meteor.users.findOne({username: username.substring(1)})?._id
     if userId then users.push(userId)
   return _.uniq users
+
+(exports ? this).getStatuses = (text) ->
+  _.uniq(text.match(/status:(\w+|"[^"]*"+|'[^']*')/g)).map (x) ->
+    x.replace('status:', '').replace(/"/g, '').replace(/'/g, '') #strip status: and all quotes.

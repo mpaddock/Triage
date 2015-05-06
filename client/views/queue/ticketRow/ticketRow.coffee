@@ -54,6 +54,9 @@ Template.ticketRow.events
       body = e.target.value
       hashtags = getTags body
       users = getUsers body
+      status = getStatuses body
+      if status?.length > 0
+        Tickets.update tpl.data._id, {$set: {status: status[0]}} #If multiple results, just use the first.
 
       if users?.length > 0
         Tickets.update tpl.data._id, {$addToSet: {associatedUserIds: $each: users}}

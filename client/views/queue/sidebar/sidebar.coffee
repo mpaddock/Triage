@@ -29,19 +29,27 @@ Template.sidebar.helpers
           collection: Tags
           field: 'name'
           template: Template.tagPill
-          noMatchTemplate: Template.noMatchTagPill
         }
       ]
     }
 
 Template.sidebar.events
   'keyup input[name=textSearch]': (e, tpl) ->
-    #TODO:Parse for tags n stuff.
     if e.keyCode is 13
-      terms = Iron.query.get('search')?.split(',') || []
-      unless terms.indexOf(e.target.value) > -1
-        terms.push(e.target.value)
+      text = e.target.value
+      filter = Iron.query.get('search')?.split(',') || []
+      tags = Iron.query.get('tags')?.split(',') || []
+      statuses = Iron.query.get('status')?.split(',') || []
+
+      terms = _.without text.split(' '), "" #Remove trailing spaces.
+      terms = _.difference terms, text.match(/status:(\w+|"[^"]*"+|'[^']*')|#\S+/g) #Not the best way of doing this.
+      
+      newTags = _.union tags, getTags(text)
+      newStatus = _.union statuses, getStatuses(text)
+
       Iron.query.set 'search', terms.join()
+      Iron.query.set 'tag', newTags.join()
+      Iron.query.set 'status', newStatus.join()
       $(e.target).val('')
 
   'click a[data-action="removeFilter"]': (e, tpl) ->
