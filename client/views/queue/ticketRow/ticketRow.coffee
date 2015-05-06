@@ -76,6 +76,9 @@ Template.ticketRow.events
 
       $(e.target).val("")
 
+  'show.bs.collapse': ->
+    Meteor.call 'removeFlag', Meteor.userId(), @_id, 'unread'
+
   ### Hide all tooltips on row collapse and focusout of assign user field. ###
   'hidden.bs.collapse': (e, tpl) ->
     tpl.$('[data-toggle="tooltip"]').tooltip('hide')
@@ -95,6 +98,8 @@ Template.ticketRow.helpers
     @type is type
   note: ->
     if this.type is "note" then return true else return false
+  unread: ->
+    TicketFlags.findOne({userId: Meteor.userId(), ticketId: this._id, k: 'unread'})?.v
   repliedTo: ->
     TicketFlags.findOne({userId: Meteor.userId(), ticketId: this._id, k: 'replied'})
   hasAttachment: ->
