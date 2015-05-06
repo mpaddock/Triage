@@ -77,7 +77,6 @@ Template.queue.events
           method: "Web"
       }, (err, res) ->
         if res
-          console.log res
           tpl.$('input[name=newTicket]').val('')
 
 
