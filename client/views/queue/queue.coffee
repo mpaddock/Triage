@@ -1,4 +1,8 @@
 Template.queue.helpers
+  noTickets: ->
+    Tickets.find().fetch().length is 0
+  search: ->
+    Iron.query.get('search')? or Iron.query.get('status')? or Iron.query.get('tag')?
   members: ->
     Queues.findOne({name: Session.get('queueName')})?.memberIds
   queueName: ->
@@ -42,6 +46,12 @@ Template.queue.created = () ->
   Session.setDefault 'limit', 30
 
 Template.queue.events
+  'click a[data-action=clearSearch]': (e, tpl) ->
+    e.stopPropagation()
+    Iron.query.set 'search', ''
+    Iron.query.set 'tag', ''
+    Iron.query.set 'status', ''
+
   'click button[data-action=openQuickAdd]': (e, tpl) ->
     Session.set 'addingTicket', !Session.get('addingTicket')
 

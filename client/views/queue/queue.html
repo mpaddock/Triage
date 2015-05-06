@@ -54,6 +54,13 @@
       </thead>
       <tbody>
         <tr></tr>
+        {{#if noTickets}}
+        {{#if search}}
+        No tickets match your current search. <a href='#' data-action='clearSearch'>Clear your search?</a>
+        {{else}}
+        No tickets found.
+        {{/if}}
+        {{/if}}
         {{#each tickets}}
         {{>ticketRow}}
         {{/each}}
