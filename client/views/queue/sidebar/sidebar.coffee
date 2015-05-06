@@ -36,7 +36,7 @@ Template.sidebar.helpers
 Template.sidebar.events
   'keyup input[name=textSearch]': (e, tpl) ->
     if e.keyCode is 13
-      text = e.target.value
+      text = $(e.target).val()
       filter = Iron.query.get('search')?.split(',') || []
       tags = Iron.query.get('tags')?.split(',') || []
       statuses = Iron.query.get('status')?.split(',') || []
