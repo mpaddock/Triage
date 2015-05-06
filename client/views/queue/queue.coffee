@@ -2,7 +2,7 @@ Template.queue.helpers
   noTickets: ->
     Tickets.find().fetch().length is 0
   search: ->
-    Iron.query.get('search')? or Iron.query.get('status')? or Iron.query.get('tag')?
+    Iron.query.get('search')? or Iron.query.get('status')? or Iron.query.get('tag')? or Iron.query.get('user')?
   members: ->
     Queues.findOne({name: Session.get('queueName')})?.memberIds
   queueName: ->
@@ -51,6 +51,7 @@ Template.queue.events
     Iron.query.set 'search', ''
     Iron.query.set 'tag', ''
     Iron.query.set 'status', ''
+    Iron.query.set 'user', ''
 
   'click button[data-action=openQuickAdd]': (e, tpl) ->
     Session.set 'addingTicket', !Session.get('addingTicket')
@@ -59,7 +60,7 @@ Template.queue.events
     body = tpl.find('input[name=newTicket]').value
     queue = tpl.find('select[name=queue]')?.value || Session.get('queueName')
     tags = getTags body
-    users = getUsers body
+    users = getUserIds body
       
     id = Tickets.insert {
       title: body

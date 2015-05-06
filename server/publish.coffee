@@ -1,4 +1,4 @@
-Meteor.publishComposite 'ticketsByQueue', (filter, limit) ->
+Meteor.publishComposite 'tickets', (filter, limit, myqueue) ->
   check filter, Object
   #If there's a queue filter, make sure the user has access. If no filter, make the queue filter all the user has access to.
   if filter.queueName? and not Queues.findOne({name: filter.queueName, memberIds: @userId})
@@ -6,7 +6,10 @@ Meteor.publishComposite 'ticketsByQueue', (filter, limit) ->
   else if not filter.queueName?
     queues = _.pluck Queues.find({memberIds: @userId}).fetch(), 'name'
     filter.queueName = queues
-
+  if myqueue
+    filter.userId = @userId
+  else
+    filter.userId = null
   mongoFilter = Filter.toMongoSelector filter
   facetPath = Filter.toFacetString filter
   

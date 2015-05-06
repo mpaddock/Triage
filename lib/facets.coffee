@@ -24,20 +24,29 @@
       mongoFilter.queueName = filter.queueName
     else
       mongoFilter.queueName = {$in: filter.queueName}
-    if filter.userId?
+    userIds = []
+    if filter.user?
+      userIds = filter.user.split(',').map (x) ->
+        Meteor.users.findOne({username: x})?._id
       userFilter = [
-        { associatedUserIds: filter.userId },
-        { authorId: filter.userId }
+        { authorName: {$in: filter.user.split(',')}},
+        { associatedUserIds: {$in: userIds}},
+        { authorId: {$in: userIds}}
+      ]
+    if filter.userId?
+      selfFilter = [
+          { associatedUserIds: filter.userId},
+          { authorId: filter.userId}
       ]
     if filter.search?.trim().length
       searchFilter = [
         { title: new RegExp(filter.search.replace(',','|'), 'i') },
         { body: new RegExp(filter.search.replace(',','|'), 'i') }
       ]
-    if searchFilter and userFilter
-      mongoFilter['$and'] = [ {$or: userFilter}, {$or: searchFilter} ]
-    else if searchFilter or userFilter
-      mongoFilter['$or'] = userFilter or searchFilter
+    _.each [userFilter, searchFilter, selfFilter], (x) ->
+      if x?.length > 0
+        unless mongoFilter['$and'] then mongoFilter['$and'] = []
+        mongoFilter['$and'].push {$or: x}
     if filter.status?
       mongoFilter.status = filter.status || ''
     if filter.tag?

@@ -21,11 +21,12 @@ Router.map ->
       Session.set 'queueName', @params.queueName #just makes it easier for our sidebar. can't get data context to work at the moment.
       @next()
       if Meteor.userId()
-        [Meteor.subscribe 'ticketsByQueue', {
+        [Meteor.subscribe 'tickets', {
           queueName: @params.queueName
           search: Iron.query.get 'search'
           status: Iron.query.get 'status'
           tag: Iron.query.get 'tag'
+          user: Iron.query.get 'user'
         }, 30]
 
 
@@ -45,12 +46,12 @@ Router.map ->
       Session.set 'queueName', 'userQueue'
       @next()
       if Meteor.userId()
-        [Meteor.subscribe 'ticketsByQueue', {
-          userId: Meteor.userId()
+        [Meteor.subscribe 'tickets', {
           search: Iron.query.get 'search'
           status: Iron.query.get 'status'
           tag: Iron.query.get 'tag'
-        }, 30]
+          user: Iron.query.get 'user'
+        }, 30, true]
 
   @route 'globalQueue',
     path: '/all/tickets'
@@ -59,10 +60,11 @@ Router.map ->
       Session.set 'queueName', 'globalQueue'
       @next()
       if Meteor.userId()
-        [Meteor.subscribe 'ticketsByQueue', {
+        [Meteor.subscribe 'tickets', {
           search: Iron.query.get 'search'
           status: Iron.query.get 'status'
           tag: Iron.query.get 'tag'
+          user: Iron.query.get 'user'
         }, 30]
 
   @route 'ticket',
@@ -72,7 +74,7 @@ Router.map ->
       Session.set 'ticketNumber', @params.ticketNumber
       @next()
       if Meteor.userId()
-        [Meteor.subscribe 'ticketsByQueue', {
+        [Meteor.subscribe 'tickets', {
           ticketNumber: @params.ticketNumber
         }]
 

@@ -40,16 +40,19 @@ Template.sidebar.events
       filter = Iron.query.get('search')?.split(',') || []
       tags = Iron.query.get('tags')?.split(',') || []
       statuses = Iron.query.get('status')?.split(',') || []
+      users = Iron.query.get('user')?.split(',') || []
 
       terms = _.without text.split(' '), "" #Remove trailing spaces.
-      terms = _.difference terms, text.match(/status:(\w+|"[^"]*"+|'[^']*')|#\S+/g) #Not the best way of doing this.
-      
+      terms = _.difference terms, text.match(/status:(\w+|"[^"]*"+|'[^']*')|#\S+|\@\S+/g) #Not the best way of doing this.  
+      newFilter = _.union terms, filter
       newTags = _.union tags, getTags(text)
       newStatus = _.union statuses, getStatuses(text)
+      newUsers = _.union users, getUsernames(text)
 
-      Iron.query.set 'search', terms.join()
+      Iron.query.set 'search', newFilter.join()
       Iron.query.set 'tag', newTags.join()
       Iron.query.set 'status', newStatus.join()
+      Iron.query.set 'user', newUsers.join()
       $(e.target).val('')
 
   'click a[data-action="removeFilter"]': (e, tpl) ->

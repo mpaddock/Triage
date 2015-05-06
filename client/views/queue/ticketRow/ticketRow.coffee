@@ -53,7 +53,7 @@ Template.ticketRow.events
     if (e.which is 13) and (e.target.value isnt "")
       body = e.target.value
       hashtags = getTags body
-      users = getUsers body
+      users = getUserIds body
       status = getStatuses body
       if status?.length > 0
         Tickets.update tpl.data._id, {$set: {status: status[0]}} #If multiple results, just use the first.
@@ -77,6 +77,7 @@ Template.ticketRow.events
       $(e.target).val("")
 
   'show.bs.collapse': ->
+    console.log 'fired'
     Meteor.call 'removeFlag', Meteor.userId(), @_id, 'unread'
 
   ### Hide all tooltips on row collapse and focusout of assign user field. ###

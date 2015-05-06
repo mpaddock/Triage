@@ -37,8 +37,8 @@ Template.ticketModal.events
     hashtags = _.uniq hashtags?.concat(getTags(title)).concat(splitTags) || []
 
     #User tagging.
-    users = getUsers body
-    users = _.uniq users?.concat getUsers(title) || []
+    users = getUserIds body
+    users = _.uniq users?.concat getUserIds(title) || []
     
     #If no onBehalfOf, submitter is the user.
     submitter = tpl.find('input[name=onBehalfOf]').value || Meteor.user().username
