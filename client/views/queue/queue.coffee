@@ -56,29 +56,28 @@ Template.queue.events
   'click button[data-action=openQuickAdd]': (e, tpl) ->
     Session.set 'addingTicket', !Session.get('addingTicket')
 
-  'click button[data-action=addTicket]': (e, tpl) ->
-    body = tpl.find('input[name=newTicket]').value
-    queue = tpl.find('select[name=queue]')?.value || Session.get('queueName')
-    tags = getTags body
-    users = getUserIds body
+  'keyup input[name=newTicket]': (e, tpl) ->
+    if e.which is 13
+      body = tpl.find('input[name=newTicket]').value
+      queue = tpl.find('select[name=queue]')?.value || Session.get('queueName')
+      tags = getTags body
+      users = getUserIds body
       
-    id = Tickets.insert {
-      title: body
-      body: body
-      tags: tags
-      associatedUserIds: users
-      queueName: queue
-      authorId: Meteor.userId()
-      authorName: Meteor.user().username
-      status: "Open"
-      submittedTimestamp: new Date()
-      submissionData:
-        method: "Web"
-    }, (err, res) ->
-      if err
-        tpl.$('textarea[name=newTicket]').addClass('has-error')
-      else
-        tpl.$('textarea[name=newTicket]').removeClass('has-error')
-        tpl.$('textarea[name=newTicket]').val('')
+      id = Tickets.insert {
+        title: body
+        body: body
+        tags: tags
+        associatedUserIds: users
+        queueName: queue
+        authorId: Meteor.userId()
+        authorName: Meteor.user().username
+        status: "Open"
+        submittedTimestamp: new Date()
+        submissionData:
+          method: "Web"
+      }, (err, res) ->
+        if res
+          console.log res
+          tpl.$('input[name=newTicket]').val('')
 
 
