@@ -2,8 +2,11 @@
 <label for="textSearch" class="control-label">Search:</label>
 {{>inputAutocomplete name="textSearch" class="form-control" settings=settings}}
 <ul class="list-unstyled animated">
-  {{#each search}}
-  <li class="fade"><a data-action="removeFilter" data-value="{{this}}"><span class="glyphicon glyphicon-remove"></span></a>search: {{this}}</li>
+  {{#each textFilter}}
+  <li class="fade"><a data-action="removeFilter" data-type="search" data-value="{{this}}"><span class="glyphicon glyphicon-remove"></span></a>search: {{this}}</li>
+  {{/each}}
+  {{#each userFilter}}
+  <li class="fade"><a data-action="removeFilter" data-type="user" data-value="{{this}}"><span class="glyphicon glyphicon-remove"></span></a>user: {{this}}</li>
   {{/each}}
 </ul>
 <hr>
@@ -16,6 +19,13 @@
   <div id="tagCollapse" class="panel-collapse collapse in">
     <div class="panel-body">
       {{#each tags}}
+      <div class="checkbox">
+        <label>
+          <input type="checkbox" data-field="tag" checked={{checked}}>{{name}} ({{count}})
+        </label>
+      </div>
+      {{/each}}
+      {{#each zeroCountTags}}
       <div class="checkbox">
         <label>
           <input type="checkbox" data-field="tag" checked={{checked}}>{{name}} ({{count}})
@@ -36,7 +46,14 @@
       {{#each status}}
       <div class="checkbox">
         <label>
-          <input type="checkbox" data-field="status" checked={{checked}}>{{name}} ({{count}})<br>
+          <input type="checkbox" data-field="status" checked={{checked}}>{{name}} ({{count}})
+        </label>
+      </div>
+      {{/each}}
+      {{#each zeroCountStatus}}
+      <div class="checkbox">
+        <label>
+          <input type="checkbox" data-field="status" checked={{checked}}>{{name}} ({{count}})
         </label>
       </div>
       {{/each}}

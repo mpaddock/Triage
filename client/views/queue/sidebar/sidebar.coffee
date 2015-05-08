@@ -5,14 +5,32 @@ Template.sidebar.helpers
       _.extend l,
         checked: if l.name in active then 'checked'
         type: 'tag'
+  zeroCountTags: ->
+    active = Iron.query.get('tag')?.split(',') || []
+    tags = _.pluck Facets.findOne()?.counts.tags, 'name'
+    return _.map _.difference(active, tags), (l) ->
+      name: l
+      count: 0
+      checked: if l in active then "checked"
+      type: 'tag'
   status: ->
     active = Iron.query.get('status')?.split(',') || []
     _.map _.sortBy(Facets.findOne()?.counts.status, (f) -> -f.count), (l) ->
       _.extend l,
         checked: if l.name in active then 'checked'
         type: 'status'
-  search: ->
+  zeroCountStatus: ->
+    active = Iron.query.get('status')?.split(',') || []
+    status = _.pluck Facets.findOne()?.counts.status, 'name'
+    return _.map _.difference(active, status), (l) ->
+      name: l
+      count: 0
+      checked: if l in active then 'checked'
+      type: 'status'
+  textFilter: ->
     Iron.query.get('search')?.split(',')
+  userFilter: ->
+    Iron.query.get('user')?.split(',')
   settings: ->
     {
       position: "bottom"
@@ -57,10 +75,11 @@ Template.sidebar.events
 
   'click a[data-action="removeFilter"]': (e, tpl) ->
     e.preventDefault()
+    type = $(e.target).closest('a').data('type')
+    filter = Iron.query.get(type)?.split(',') || []
     value = this.valueOf()
-    filter = Iron.query.get('search')?.split(',') || []
     filter = _.without filter, value
-    Iron.query.set 'search', filter.join()
+    Iron.query.set type, filter.join()
 
   'change input:checkbox': (e, tpl) ->
     filter = Iron.query.get(@type)?.split(',') || []
