@@ -1,6 +1,8 @@
 Template.queue.helpers
   noTickets: ->
-    Tickets.find().fetch().length is 0
+    Tickets.find().count() is 0
+  clientCount: ->
+    Tickets.find().count()
   search: ->
     Iron.query.get('search')? or Iron.query.get('status')? or Iron.query.get('tag')? or Iron.query.get('user')?
   members: ->

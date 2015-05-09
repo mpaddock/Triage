@@ -15,9 +15,8 @@ Meteor.publishComposite 'tickets', (filter, limit, myqueue) ->
   
   {
     find: () ->
-      queueFilter = mongoFilter
-      Tickets.find queueFilter, {sort: {submittedTimestamp: -1}, limit: limit}
-
+      Counts.publish(this, 'ticketCount', Tickets.find(mongoFilter))
+      Tickets.find mongoFilter, {sort: {submittedTimestamp: -1}, limit: limit}
     children: [
       {
         find: (ticket) ->
