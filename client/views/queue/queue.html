@@ -1,11 +1,11 @@
 <template name="queue">
 <div class="col-xs-12 col-sm-10">
   <div class="row">
-    {{#if connected}}
+    {{#unless connected}}
     <div class="alert alert-danger">
       <strong>You are not currently connected. Any changes you make may not be saved.</strong>
     </div>
-    {{/if}}
+    {{/unless}}
     <div class="pull-left">
       <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#ticketModal">Add New Ticket</button>
       <button class="btn btn-success" type="button" data-action="openQuickAdd">Quick Add Ticket</button>
