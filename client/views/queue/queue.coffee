@@ -1,4 +1,6 @@
 Template.queue.helpers
+  connected: ->
+    Meteor.status().connected
   noTickets: ->
     Tickets.find().count() is 0
   clientCount: ->
