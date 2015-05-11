@@ -54,13 +54,39 @@
     optional: true
 
 if Meteor.isServer && Npm.require('cluster').isMaster
-  ready = false
-  Tickets.find().observe
-    added: (doc) ->
-      if ready
-        max = Tickets.findOne({}, {sort:{ticketNumber:-1}})?.ticketNumber || 0
-        Tickets.update doc._id, {$set: {ticketNumber: max+1}}
-  ready = true
+  Tickets.before.insert (userId, doc) ->
+    max = Tickets.findOne({}, {sort:{ticketNumber:-1}})?.ticketNumber || 0
+    doc.ticketNumber = max + 1
+
+  Tickets.before.update (userId, doc, fieldNames, modifier, options) ->
+    _.each fieldNames, (fn) ->
+      switch fn
+        when 'tags'
+          if modifier.$addToSet?.tags?
+            tags = _.difference modifier.$addToSet.tags.$each, doc.tags
+            message = "#{Meteor.user().username} added tag(s) #{tags}"
+          if modifier.$pull?.tags?
+            message = "#{Meteor.user().username} removed tag(s) #{modifier.$pull.tags}"
+        when 'status'
+            message = "#{Meteor.user().username} changed status from #{doc.status} to #{modifier.$set.status}"
+        when 'associatedUserIds'
+          if modifier.$addToSet?.associatedUserIds?
+            users = _.map modifier.$addToSet.associatedUserIds.$each, (x) ->
+              Meteor.users.findOne({_id: x}).username
+            message = "#{Meteor.user().username} associated user(s) #{users}"
+          if modifier.$pull?.associatedUserIds?
+            user = Meteor.users.findOne({_id: modifier.$pull.associatedUserIds}).username
+            message = "#{Meteor.user().username} disassociated user #{user}"
+      Changelog.insert
+        ticketId: doc._id
+        timestamp: new Date()
+        authorId: Meteor.userId()
+        authorName: Meteor.user().username
+        type: "field"
+        field: fn
+        message: message
+
+
 
 @TicketFlags = new Mongo.Collection 'ticketFlags'
 # TODO: SimpleSchema doesnt handle v very well, so skip for now

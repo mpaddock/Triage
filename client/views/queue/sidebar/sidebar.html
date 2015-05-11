@@ -13,31 +13,6 @@
 <div class="panel panel-primary">
   <div class="panel-heading">
     <h4 class="panel-title">
-      <a data-toggle="collapse" href='#tagCollapse'>Tag</a>
-    </h4>
-  </div>
-  <div id="tagCollapse" class="panel-collapse collapse in">
-    <div class="panel-body">
-      {{#each tags}}
-      <div class="checkbox">
-        <label>
-          <input type="checkbox" data-field="tag" checked={{checked}}>{{name}} ({{count}})
-        </label>
-      </div>
-      {{/each}}
-      {{#each zeroCountTags}}
-      <div class="checkbox">
-        <label>
-          <input type="checkbox" data-field="tag" checked={{checked}}>{{name}} ({{count}})
-        </label>
-      </div>
-      {{/each}}
-    </div>
-  </div>
-</div>
-<div class="panel panel-primary">
-  <div class="panel-heading">
-    <h4 class="panel-title">
       <a data-toggle="collapse" href='#statusCollapse'>Status</a>
     </h4>
   </div>
@@ -54,6 +29,31 @@
       <div class="checkbox">
         <label>
           <input type="checkbox" data-field="status" checked={{checked}}>{{name}} ({{count}})
+        </label>
+      </div>
+      {{/each}}
+    </div>
+  </div>
+</div>
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    <h4 class="panel-title">
+      <a data-toggle="collapse" href='#tagCollapse'>Tag</a>
+    </h4>
+  </div>
+  <div id="tagCollapse" class="panel-collapse collapse in">
+    <div class="panel-body">
+      {{#each tags}}
+      <div class="checkbox">
+        <label>
+          <input type="checkbox" data-field="tag" checked={{checked}}>{{name}} ({{count}})
+        </label>
+      </div>
+      {{/each}}
+      {{#each zeroCountTags}}
+      <div class="checkbox">
+        <label>
+          <input type="checkbox" data-field="tag" checked={{checked}}>{{name}} ({{count}})
         </label>
       </div>
       {{/each}}
