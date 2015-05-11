@@ -77,7 +77,6 @@ Template.ticketRow.events
       $(e.target).val("")
 
   'show.bs.collapse': ->
-    console.log 'fired'
     Meteor.call 'removeFlag', Meteor.userId(), @_id, 'unread'
 
   ### Hide all tooltips on row collapse and focusout of assign user field. ###
