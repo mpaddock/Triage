@@ -65,19 +65,19 @@ if Meteor.isServer && Npm.require('cluster').isMaster
         when 'tags'
           if modifier.$addToSet?.tags?
             tags = _.difference modifier.$addToSet.tags.$each, doc.tags
-            message = "#{Meteor.user().username} added tag(s) #{tags}"
+            message = "added tag(s) #{tags}"
           if modifier.$pull?.tags?
-            message = "#{Meteor.user().username} removed tag(s) #{modifier.$pull.tags}"
+            message = "removed tag(s) #{modifier.$pull.tags}"
         when 'status'
-          message = "#{Meteor.user().username} changed status from #{doc.status} to #{modifier.$set.status}"
+          message = "changed status from #{doc.status} to #{modifier.$set.status}"
         when 'associatedUserIds'
           if modifier.$addToSet?.associatedUserIds?
             users = _.map modifier.$addToSet.associatedUserIds.$each, (x) ->
               Meteor.users.findOne({_id: x}).username
-            message = "#{Meteor.user().username} associated user(s) #{users}"
+            message = "associated user(s) #{users}"
           if modifier.$pull?.associatedUserIds?
             user = Meteor.users.findOne({_id: modifier.$pull.associatedUserIds}).username
-            message = "#{Meteor.user().username} disassociated user #{user}"
+            message = "disassociated user #{user}"
       Changelog.insert
         ticketId: doc._id
         timestamp: new Date()

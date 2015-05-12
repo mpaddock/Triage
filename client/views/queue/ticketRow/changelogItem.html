@@ -1,0 +1,28 @@
+<template name="changelogItem">
+{{#if note}}
+<div class="row">
+  <div class="col-xs-4 col-md-2">
+    <label for="note-{{_id}}" class="control-label pull-right">
+      {{> userPortrait userId=authorId class="user-image"}}
+      <small style="font-size: 0.7em; font-weight: lighter;">{{>timeParser date=timestamp}}</small>
+    </label>
+  </div>
+  <div class="col-xs-8 col-md-10">
+    <div class="well well-sm" style="text-align: left;">{{message}}</div>
+  </div>
+</div>
+{{else}}
+<div class="row">
+  <div class="col-xs-8 col-xs-offset-4 col-md-10 col-md-offset-2">
+    {{#if changeIsType 'attachment'}}
+    {{#with otherId}}
+    <img style="max-width: 100%; max-height: 128px" src="/file/{{file.filenameOnDisk}}"/><br/>
+    {{/with}}
+    <small style="font-size: 0.7em;">User {{authorName}} {{message}} @ {{timestamp}}</small>
+    {{else}}
+    <small style="font-size: 0.7em;">User {{authorName}} {{message}} @ {{timestamp}}</small>
+    {{/if}}
+  </div>
+</div>
+{{/if}}
+</template>

@@ -33,49 +33,6 @@ Template.ticketRow.events
         else
           tpl.$('[data-toggle="tooltip"]').tooltip('show')
 
-  ### Uploading files. ###
-  'click a[data-action=uploadFile]': (e, tpl) ->
-    Media.pickLocalFile (fileId) ->
-      console.log "Uploaded a file, got _id: ", fileId
-      Tickets.update tpl.data._id, {$addToSet: {attachmentIds: fileId}}
-      Meteor.call 'setFlag', Meteor.userId(), tpl.data._id, 'attachment', true
-      Changelog.insert
-        ticketId: tpl.data._id
-        timestamp: new Date()
-        authorId: Meteor.userId()
-        authorName: Meteor.user().username
-        type: "attachment"
-        message: "added file " + FileRegistry.findOne({_id: fileId})?.filename
-        otherId: fileId
-
-  ### Adding notes to tickets. ###
-  'keyup input[name=newNote]': (e, tpl) ->
-    if (e.which is 13) and (e.target.value isnt "")
-      body = e.target.value
-      hashtags = getTags body
-      users = getUserIds body
-      status = getStatuses body
-      if status?.length > 0
-        Tickets.update tpl.data._id, {$set: {status: status[0]}} #If multiple results, just use the first.
-
-      if users?.length > 0
-        Tickets.update tpl.data._id, {$addToSet: {associatedUserIds: $each: users}}
-
-      if hashtags?.length > 0
-        Tickets.update tpl.data._id, {$addToSet: {tags: $each: hashtags}}
-
-      Changelog.insert
-        ticketId: tpl.data._id
-        timestamp: new Date()
-        authorId: Meteor.userId()
-        authorName: Meteor.user().username
-        type: "note"
-        message: e.target.value
-
-      Meteor.call 'setFlag', Meteor.userId(), tpl.data._id, 'replied', true
-
-      $(e.target).val("")
-
   'show.bs.collapse': ->
     Meteor.call 'removeFlag', Meteor.userId(), @_id, 'unread'
 
@@ -96,35 +53,9 @@ Template.ticketRow.helpers
     Changelog.find {ticketId: this._id}, {sort: timestamp: 1}
   author: ->
     Meteor.users.findOne {_id: @authorId}
-  changeIsType: (type) ->
-    @type is type
-  note: ->
-    if this.type is "note" then return true else return false
   unread: ->
     TicketFlags.findOne({userId: Meteor.userId(), ticketId: this._id, k: 'unread'})?.v
   repliedTo: ->
     TicketFlags.findOne({userId: Meteor.userId(), ticketId: this._id, k: 'replied'})
   hasAttachment: ->
     TicketFlags.findOne({ticketId: this._id, k: 'attachment'})
-  file: ->
-    FileRegistry.findOne {_id: this.valueOf()}
-  settings: ->
-    {
-      position: "top"
-      limit: 5
-      rules: [
-        {
-          token: '@'
-          collection: Meteor.users
-          field: 'username'
-          template: Template.userPill
-        }
-        {
-          token: '#'
-          collection: Tags
-          field: 'name'
-          template: Template.tagPill
-          noMatchTemplate: Template.noMatchTagPill
-        }
-      ]
-    }

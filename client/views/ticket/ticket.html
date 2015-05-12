@@ -29,97 +29,15 @@
     <blockquote>
       {{body}}
     </blockquote>
-    <div class="row">
-      <table class="table table-bordered">
-        <thead>
-          <tr>
-            <th width="33%">Assigned Users</th>
-            <th width="33%">Tags</th>
-            <th width="33%">Attachments</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>
-              {{#if admin}}
-              <div class="assign-user-field">
-                <span class="icon glyphicon glyphicon-plus"></span>
-                <input type="text" name="assignUser" placeholder="Assign User" data-toggle="tooltip" data-trigger="manual" title="User not found.">
-              </div>
-              {{/if}}
-              {{#each associatedUserIds}}
-              {{> userPortrait userId=this associated=true class="user-image"}}
-              {{/each}}
-            </td>
-            <td>
-              {{#each tags}}
-              {{#if admin}}{{>tag}}{{else}}{{this}}{{/if}}
-              {{/each}}
-            </td>
-            <td>
-              {{#each attachmentIds}}
-              <img style="max-width: 64px; max-height:24px;" src="/file/{{file.thumbnail}}" />
-              <a data-action="downloadAttachment" href="/file/{{file.filenameOnDisk}}">{{file.filename}}</a><br />
-              {{/each}}
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+
+    {{>infoTable}}
 
     {{#each changelog}}
-    {{#if note}}
-    <div class="row">
-      <div class="col-xs-4 col-md-2">
-        <label for="note-{{_id}}" class="control-label pull-right">
-          {{> userPortrait userId=authorId class="user-image"}}
-          <small style="font-size: 0.7em; font-weight: lighter;">{{>timeParser date=timestamp}}</small>
-        </label>
-      </div>
-      <div class="col-xs-8 col-md-10">
-        <div class="well well-sm" style="text-align: left;">{{message}}</div>
-      </div>
-    </div>
-    {{else}}
-    <div class="row">
-      <div class="col-xs-8 col-xs-offset-4 col-md-10 col-md-offset-2">
-        {{#if changeIsType 'attachment'}}
-        {{#with otherId}}
-        <img style="max-width: 100%; max-height: 128px" src="/file/{{file.filenameOnDisk}}"/><br/>
-        {{/with}}
-        <small style="font-size: 0.7em;">User {{authorName}} {{message}} @ {{timestamp}}</small>
-        {{else}}
-        <small style="font-size: 0.7em;">User {{authorName}} {{message}} @ {{timestamp}}</small>
-        {{/if}}
-      </div>
-    </div>
-    {{/if}}
+      {{>changelogItem}}
     {{/each}}
 
-    <div class="form-group">
-      <div class="col-xs-12 col-md-10 col-md-offset-2">
-        <div class="input-group">
-          {{#if admin}}
-          {{> inputAutocomplete name="newNoteAdmin" class="form-control" placeholder="Add a new note..." settings=settings data-ticket=_id }}
-          {{else}}
-          <input class="form-control" placeholder="Add a new note..." name="newNote" data-ticket="{{_id}}">
-          {{/if}}
-          <div class="input-group-btn">
-            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="False">Attach File <span class="caret"></span></button>
-            <ul class="dropdown-menu" role="menu">
-              <li><a data-action="uploadFile">Upload File</a></li>
-              <li><a href="#">Take Picture</a></li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+    {{>noteInput admin=admin ticket=_id}}
 
-  <div class="hidden-xs col-md-12">
-    {{#each arrayify formFields}}
-    {{>tableFormGroup name=name value=value disabled="disabled"}}
-    {{/each}}
   </div>
 </div>
 {{/with}}
