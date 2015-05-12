@@ -68,7 +68,7 @@ if Meteor.isServer && Npm.require('cluster').isMaster
           if modifier.$pull?.tags?
             message = "#{Meteor.user().username} removed tag(s) #{modifier.$pull.tags}"
         when 'status'
-            message = "#{Meteor.user().username} changed status from #{doc.status} to #{modifier.$set.status}"
+          message = "#{Meteor.user().username} changed status from #{doc.status} to #{modifier.$set.status}"
         when 'associatedUserIds'
           if modifier.$addToSet?.associatedUserIds?
             users = _.map modifier.$addToSet.associatedUserIds.$each, (x) ->
