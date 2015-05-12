@@ -28,9 +28,9 @@ Template.sidebar.helpers
       checked: if l in active then 'checked'
       type: 'status'
   textFilter: ->
-    Iron.query.get('search')?.split(',')
+    Iron.Location.get().queryObject?.search?.split(',')
   userFilter: ->
-    Iron.query.get('user')?.split(',')
+    Iron.Location.get().queryObject?.user?.split(',')
   settings: ->
     {
       position: "bottom"
