@@ -48,7 +48,7 @@
     <div>
       Viewing {{clientCount}} of a possible {{getPublishedCount 'ticketCount'}} tickets.
     </div>
-    <table class="table table-striped table-condensed" style="border-collapse:collapse;">
+    <table class="table table-condensed" style="border-collapse:collapse;">
       <thead>
         <tr>
           <th class="col-md-1">&nbsp;</th>
@@ -62,11 +62,15 @@
       <tbody>
         <tr></tr>
         {{#if noTickets}}
-        {{#if search}}
-        No tickets match your current search. <a href='#' data-action='clearSearch'>Clear your search?</a>
-        {{else}}
-        No tickets found.
-        {{/if}}
+        <tr>
+          <td colspan='6'>
+            {{#if search}}
+            No tickets match your current search. <a href='#' data-action='clearSearch'>Clear your search?</a>
+            {{else}}
+            No tickets found.
+            {{/if}}
+          </td>
+        </tr>
         {{/if}}
         {{#each tickets}}
         {{>ticketRow}}

@@ -94,6 +94,8 @@ Template.ticketRow.rendered = ->
 Template.ticketRow.helpers
   changelog: ->
     Changelog.find {ticketId: this._id}, {sort: timestamp: 1}
+  author: ->
+    Meteor.users.findOne {_id: @authorId}
   changeIsType: (type) ->
     @type is type
   note: ->

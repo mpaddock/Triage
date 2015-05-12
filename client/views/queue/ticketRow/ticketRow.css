@@ -57,7 +57,8 @@
 
   /* ANIMATION EFFECTS */
 .assign-user-field input:focus, .assign-user-field input:active{
-    outline:none;
+  ientCount: ->
+  outline:none;
 }
   .assign-user-field input:hover, .assign-user-field input:focus {
     outline:none; 
@@ -75,4 +76,17 @@
 blockquote { 
   background: #ffffff;
   border: 2px solid #ccc;
+}
+
+.ticket-row-panel-body {
+  bottom: 0px;
+}
+
+.ticket-row-panel {
+  margin-bottom: 0px;
+  border-bottom: none;
+  border-top: none;
+  border-top-left-radius: 0px;
+  border-top-right-radius: 0px;
+  bottom: 0px;
 }
