@@ -57,6 +57,7 @@ if Meteor.isServer && Npm.require('cluster').isMaster
   Tickets.before.insert (userId, doc) ->
     max = Tickets.findOne({}, {sort:{ticketNumber:-1}})?.ticketNumber || 0
     doc.ticketNumber = max + 1
+    doc.timestamp = new Date()
 
   Tickets.before.update (userId, doc, fieldNames, modifier, options) ->
     _.each fieldNames, (fn) ->
@@ -85,8 +86,6 @@ if Meteor.isServer && Npm.require('cluster').isMaster
         type: "field"
         field: fn
         message: message
-
-
 
 @TicketFlags = new Mongo.Collection 'ticketFlags'
 # TODO: SimpleSchema doesnt handle v very well, so skip for now
@@ -131,6 +130,10 @@ if Meteor.isServer && Npm.require('cluster').isMaster
   otherId:
     type: String
     optional: true
+
+if Meteor.isServer
+  Changelog.before.insert (userId, doc) ->
+    doc.timestamp = new Date()
 
 @Queues = new Mongo.Collection 'queues'
 @Queues.attachSchema new SimpleSchema
