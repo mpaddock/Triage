@@ -1,5 +1,7 @@
 Template.queuebar.helpers
-  queue: -> Queues.find {memberIds: Meteor.userId()} #Only show queues in queuebar that the user is a member of. No tickets are published for queues they're not a member of.
+  queue: ->
+    #Use fetch so we get a null result if the user has access to no queues.
+    Queues.find({memberIds: Meteor.userId()}).fetch()
   active: ->
     if this.name is Session.get("queueName")
       return "active"

@@ -71,7 +71,7 @@ Router.map ->
     path: '/ticket/:ticketNumber'
     template: 'ticket'
     onBeforeAction: ->
-      Session.set 'ticketNumber', @params.ticketNumber
+      Session.set 'ticketNumber', Number(@params.ticketNumber)
       @next()
       if Meteor.userId()
         [Meteor.subscribe 'tickets', {
