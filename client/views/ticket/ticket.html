@@ -2,23 +2,7 @@
 {{#with ticket}}
 <div class="panel panel-default" data-ticketId="{{_id}}">
   <div class="panel-heading clearfix">
-    <div class="col-md-3 col-xs-6">
-      <div class="col-xs-2">
-        {{>userPortrait userId=this.authorId class="user-image"}}
-      </div>
-      <div class="col-xs-9">
-        <strong>
-          {{author.displayName}}<br>
-          {{author.department}}<br>
-          {{author.physicalDeliveryOfficeName}}<br>
-        </strong>
-      </div>
-    </div>
-    <div class="col-md-3 col-md-offset-6 col-xs-6" style="text-align: right; float: right;">
-      <strong>{{queueName}}</strong><br>
-      {{>timestampFormatter date=submittedTimestamp}}<br>
-      {{>timeParser date=submittedTimestamp}}
-    </div>
+    {{> ticketHeading}}
   </div>
   <div class="panel-body">
     <blockquote>
@@ -30,13 +14,13 @@
       {{body}}
     </blockquote>
 
-    {{>infoTable}}
+    {{> ticketInfoTable}}
 
     {{#each changelog}}
-      {{>changelogItem}}
+      {{> ticketChangelogItem}}
     {{/each}}
 
-    {{>noteInput admin=admin ticket=_id}}
+    {{> ticketNoteInput admin=admin ticket=_id}}
 
   </div>
 </div>
