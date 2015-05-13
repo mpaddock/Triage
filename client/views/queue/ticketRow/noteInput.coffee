@@ -66,13 +66,13 @@ Template.noteInput.events
       $(e.target).val("")
 
   'keyup input[name=newNote]': (e, tpl) ->
-      Changelog.insert
-        ticketId: tpl.data.ticket
-        timestamp: new Date()
-        authorId: Meteor.userId()
-        authorName: Meteor.user().username
-        type: "note"
-        message: e.target.value
+    Changelog.insert
+      ticketId: tpl.data.ticket
+      timestamp: new Date()
+      authorId: Meteor.userId()
+      authorName: Meteor.user().username
+      type: "note"
+      message: e.target.value
 
-      Meteor.call 'setFlag', Meteor.userId(), tpl.data.ticket, 'replied', true
-      $(e.target).val("")
+    Meteor.call 'setFlag', Meteor.userId(), tpl.data.ticket, 'replied', true
+    $(e.target).val("")
