@@ -12,6 +12,8 @@ Meteor.publishComposite 'tickets', (filter, limit, myqueue) ->
     filter.userId = null
   mongoFilter = Filter.toMongoSelector filter
   facetPath = Filter.toFacetString filter
+  unless mongoFilter.status
+    mongoFilter.status = {$ne: 'Closed'}
   
   {
     find: () ->
