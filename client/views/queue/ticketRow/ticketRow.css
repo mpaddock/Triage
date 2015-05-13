@@ -56,8 +56,7 @@
 }
 
   /* ANIMATION EFFECTS */
-.assign-user-field input:focus, .assign-user-field input:active{
-  ientCount: ->
+.assign-user-field input:focus, .assign-user-field input:active {
   outline:none;
 }
   .assign-user-field input:hover, .assign-user-field input:focus {
