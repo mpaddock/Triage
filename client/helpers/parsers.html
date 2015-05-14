@@ -3,7 +3,12 @@
 </template>
 
 <template name="timeParser">
-<span title="{{fullTime}}">{{parsedTime}}</span>
+<div class="time">
+  {{parsedTime}}
+  <div class="full-time">
+    {{fullTime}}
+  </div>
+</div>
 </template>
 
 <template name="dateFormatter">
