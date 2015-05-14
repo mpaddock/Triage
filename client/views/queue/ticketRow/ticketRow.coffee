@@ -13,19 +13,19 @@ Template.ticketRow.events
   'click .dropdown-menu[name=statusMenu]': (e, tpl) ->
     e.stopPropagation() #Stops table row expanding on dropdown click. Have to trigger dropdown manually below.
   'click .dropdown-menu[name=statusMenu] a': (e, tpl) ->
-    Meteor.call 'updateStatus', Meteor.userId(), this._id, $(e.target).html()
+    Tickets.update this._id, {$set: {status: $(e.target).html()}}
     tpl.$('.dropdown-toggle[name=statusButton]').dropdown('toggle')
 
   'keyup input[name=customStatus]': (e, tpl) ->
     if e.which is 13
-      Meteor.call 'updateStatus', Meteor.userId(), this._id, e.target.value
+      Tickets.update this._id, {$set: {status: $(e.target).val()}}
       $(e.target).val("")
       tpl.$('.dropdown-toggle[name=statusButton]').dropdown('toggle')
     
   ### Assigning users to tickets. ###
   'keyup input[name=assignUser]': (e, tpl) ->
     if e.which is 13
-      id = Meteor.call 'checkUsername', e.target.value, (err, res) ->
+      id = Meteor.call 'checkUsername', $(e.target).val(), (err, res) ->
         if res
           tpl.$('[data-toggle="tooltip"]').tooltip('hide')
           Tickets.update tpl.data._id, {$addToSet: {associatedUserIds: res}}
