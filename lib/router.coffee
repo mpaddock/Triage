@@ -17,8 +17,9 @@ Router.map ->
   @route 'queue',
     path: '/queue/:queueName',
     onBeforeAction: ->
+      Session.set 'ready', false
       Session.set 'limit', 30
-      Session.set 'queueName', @params.queueName #just makes it easier for our sidebar. can't get data context to work at the moment.
+      Session.set 'queueName', @params.queueName
       @next()
       if Meteor.userId()
         [Meteor.subscribe 'tickets', {
@@ -27,14 +28,9 @@ Router.map ->
           status: Iron.query.get 'status'
           tag: Iron.query.get 'tag'
           user: Iron.query.get 'user'
-        }, 30]
-
-
-  @route 'queueDashboard',
-    path: '/queue/:queueName/dashboard',
-    onBeforeAction: ->
-      Session.set 'queueName', @params.queueName #Temporary until we figure out how we're storing queues probably.
-      @next()
+        }, 30, onReady: () ->
+          Session.set('ready', true)
+        ]
 
   @route 'userDashboard',
     path: '/my/dashboard'
@@ -43,6 +39,7 @@ Router.map ->
     path: '/my/tickets'
     template: 'queue'
     onBeforeAction: ->
+      Session.set 'ready', false
       Session.set 'queueName', 'userQueue'
       @next()
       if Meteor.userId()
@@ -51,7 +48,9 @@ Router.map ->
           status: Iron.query.get 'status'
           tag: Iron.query.get 'tag'
           user: Iron.query.get 'user'
-        }, 30, true]
+        }, 30, true, onReady: () ->
+          Session.set('ready', true)
+        ]
 
   @route 'globalQueue',
     path: '/all/tickets'
@@ -65,7 +64,9 @@ Router.map ->
           status: Iron.query.get 'status'
           tag: Iron.query.get 'tag'
           user: Iron.query.get 'user'
-        }, 30]
+        }, 30, onReady: () ->
+          Session.set('ready', true)
+        ]
 
   @route 'ticket',
     path: '/ticket/:ticketNumber'

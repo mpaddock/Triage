@@ -44,11 +44,12 @@
   </div>
   <hr>
   {{/if}}
+  {{#if ready}}
   <div class="row">
     <div>
       Viewing {{clientCount}} of a possible {{getPublishedCount 'ticketCount'}} tickets.
     </div>
-    <table class="table table-condensed" style="border-collapse:collapse;">
+    <table name="ticketTable" class="table table-condensed" style="border-collapse:collapse;">
       <thead>
         <tr>
           <th class="col-md-1">&nbsp;</th>
@@ -59,7 +60,7 @@
           <th class="col-md-2">Submitted</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody class='animated'>
         <tr></tr>
         {{#if noTickets}}
         <tr>
@@ -78,6 +79,9 @@
       </tbody>
     </table>
   </div>
+  {{else}}
+  {{> loading}}
+  {{/if}}
 </div>
 <div class="col-sm-2 hidden-xs">
   {{> sidebar data=tickets}}

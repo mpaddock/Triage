@@ -1,4 +1,6 @@
 Template.queue.helpers
+  ready: ->
+    Session.get 'ready'
   connected: ->
     Meteor.status().connected
   noTickets: ->
@@ -45,6 +47,15 @@ Template.queue.rendered = () ->
   $(window).scroll () ->
     if $(window).scrollTop() + $(window).height() is $(document).height()
       Session.set 'limit', Session.get('limit') + 30
+  this.find('.animated')?._uihooks =
+    insertElement: (node, next) ->
+      $(node)
+        .hide()
+        .insertBefore(next)
+        .fadeIn(500)
+    removeElement: (node) ->
+      $(node).fadeOut 700, () ->
+        $(this).remove()
 
 Template.queue.created = () ->
   Session.setDefault 'limit', 30
