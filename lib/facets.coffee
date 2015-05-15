@@ -48,7 +48,11 @@
         unless mongoFilter['$and'] then mongoFilter['$and'] = []
         mongoFilter['$and'].push {$or: x}
     if filter.status?
-      mongoFilter.status = filter.status || ''
+      if filter.status.charAt(0) is '!'
+        status = filter.status.substr(1)
+        mongoFilter.status = {$ne: status}
+      else
+        mongoFilter.status = filter.status || ''
     if filter.tag?
       tags = filter.tag.split(',')
       sorted = _.sortBy(tags).join(',')
