@@ -1,9 +1,10 @@
 Meteor.publishComposite 'tickets', (filter, limit, myqueue) ->
   check filter, Object
-  #If there's a queue filter, make sure the user has access. If no filter, make the queue filter all the user has access to.
   if filter.queueName? and not Queues.findOne({name: filter.queueName, memberIds: @userId})
+    #If there's a queue filter, make sure the user has access.
     filter.queueName = null
-  if not filter.status
+  if not (filter.status or filter.ticketNumber)
+    #If no status filter and we're not looking at a specific ticket, default to 'not Closed' tickets.
     filter.status = "!Closed"
   else if not filter.queueName?
     queues = _.pluck Queues.find({memberIds: @userId}).fetch(), 'name'
