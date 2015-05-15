@@ -8,11 +8,20 @@ filter =
     ticketNumber: '1234'
 
 Tinytest.add 'Filter - toMongoSelector', (test) ->
-  test.equal Filter.toMongoSelector(filter), {}
+  test.equal Filter.toMongoSelector(filter),
+    queueName: 'Queue'
+    '$and': [
+      '$or': [{title: {}}, {body: {}}]
+    ],
+    status: { '$ne': 'Closed' },
+    ticketNumber: 1234
 
 Tinytest.add 'Filter - toFacetString', (test) ->
-  test.equal 1,2
+  test.equal Filter.toFacetString(filter),
+    "queueName:Queue|search:phrase|status:!Closed"
 
-Tinytest.add 'Filter - fromFacetString', (test) ->
-  test.equal 1,2
+
+# TODO: is bidirectionality between facet string and search filter object part of our contract?
+Tinytest.add 'Filter - from/to FacetString bidirectionality', (test) ->
+  test.equal filter, Filter.fromFacetString(Filter.toFacetString(filter))
 
