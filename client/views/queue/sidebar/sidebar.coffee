@@ -50,8 +50,12 @@ Template.sidebar.helpers
         }
       ]
     }
+  helpText: ->
+    Session.get 'helpText'
 
 Template.sidebar.events
+  'click a[data-action=showHelp]': ->
+    Session.set 'helpText', !Session.get('helpText')
   'keyup input[name=textSearch]': (e, tpl) ->
     if e.keyCode is 13
       text = $(e.target).val()
@@ -90,3 +94,14 @@ Template.sidebar.events
       filter = _.without filter, @name
     Iron.query.set @type, filter.join()
 
+Template.sidebar.rendered = () ->
+  this.find('#searchLabel')._uihooks = {
+    insertElement: (node, next) ->
+      $(node)
+        .hide()
+        .insertBefore(next)
+        .slideToggle()
+    removeElement: (node) ->
+      $(node).slideToggle () ->
+        this.remove()
+  }
