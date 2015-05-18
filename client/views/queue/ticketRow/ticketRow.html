@@ -1,6 +1,6 @@
 <template name="ticketRow">
 <tr data-toggle="collapse" data-target="#row{{_id}}" class="accordion-toggle ticket-row" data-ticket="{{_id}}">
-  <td>
+  <td class="hidden-xs">
     <span class="glyphicon glyphicon-plus" name="{{_id}}"></span>
     {{#if repliedTo}}
     <span class="glyphicon glyphicon-comment"></span>
@@ -19,7 +19,7 @@
     </div>
     {{authorName}}
   </td>
-  <td>
+  <td class="hidden-xs">
     {{#each associatedUserIds}}
     {{>userPortrait userId=this associated=true class="in-row"}}
     {{/each}}
