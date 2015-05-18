@@ -1,3 +1,5 @@
+limitDefault = 20
+
 Router.configure
   layoutTemplate: 'layout'
   loadingTemplate: 'loading'
@@ -18,7 +20,9 @@ Router.map ->
     path: '/queue/:queueName',
     onBeforeAction: ->
       Session.set 'ready', false
-      Session.set 'limit', 30
+      Session.set 'loadingMore', false
+      Session.set 'limit', limitDefault
+      Session.set 'pseudoQueue', null
       Session.set 'queueName', @params.queueName
       @next()
       if Meteor.userId()
@@ -28,7 +32,7 @@ Router.map ->
           status: Iron.query.get 'status'
           tag: Iron.query.get 'tag'
           user: Iron.query.get 'user'
-        }, 30, onReady: () ->
+        }, limitDefault, onReady: () ->
           Session.set('ready', true)
         ]
 
@@ -40,7 +44,10 @@ Router.map ->
     template: 'queue'
     onBeforeAction: ->
       Session.set 'ready', false
-      Session.set 'queueName', 'userQueue'
+      Session.set 'loadingMore', false
+      Session.set 'limit', limitDefault
+      Session.set 'queueName', null
+      Session.set 'pseudoQueue', 'userQueue'
       @next()
       if Meteor.userId()
         [Meteor.subscribe 'tickets', {
@@ -48,7 +55,7 @@ Router.map ->
           status: Iron.query.get 'status'
           tag: Iron.query.get 'tag'
           user: Iron.query.get 'user'
-        }, 30, true, onReady: () ->
+        }, limitDefault, true, onReady: () ->
           Session.set('ready', true)
         ]
 
@@ -56,7 +63,11 @@ Router.map ->
     path: '/all/tickets'
     template: 'queue'
     onBeforeAction: ->
-      Session.set 'queueName', 'globalQueue'
+      Session.set 'ready', false
+      Session.set 'limit', limitDefault
+      Session.set 'loadingMore', false
+      Session.set 'queueName', null
+      Session.set 'pseudoQueue', 'globalQueue'
       @next()
       if Meteor.userId()
         [Meteor.subscribe 'tickets', {
@@ -64,7 +75,7 @@ Router.map ->
           status: Iron.query.get 'status'
           tag: Iron.query.get 'tag'
           user: Iron.query.get 'user'
-        }, 30, onReady: () ->
+        }, limitDefault, onReady: () ->
           Session.set('ready', true)
         ]
 

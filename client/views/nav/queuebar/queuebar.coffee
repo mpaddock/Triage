@@ -8,8 +8,8 @@ Template.queuebar.helpers
     else
       return null
   globalClass: ->
-    if Session.get('queueName') is 'globalQueue' then return 'active'
+    if Session.get('pseudoQueue') is 'globalQueue' then return 'active'
   userClass: ->
-    if Session.get('queueName') is 'userQueue' then return 'active'
+    if Session.get('psuedoQueue') is 'userQueue' then return 'active'
 
 
