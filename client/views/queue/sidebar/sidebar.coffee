@@ -100,8 +100,8 @@ Template.sidebar.rendered = () ->
       $(node)
         .hide()
         .insertBefore(next)
-        .slideToggle()
+        .slideToggle(350)
     removeElement: (node) ->
-      $(node).slideToggle () ->
+      $(node).slideToggle 350, () ->
         this.remove()
   }
