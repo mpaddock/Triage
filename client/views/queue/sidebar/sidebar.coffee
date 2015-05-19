@@ -94,6 +94,14 @@ Template.sidebar.events
       filter = _.without filter, @name
     Iron.query.set @type, filter.join()
 
+  'hidden.bs.collapse': (e, tpl) ->
+    console.log e.target.id
+    tpl.$('span[name='+e.target.id+']').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-right')
+
+  'shown.bs.collapse': (e, tpl) ->
+    tpl.$('span[name='+e.target.id+']').removeClass('glyphicon-chevron-right').addClass('glyphicon-chevron-down')
+
+
 Template.sidebar.rendered = () ->
   this.find('#searchLabel')._uihooks = {
     insertElement: (node, next) ->

@@ -25,7 +25,7 @@ Template.queue.helpers
   addingTicket: ->
     Session.get 'addingTicket'
   psuedoqueue: ->
-    Session.get('psuedoQueue') in ['globalQueue', 'userQueue']
+    Session.get('pseudoQueue') in ['globalQueue', 'userQueue']
   queues: ->
     Queues.find()
   settings: ->
