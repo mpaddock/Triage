@@ -51,7 +51,6 @@ Template.ticketNoteInput.events
 
   ### Adding notes to tickets. ###
   'keyup input[name=newNoteAdmin]': (e, tpl) ->
-    console.log e.which
     if (e.which is 13) and (e.target.value isnt "")
       body = e.target.value
       hashtags = getTags body
