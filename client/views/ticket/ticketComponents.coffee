@@ -51,6 +51,7 @@ Template.ticketNoteInput.events
 
   ### Adding notes to tickets. ###
   'keyup input[name=newNoteAdmin]': (e, tpl) ->
+    console.log e.which
     if (e.which is 13) and (e.target.value isnt "")
       body = e.target.value
       hashtags = getTags body
@@ -78,16 +79,18 @@ Template.ticketNoteInput.events
       $(e.target).val("")
 
   'keyup input[name=newNote]': (e, tpl) ->
-    Changelog.insert
-      ticketId: tpl.data.ticket
-      timestamp: new Date()
-      authorId: Meteor.userId()
-      authorName: Meteor.user().username
-      type: "note"
-      message: e.target.value
+    if (e.which is 13) and (e.target.value isnt "")
+      Changelog.insert
+        ticketId: tpl.data.ticket
+        timestamp: new Date()
+        authorId: Meteor.userId()
+        authorName: Meteor.user().username
+        type: "note"
+        message: e.target.value
 
-    Meteor.call 'setFlag', Meteor.userId(), tpl.data.ticket, 'replied', true
-    $(e.target).val("")
+      Meteor.call 'setFlag', Meteor.userId(), tpl.data.ticket, 'replied', true
+      $(e.target).val("")
+    
 Template.ticketTag.events
   'click a[data-action=removeTag]': (e, tpl) ->
     e.preventDefault()
