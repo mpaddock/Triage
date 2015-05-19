@@ -95,7 +95,6 @@ Template.sidebar.events
     Iron.query.set @type, filter.join()
 
   'hide.bs.collapse': (e, tpl) ->
-    console.log e.target.id
     tpl.$('span[name='+e.target.id+']').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-right')
 
   'show.bs.collapse': (e, tpl) ->

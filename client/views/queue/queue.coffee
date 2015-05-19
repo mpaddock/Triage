@@ -51,13 +51,14 @@ Template.queue.helpers
 
 Template.queue.rendered = () ->
   this.autorun () ->
+    if Session.get('pseudoQueue') is 'userQueue' then myqueue = true else myqueue = false
     Meteor.subscribe 'tickets', {
       queueName: Session.get('queueName')
       search: Iron.query.get('search')
       status: Iron.query.get('status')
       tag: Iron.query.get('tag')
       user: Iron.query.get('user')
-    }, Session.get('limit'), onReady: () ->
+    }, Session.get('limit'), myqueue, onReady: () ->
       Session.set('loadingMore', false)
 
   $('[data-toggle=popover]').popover()

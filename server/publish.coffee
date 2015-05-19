@@ -11,6 +11,7 @@ Meteor.publishComposite 'tickets', (filter, limit, myqueue) ->
     filter.status = "!Closed"
   if myqueue
     filter.userId = @userId
+    filter.queueName = _.pluck Queues.find().fetch(), 'name'
   else
     filter.userId = null
   mongoFilter = Filter.toMongoSelector filter
@@ -18,6 +19,7 @@ Meteor.publishComposite 'tickets', (filter, limit, myqueue) ->
 
   {
     find: () ->
+      console.log mongoFilter
       Counts.publish(this, 'ticketCount', Tickets.find(mongoFilter), { noReady: true })
       Tickets.find mongoFilter, {sort: {submittedTimestamp: -1}, limit: limit}
     children: [

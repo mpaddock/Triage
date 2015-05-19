@@ -10,6 +10,6 @@ Template.queuebar.helpers
   globalClass: ->
     if Session.get('pseudoQueue') is 'globalQueue' then return 'active'
   userClass: ->
-    if Session.get('psuedoQueue') is 'userQueue' then return 'active'
+    if Session.get('pseudoQueue') is 'userQueue' then return 'active'
 
 
