@@ -49,8 +49,32 @@ Meteor.publishComposite 'tickets', (filter, limit, myqueue) ->
     ]
   }
 
+Meteor.publishComposite 'ticket', (ticketNumber) ->
+  find: () ->
+    #Check username for API submissions that may not have an authorId associated?
+    username = Meteor.users.findOne(@userId).username
+    queues = _.pluck Queues.find({memberIds: @userId}).fetch(), 'name'
+    return Tickets.find {ticketNumber: ticketNumber, $or: [{associatedUserIds: @userId}, {authorId: @userId}, {authorName: username}, {queueName: {$in: queues}}]}
+
+  children: [
+    {
+      find: (ticket) ->
+        Changelog.find {ticketId: ticket._id}
+    },
+    {
+      find: (ticket) ->
+        TicketFlags.find {ticketId: ticket._id, userId: @userId}
+    },
+    {
+      find: (ticket) ->
+        if ticket.attachmentIds?.length > 0
+          FileRegistry.find {_id: {$in: ticket.attachmentIds}}
+    }
+  ]
+
 Meteor.publish 'userData', () ->
   Meteor.users.find {_id: @userId}
+
 Meteor.publish 'allUserData', () ->
   Meteor.users.find {}, {fields: {'_id': 1, 'username': 1, 'mail': 1, 'displayName': 1, 'department': 1, 'physicalDeliveryOfficeName': 1, 'status.online': 1}}
 

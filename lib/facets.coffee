@@ -57,8 +57,6 @@
       tags = filter.tag.split(',')
       sorted = _.sortBy(tags).join(',')
       mongoFilter.tags = {$all: tags}
-    if filter.ticketNumber?
-      mongoFilter.ticketNumber = Number(filter.ticketNumber)
     return mongoFilter
 
   toFacetString: (filter) ->

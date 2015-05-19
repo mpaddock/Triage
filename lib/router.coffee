@@ -86,9 +86,7 @@ Router.map ->
       Session.set 'ticketNumber', Number(@params.ticketNumber)
       @next()
       if Meteor.userId()
-        [Meteor.subscribe 'tickets', {
-          ticketNumber: @params.ticketNumber
-        }]
+        [Meteor.subscribe 'ticket', Number(@params.ticketNumber)]
 
 
   @route 'apiSubmit',
