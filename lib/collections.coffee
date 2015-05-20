@@ -78,6 +78,10 @@ if Meteor.isServer && Npm.require('cluster').isMaster
           if modifier.$pull?.associatedUserIds?
             user = Meteor.users.findOne({_id: modifier.$pull.associatedUserIds}).username
             message = "disassociated user #{user}"
+        when 'attachmentIds'
+          file = FileRegistry.findOne modifier.$addToSet.attachmentIds
+          message = "attached file #{file.filename}"
+
       Changelog.insert
         ticketId: doc._id
         timestamp: new Date()
@@ -130,10 +134,6 @@ if Meteor.isServer && Npm.require('cluster').isMaster
   otherId:
     type: String
     optional: true
-
-if Meteor.isServer
-  Changelog.before.insert (userId, doc) ->
-    doc.timestamp = new Date()
 
 @Queues = new Mongo.Collection 'queues'
 @Queues.attachSchema new SimpleSchema

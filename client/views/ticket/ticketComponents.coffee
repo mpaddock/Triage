@@ -40,14 +40,6 @@ Template.ticketNoteInput.events
       console.log "Uploaded a file, got _id: ", fileId
       Tickets.update tpl.data.ticket, {$addToSet: {attachmentIds: fileId}}
       Meteor.call 'setFlag', Meteor.userId(), tpl.data.ticket, 'attachment', true
-      Changelog.insert
-        ticketId: tpl.data.ticket
-        timestamp: new Date()
-        authorId: Meteor.userId()
-        authorName: Meteor.user().username
-        type: "attachment"
-        message: "added file " + FileRegistry.findOne({_id: fileId})?.filename
-        otherId: fileId
 
   ### Adding notes to tickets. ###
   'keyup input[name=newNoteAdmin]': (e, tpl) ->
