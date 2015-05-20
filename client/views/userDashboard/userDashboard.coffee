@@ -1,4 +1,4 @@
 Template.userDashboard.helpers
   queue: ->
-    Queues.find().fetch()
+    Queues.find({memberIds: Meteor.userId()}).fetch()
         

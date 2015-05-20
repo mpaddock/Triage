@@ -1,12 +1,38 @@
 <template name="userDashboard">
-<form class="form-horizontal">
-  <div class="from-group">
-    <label for="defaultQueue">Default Queue:</label>
-    <select>
+<div class="col-md-8 col-md-offset-2">
+  <h4>Preferences</h4>
+  <hr>
+  <div class="form-group">
+    <label for="defaultQueue" class="control-label">Default Queue:</label>
+    <select class="form-control">
       {{#each queue}}
       <option>{{name}}</option>
       {{/each}}
     </select>
   </div>
-</form>
+  <div class="form-group">
+    <label for="authorPreferences" class="control-label">If I am the author of a ticket, email me when:</label>
+    {{>settingsCheckbox name="submitted" option="I submit the ticket"}}
+    {{>settingsCheckbox name="authorSelfNote" option="I leave a note on the ticket"}}
+    {{>settingsCheckbox name="authorOtherNote" option="Someone else leaves a note on the ticket"}}
+    {{>settingsCheckbox name="authorStatusChanged" option="The status of the ticket changes"}}
+    {{>settingsCheckbox name="authorAttachment" option="An attachment is added to the ticket"}}
+  </div>
+  <div class="form-group">
+    <label for="associatedPreferences" class="control-label">If I am associated with a ticket, email me when:</label>
+    {{>settingsCheckbox name="associatedSelfNote" option="I leave a note on the ticket"}}
+    {{>settingsCheckbox name="associatedOtherNote" option="Someone else leaves a note on the ticket"}}
+    {{>settingsCheckbox name="associatedStatusChanged" option="The status of the ticket changes"}}
+    {{>settingsCheckbox name="associatedAttachment" option="An attachment is added to the ticket"}}
+  </div>
+  <button type="button" class="btn btn-primary pull-right">Submit</button>
+</div>
+</template>
+
+<template name="settingsCheckbox">
+<div class="checkbox">
+  <label><input type="checkbox" value="" name="{{name}}">
+    {{option}}
+  </label>
+</div>
 </template>

@@ -8,9 +8,9 @@
 .login-form {
   margin-top: 42px;
 }
-.form-group {
+.login-form .form-group {
   text-align: center;
 }
-.input {
+.login-form input {
   border: 1px solid;
 }
