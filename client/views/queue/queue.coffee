@@ -1,6 +1,13 @@
+limitDefault = 20
+limitIncrement = 20
+
 Template.queue.helpers
+  moreToLoad: ->
+    if Tickets.find().count() < Counts.get('ticketCount') then return true
   ready: ->
     Session.get 'ready'
+  loadingMore: ->
+    Session.get 'loadingMore'
   connected: ->
     Meteor.status().connected
   noTickets: ->
@@ -18,7 +25,7 @@ Template.queue.helpers
   addingTicket: ->
     Session.get 'addingTicket'
   psuedoqueue: ->
-    Session.get('queueName') in ['globalQueue', 'userQueue']
+    Session.get('pseudoQueue') in ['globalQueue', 'userQueue']
   queues: ->
     Queues.find()
   settings: ->
@@ -43,10 +50,18 @@ Template.queue.helpers
     }
 
 Template.queue.rendered = () ->
+  this.autorun () ->
+    if Session.get('pseudoQueue') is 'userQueue' then myqueue = true else myqueue = false
+    Meteor.subscribe 'tickets', {
+      queueName: Session.get('queueName')
+      search: Iron.query.get('search')
+      status: Iron.query.get('status')
+      tag: Iron.query.get('tag')
+      user: Iron.query.get('user')
+    }, Session.get('limit'), myqueue, onReady: () ->
+      Session.set('loadingMore', false)
+
   $('[data-toggle=popover]').popover()
-  $(window).scroll () ->
-    if $(window).scrollTop() + $(window).height() is $(document).height()
-      Session.set 'limit', Session.get('limit') + 30
   this.find('.animated')?._uihooks =
     insertElement: (node, next) ->
       $(node)
@@ -57,10 +72,11 @@ Template.queue.rendered = () ->
       $(node).fadeOut 700, () ->
         $(this).remove()
 
-Template.queue.created = () ->
-  Session.setDefault 'limit', 30
-
 Template.queue.events
+  'click a[data-action=loadMore]': (e, tpl) ->
+    Session.set 'limit', Session.get('limit') + limitIncrement
+    Session.set 'loadingMore', true
+
   'click a[data-action=clearSearch]': (e, tpl) ->
     e.stopPropagation()
     Iron.query.set 'search', ''
@@ -93,5 +109,4 @@ Template.queue.events
       }, (err, res) ->
         if res
           tpl.$('input[name=newTicket]').val('')
-
 

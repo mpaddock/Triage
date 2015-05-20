@@ -1,19 +1,34 @@
 <template name="sidebar">
-<label for="textSearch" class="control-label">Search:</label>
-{{>inputAutocomplete name="textSearch" class="form-control" settings=settings}}
-<ul class="list-unstyled animated">
-  {{#each textFilter}}
-  <li class="fade"><a data-action="removeFilter" data-type="search" data-value="{{this}}"><span class="glyphicon glyphicon-remove"></span></a>search: {{this}}</li>
-  {{/each}}
-  {{#each userFilter}}
-  <li class="fade"><a data-action="removeFilter" data-type="user" data-value="{{this}}"><span class="glyphicon glyphicon-remove"></span></a>user: {{this}}</li>
-  {{/each}}
-</ul>
+<div id="searchLabel">
+  <label for="textSearch" class="control-label">Search:</label>  <a href="#" data-action="showHelp"><em>(help)</em></a>
+  {{#if helpText}}
+  <div class="help-text">
+    <small>
+      Use search to locate specific tickets by tag, text, users, or status. Examples:
+      <ul>
+        <li>@user</li>
+        <li>#tag</li>
+        <li>status:Closed</li>
+        <li>Printer</li>
+      </ul>
+    </small>
+  </div>
+  {{/if}}
+</div>
+  {{>inputAutocomplete name="textSearch" class="form-control" settings=settings}}
+  <ul class="list-unstyled">
+    {{#each textFilter}}
+    <li><a data-action="removeFilter" data-type="search" data-value="{{this}}"><span class="glyphicon glyphicon-remove"></span></a>search: {{this}}</li>
+    {{/each}}
+    {{#each userFilter}}
+    <li><a data-action="removeFilter" data-type="user" data-value="{{this}}"><span class="glyphicon glyphicon-remove"></span></a>user: {{this}}</li>
+    {{/each}}
+  </ul>
 <hr>
 <div class="panel panel-primary">
   <div class="panel-heading">
     <h4 class="panel-title">
-      <a data-toggle="collapse" href='#statusCollapse'>Status</a>
+      <span name="statusCollapse" class="glyphicon glyphicon-chevron-down"></span> <a data-toggle="collapse" href='#statusCollapse'>Status</a>
     </h4>
   </div>
   <div id="statusCollapse" class="panel-collapse collapse in">
@@ -38,7 +53,7 @@
 <div class="panel panel-primary">
   <div class="panel-heading">
     <h4 class="panel-title">
-      <a data-toggle="collapse" href='#tagCollapse'>Tag</a>
+      <span name="tagCollapse" class="glyphicon glyphicon-chevron-down"></span> <a data-toggle="collapse" href='#tagCollapse'>Tag</a>
     </h4>
   </div>
   <div id="tagCollapse" class="panel-collapse collapse in">

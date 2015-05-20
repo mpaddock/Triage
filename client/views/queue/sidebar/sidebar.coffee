@@ -50,8 +50,12 @@ Template.sidebar.helpers
         }
       ]
     }
+  helpText: ->
+    Session.get 'helpText'
 
 Template.sidebar.events
+  'click a[data-action=showHelp]': ->
+    Session.set 'helpText', !Session.get('helpText')
   'keyup input[name=textSearch]': (e, tpl) ->
     if e.keyCode is 13
       text = $(e.target).val()
@@ -90,3 +94,21 @@ Template.sidebar.events
       filter = _.without filter, @name
     Iron.query.set @type, filter.join()
 
+  'hide.bs.collapse': (e, tpl) ->
+    tpl.$('span[name='+e.target.id+']').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-right')
+
+  'show.bs.collapse': (e, tpl) ->
+    tpl.$('span[name='+e.target.id+']').removeClass('glyphicon-chevron-right').addClass('glyphicon-chevron-down')
+
+
+Template.sidebar.rendered = () ->
+  this.find('#searchLabel')._uihooks = {
+    insertElement: (node, next) ->
+      $(node)
+        .hide()
+        .insertBefore(next)
+        .slideToggle(350)
+    removeElement: (node) ->
+      $(node).slideToggle 350, () ->
+        this.remove()
+  }

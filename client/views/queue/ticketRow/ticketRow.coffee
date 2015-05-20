@@ -33,13 +33,16 @@ Template.ticketRow.events
         else
           tpl.$('[data-toggle="tooltip"]').tooltip('show')
 
-  'show.bs.collapse': ->
+  'show.bs.collapse': (e, tpl) ->
     Meteor.call 'removeFlag', Meteor.userId(), @_id, 'unread'
+    tpl.$('span[name=plusminus]').removeClass('glyphicon-plus').addClass('glyphicon-minus')
+
 
   ### Hide all tooltips on row collapse and focusout of assign user field. ###
-  'hidden.bs.collapse': (e, tpl) ->
+  'hide.bs.collapse': (e, tpl) ->
     tpl.$('[data-toggle="tooltip"]').tooltip('hide')
     tpl.$('input[name="assignUser"]').val('')
+    tpl.$('span[name=plusminus]').removeClass('glyphicon-minus').addClass('glyphicon-plus')
 
   'focusout input[name="assignUser"]': (e, tpl) ->
     tpl.$('[data-toggle="tooltip"]').tooltip('hide')

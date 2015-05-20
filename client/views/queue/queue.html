@@ -52,10 +52,10 @@
     <table name="ticketTable" class="table table-condensed" style="border-collapse:collapse;">
       <thead>
         <tr>
-          <th class="col-md-1">&nbsp;</th>
+          <th class="col-md-1 hidden-xs">&nbsp;</th>
           <th class="col-md-4">Subject</th>
           <th class="col-md-2">Requester</th>
-          <th class="col-md-2">Associated Users</th>
+          <th class="col-md-2 hidden-xs">Associated Users</th>
           <th class="col-md-1">Status</th>
           <th class="col-md-2">Submitted</th>
         </tr>
@@ -79,9 +79,22 @@
       </tbody>
     </table>
   </div>
-  {{else}}
-  {{> loading}}
+  {{#if moreToLoad}}
+    {{#if loadingMore}}
+      {{> loading}}
+    {{else}}
+      <div class="load-more">
+        <a class="btn btn-default more-button" data-action="loadMore">
+          <span class="glyphicon glyphicon-refresh"></span> Load More
+        </a>
+      </div>
+    {{/if}}
   {{/if}}
+
+  {{else}}
+    {{> loading}}
+  {{/if}}
+
 </div>
 <div class="col-sm-2 hidden-xs">
   {{> sidebar data=tickets}}
