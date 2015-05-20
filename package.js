@@ -19,6 +19,7 @@ Package.onUse(function (api) {
 Package.onTest(function (api) {
   api.use([
     'mongo',
+    'minimongo',
     'coffeescript',
     'aldeed:collection2@2.3.3',
     'aldeed:simple-schema@1.3.2',
