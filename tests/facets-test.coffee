@@ -36,6 +36,6 @@ Tinytest.add 'Filter - toFacetString', (test) ->
     "queueName:Q|search:phrase|status:!Closed"
 
 # TODO: is bidirectionality between facet string and search filter object part of our contract?
-Tinytest.add 'Filter - from/to FacetString bidirectionality', (test) ->
-  test.equal filter, Filter.fromFacetString(Filter.toFacetString(filter))
+#Tinytest.add 'Filter - from/to FacetString bidirectionality', (test) ->
+#  test.equal filter, Filter.fromFacetString(Filter.toFacetString(filter))
 
