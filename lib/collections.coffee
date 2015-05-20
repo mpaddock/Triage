@@ -53,19 +53,6 @@
     unique: true
     optional: true
 
-@Tickets.allow
-  insert: -> true
-  update: -> true
-  remove: -> false
-
-@Tickets.deny
-  update: (userId, doc, fields, modifier) ->
-    if _.intersection(['_id', 'authorId', 'authorName', 'body', 'queueName', 'submissionData', 'submittedTimestamp', 'ticketNumber', 'title'], fields).length isnt 0
-      return true
-    unless Queues.findOne({name: doc.queueName, memberIds: userId}) or (_.contains doc.associatedUserIds, userId) or (_.contains doc.authorId, userId)
-      return true
-  remove: -> true
-
 @TicketFlags = new Mongo.Collection 'ticketFlags'
 # TODO: SimpleSchema doesnt handle v very well, so skip for now
 ###@TicketFlags.attachSchema new SimpleSchema
@@ -110,12 +97,6 @@
     type: String
     optional: true
 
-@Changelog.allow
-  #Users can't update/insert to the changelog.
-  insert: -> false
-  update: -> false
-  remove: -> false
-
 @Queues = new Mongo.Collection 'queues'
 @Queues.attachSchema new SimpleSchema
   name:
@@ -129,7 +110,3 @@
     type: [String]
     label: "Security Groups"
 
-@Queues.allow
-  insert: -> false
-  update: -> false
-  remove: -> false
