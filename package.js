@@ -21,6 +21,7 @@ Package.onTest(function (api) {
     'mongo',
     'minimongo',
     'coffeescript',
+    'accounts-base',
     'aldeed:collection2@2.3.3',
     'aldeed:simple-schema@1.3.2',
     'matb33:collection-hooks@0.7.13',
