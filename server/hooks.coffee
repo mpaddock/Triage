@@ -2,7 +2,7 @@ if Npm.require('cluster').isMaster
   Tickets.before.insert (userId, doc) ->
     max = Tickets.findOne({}, {sort:{ticketNumber:-1}})?.ticketNumber || 0
     doc.ticketNumber = max + 1
-    doc.timestamp = new Date()
+    doc.submittedTimestamp = new Date()
 
   Tickets.before.update (userId, doc, fieldNames, modifier, options) ->
     _.each fieldNames, (fn) ->
