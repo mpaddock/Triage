@@ -16,3 +16,8 @@ Meteor.users.allow
     else
       return false
   remove: -> false
+
+@Changelog.allow
+  insert: (userId, doc) ->
+    if doc.type is "note"
+      return true
