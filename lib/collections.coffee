@@ -110,3 +110,69 @@
     type: [String]
     label: "Security Groups"
 
+notificationSettingDefaults =
+  submitted: true
+  authorSelfNote: true
+  authorOtherNote: true
+  authorStatusChanged: true
+  authorAttachment: true
+  associatedSelfNote: true
+  associatedOtherNote: true
+  associatedStatusChanged: true
+  associatedAttachment: true
+
+Meteor.users.attachSchema new SimpleSchema
+  username:
+    type: String
+    label: "Username"
+  defaultQueue:
+    type: String
+    optional: true
+    label: "Default Queue"
+  displayName:
+    type: String
+    label: "Display Name"
+  employeeNumber:
+    type: String
+    label: "Employee Number"
+  mail:
+    type: String
+    label: "Email Address"
+  memberOf:
+    type: [String]
+    label: "Member Of"
+  notificationSettings:
+    type: Object
+    defaultValue: notificationSettingDefaults
+  'notificationSettings.submitted':
+    type: Boolean
+  'notificationSettings.authorSelfNote':
+    type: Boolean
+  'notificationSettings.authorOtherNote':
+    type: Boolean
+  'notificationSettings.authorStatusChanged':
+    type: Boolean
+  'notificationSettings.authorAttachment':
+    type: Boolean
+  'notificationSettings.associatedSelfNote':
+    type: Boolean
+  'notificationSettings.associatedOtherNote':
+    type: Boolean
+  'notificationSettings.associatedStatusChanged':
+    type: Boolean
+  'notificationSettings.associatedAttachment':
+    type: Boolean
+  physicalDeliveryOfficeName:
+    type: String
+    label: "Address"
+  services:
+    type: Object
+    optional: true
+    blackbox: true
+  status:
+    type: Object
+    optional: true
+    blackbox: true
+  title:
+    type: String
+    label: "Title"

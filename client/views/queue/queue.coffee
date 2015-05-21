@@ -28,6 +28,8 @@ Template.queue.helpers
     Session.get('pseudoQueue') in ['globalQueue', 'userQueue']
   queues: ->
     Queues.find()
+  selected: ->
+    if this.name is Meteor.user().defaultQueue then "selected"
   settings: ->
     {
       position: "bottom"
