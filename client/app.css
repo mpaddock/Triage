@@ -1,0 +1,322 @@
+/***************************** PREFS MESSAGE *****************************/
+
+.saved-preferences {
+  display: inline;
+  padding-right: 15px;
+  vertical-align: middle;
+  font-weight: bold;
+  height: 2em;
+  line-height: 2em;
+  color: red;
+}
+
+/***************************** SVG SPINNER *****************************/
+
+.loader {
+  text-align: center;
+}
+
+/***************************** TIME HOVER *****************************/
+.time {
+  display: inline;
+}
+
+.time .full-time {
+  position: absolute;
+  display: block;
+  border: 1px solid;
+  z-index: 9999;
+  width: 13.8em;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 2px 4px 2px 4px;
+  visibility: hidden;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+}
+
+.time:hover .full-time {
+  visibility: visible;
+}
+
+/***************************** USER PROFILE *****************************/
+.user-profile {
+  display: inline-block;
+  position: relative;
+}
+
+.user-profile img {
+  max-width: 96px;
+  max-height: 40px;
+}
+
+.in-row img  {
+  max-height: 24px;
+}
+
+.offline {
+  opacity: 0.3;
+}
+
+.user-profile .user-info {
+  position: absolute;
+  display: block;
+  text-align: left;
+  border: 1px solid;
+  left: 50%;
+  z-index: 9999;
+  top: 40px;
+  width: 200px;
+  font-size: .85em;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 2px 4px 2px 4px;
+  visibility: hidden;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+}
+
+.in-row .user-info {
+  top: 24px;
+}
+
+.user-info .name {
+  font-weight: bold;
+}
+
+.user-profile:hover .user-info {
+  visibility: visible;
+}
+
+/***************************** LOGIN *****************************/
+
+.login-box {
+  text-align: center;
+  background: #eee;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 2px 2px 4px -1px rgba(0, 0, 0, 0.5);
+}
+.login-form {
+  margin-top: 42px;
+}
+.login-form .form-group {
+  text-align: center;
+}
+.login-form input {
+  border: 1px solid;
+}
+
+/***************************** NAV *****************************/
+
+.navbar {
+  position: static;
+}
+
+.navbar .nav .dropdown > li {
+  z-index: 10001;
+}
+
+.navbar-default {
+  background-color: #005daa;
+  border-color: #006ac3;
+  border-radius: 0 !important;
+}
+.navbar-default .navbar-brand {
+  color: #eeeeee;
+}
+.navbar-default .navbar-brand:hover, .navbar-default .navbar-brand:focus {
+  color: #cccccc;
+}
+.navbar-default .navbar-text {
+  color: #eeeeee;
+}
+.navbar-default .navbar-nav > li > a {
+  color: #eeeeee;
+}
+.navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus {
+  color: #cccccc;
+}
+.navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active > a:hover, .navbar-default .navbar-nav > .active > a:focus {
+  color: #cccccc;
+  background-color: #006ac3;
+}
+.navbar-default .navbar-nav > .open > a, .navbar-default .navbar-nav > .open > a:hover, .navbar-default .navbar-nav > .open > a:focus {
+  color: #cccccc;
+  background-color: #006ac3;
+}
+.navbar-default .navbar-toggle {
+  border-color: #006ac3;
+}
+.navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus {
+  background-color: #006ac3;
+}
+.navbar-default .navbar-toggle .icon-bar {
+  background-color: #eeeeee;
+}
+.navbar-default .navbar-collapse,
+.navbar-default .navbar-form {
+  border-color: #eeeeee;
+}
+.navbar-default .navbar-link {
+  color: #eeeeee;
+}
+.navbar-default .navbar-link:hover {
+  color: #cccccc;
+}
+
+@media (max-width: 767px) {
+  .navbar-default .navbar-nav .open .dropdown-menu > li > a {
+    color: #eeeeee;
+  }
+  .navbar-default .navbar-nav .open .dropdown-menu > li > a:hover, .navbar-default .navbar-nav .open .dropdown-menu > li > a:focus {
+    color: #cccccc;
+  }
+  .navbar-default .navbar-nav .open .dropdown-menu > .active > a, .navbar-default .navbar-nav .open .dropdown-menu > .active > a:hover, .navbar-default .navbar-nav .open .dropdown-menu > .active > a:focus {
+    color: #cccccc;
+    background-color: #006ac3;
+  }
+}
+
+.navbar-no-padding {
+  padding: 0 0 0 0  !important;
+  margin-bottom: 0 !important;
+}
+
+/***************************** QUEUE/TICKETROW/SIDEBAR *****************************/
+
+.hiddenRow {
+  padding: 0 !important;
+}
+
+.top-buffer {
+  margin-top: 10px;
+}
+
+.load-more {
+  text-align: center;
+  vertical-align: middle;
+}
+
+.fade.off {
+  opacity: 0
+}
+
+.fade {
+  opacity: 1;
+  transition: opacity 200ms ease;
+}
+
+.assign-user-field{
+  width: 200px;
+  vertical-align: middle;
+  white-space: nowrap;
+  position: relative;
+}
+.assign-user-field input{
+  width: 40px;
+  height: 40px;
+  background: #005DAA;
+  border: none;
+  font-size: 10pt;
+  float: left;
+  color: #fff;
+  padding-left: 40px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  
+  -webkit-transition: width .55s ease;
+  -moz-transition: width .55s ease;
+  -ms-transition: width .55s ease;
+  -o-transition: width .55s ease;
+  transition: width .55s ease;
+  
+}
+
+.assign-user-field input::-webkit-input-placeholder {
+   color: #ccc;
+}
+.assign-user-field input:-moz-placeholder { /* Firefox 18- */
+   color: #ccc;  
+}
+.assign-user-field input::-moz-placeholder {  /* Firefox 19+ */
+   color: #ccc;  
+}
+.assign-user-field input:-ms-input-placeholder {  
+   color: #ccc;  
+}
+
+.assign-user-field .icon{
+  position: absolute;
+  top: 50%;
+  margin-left: 14px;
+  margin-top: 12px;
+  z-index: 1;
+  color: #ddd;
+}
+
+.ticket-requester-portrait{
+  float: left;
+  text-align: center;
+  padding-right: 5px;
+  max-height: 24px;
+  width: 40px;
+}
+
+  /* ANIMATION EFFECTS */
+.assign-user-field input:focus, .assign-user-field input:active {
+  outline:none;
+}
+  .assign-user-field input:hover, .assign-user-field input:focus {
+    outline:none; 
+    width: 200px;
+  }
+  .assign-user-field:hover .icon{
+    color: #fff;
+  }
+
+.ticket-status-input {
+  padding-left: 20px;
+  padding-right: 5px;
+}
+
+blockquote { 
+  background: #ffffff;
+  border: 2px solid #ccc;
+}
+
+.ticket-row-panel-body {
+  bottom: 0px;
+}
+
+.ticket-row-panel {
+  margin-bottom: 0px;
+  border-bottom: none;
+  border-top: none;
+  border-top-left-radius: 0px;
+  border-top-right-radius: 0px;
+  bottom: 0px;
+}
+.tag { 
+  display: inline-block; 
+  position: relative; 
+} 
+ 
+.tag .remove-tag { 
+  position: absolute; 
+  display: block; 
+  border: 1px solid; 
+  top: 17px;
+  left: 20%; 
+  z-index: 9999; 
+  width: 4.4em;
+  background: rgba(255, 255, 255, 0.9); 
+  padding: 2px 4px 2px 4px; 
+  visibility: hidden; 
+  -moz-border-radius: 3px; 
+  -webkit-border-radius: 3px; 
+} 
+ 
+.tag:hover .remove-tag { 
+  visibility: visible; 
+} 
+
