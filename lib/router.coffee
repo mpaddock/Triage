@@ -38,6 +38,10 @@ Router.map ->
 
   @route 'userDashboard',
     path: '/my/dashboard'
+    onBeforeAction: ->
+      Session.set 'queueName', null
+      Session.set 'pseudoQueue', null
+      @next()
 
   @route 'userQueue',
     path: '/my/tickets'

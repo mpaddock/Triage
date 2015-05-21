@@ -4,34 +4,39 @@
   <hr>
   <div class="form-group">
     <label for="defaultQueue" class="control-label">Default Queue:</label>
-    <select class="form-control">
+    <select class="form-control" name="defaultQueue">
       {{#each queue}}
-      <option>{{name}}</option>
+      <option {{selected}}>{{name}}</option>
       {{/each}}
     </select>
   </div>
   <div class="form-group">
-    <label for="authorPreferences" class="control-label">If I am the author of a ticket, email me when:</label>
-    {{>settingsCheckbox name="submitted" option="I submit the ticket"}}
-    {{>settingsCheckbox name="authorSelfNote" option="I leave a note on the ticket"}}
-    {{>settingsCheckbox name="authorOtherNote" option="Someone else leaves a note on the ticket"}}
-    {{>settingsCheckbox name="authorStatusChanged" option="The status of the ticket changes"}}
-    {{>settingsCheckbox name="authorAttachment" option="An attachment is added to the ticket"}}
+    <label for="authorPreferences" class="control-label">If I am the author of a ticket, notify me when:</label>
+    {{>settingsCheckbox name="submitted" option="I submit the ticket" setting=notificationSettings.submitted}}
+    {{>settingsCheckbox name="authorSelfNote" option="I leave a note on the ticket" setting=notificationSettings.authorSelfNote}}
+    {{>settingsCheckbox name="authorOtherNote" option="Someone else leaves a note on the ticket" setting=notificationSettings.authorOtherNote}}
+    {{>settingsCheckbox name="authorStatusChanged" option="The status of the ticket changes" setting=notificationSettings.authorStatusChanged}}
+    {{>settingsCheckbox name="authorAttachment" option="An attachment is added to the ticket" setting=notificationSettings.authorAttachment}}
   </div>
   <div class="form-group">
-    <label for="associatedPreferences" class="control-label">If I am associated with a ticket, email me when:</label>
-    {{>settingsCheckbox name="associatedSelfNote" option="I leave a note on the ticket"}}
-    {{>settingsCheckbox name="associatedOtherNote" option="Someone else leaves a note on the ticket"}}
-    {{>settingsCheckbox name="associatedStatusChanged" option="The status of the ticket changes"}}
-    {{>settingsCheckbox name="associatedAttachment" option="An attachment is added to the ticket"}}
+    <label for="associatedPreferences" class="control-label">If I am associated with a ticket, notify me when:</label>
+    {{>settingsCheckbox name="associatedSelfNote" option="I leave a note on the ticket" setting=notificationSettings.associatedSelfNote}}
+    {{>settingsCheckbox name="associatedOtherNote" option="Someone else leaves a note on the ticket" setting=notificationSettings.associatedOtherNote}}
+    {{>settingsCheckbox name="associatedStatusChanged" option="The status of the ticket changes" setting=notificationSettings.associatedStatusChanged}}
+    {{>settingsCheckbox name="associatedAttachment" option="An attachment is added to the ticket" setting=notificationSettings.associatedAttachment}}
   </div>
-  <button type="button" class="btn btn-primary pull-right">Submit</button>
+  <div id="savedMessage" class="pull-right">
+    {{#if saved}}
+      <span class="saved-preferences">Preferences saved. </span>
+    {{/if}}
+    <button type="button" class="btn btn-primary pull-right" data-action="submit">Save</button>
+  </div>
 </div>
 </template>
 
 <template name="settingsCheckbox">
 <div class="checkbox">
-  <label><input type="checkbox" value="" name="{{name}}">
+  <label><input type="checkbox" value="" name="{{name}}" {{checked}}>
     {{option}}
   </label>
 </div>
