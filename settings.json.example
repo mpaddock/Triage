@@ -1,0 +1,24 @@
+{
+  "ldap": {
+    "serverDn": "DC=ad,DC=university,DC=edu",
+    "serverUrl": "ldap://ad.university.edu:3268",
+    "whiteListedFields": [ "displayName", "givenName", "department", "employeeNumber", "mail", "title", "address", "phone", "memberOf", "physicalDeliveryOfficeName"]
+  },
+  "queues": [
+    {"name": "Finance", "securityGroups": ["SGFinanceTeam"]},
+    {"name": "Design", "securityGroups": ["SGDesignTeam"]},
+    {"name": "Web", "securityGroups": ["SGWebTeam"]},
+    {"name": "App Dev", "securityGroups": ["SGAppDevTeam"]}
+  ],
+  "ldapDummy": {
+    "username": "ldaptestaccount",
+    "password": "password"
+  },
+  "public": {
+    "pageLimitDefault": 20,
+    "pageLimitIncrement": 20
+  },
+  "email": {
+    "fromEmail": "triage@university.edu"
+  }
+}
