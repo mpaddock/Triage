@@ -2,6 +2,8 @@ limitDefault = 20
 limitIncrement = 20
 
 Template.queue.helpers
+  alpha: ->
+    Meteor.settings.public.alpha
   moreToLoad: ->
     if Tickets.find().count() < Counts.get('ticketCount') then return true
   ready: ->
