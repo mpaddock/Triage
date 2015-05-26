@@ -43,7 +43,7 @@ Tickets.before.update (userId, doc, fieldNames, modifier) ->
       sendNotification author.mail, title, message
       authorSent = true
     _.each doc.associatedUserIds, (a) ->
-      unless (a is doc.authorId) and authorSent = true
+      unless (a is doc.authorId) and (authorSent = true)
         aUser = Meteor.users.findOne(a)
         if aUser.notificationSettings.associatedAttachment
           sendNotification aUser.mail, title, message
@@ -69,7 +69,7 @@ Changelog.before.insert (userId, doc) ->
       authorSent = true
     
     _.each doc.associatedUserIds, (a) ->
-      unless (a is author._id) and authorSent = true
+      unless (a is author._id) and (authorSent = true)
         aUser = Meteor.users.findOne(a)
         if (aUser._id is userId) and (aUser.notificationSettings.associatedSelfNote)
           sendNotification aUser.email, title, message

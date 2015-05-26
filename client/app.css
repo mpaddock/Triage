@@ -320,3 +320,6 @@ blockquote {
   visibility: visible; 
 } 
 
+.note-well {
+  margin-bottom: 0px;
+}
