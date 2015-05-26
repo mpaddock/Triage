@@ -5,7 +5,7 @@ Template.ticketRow.events
     $('html, body').clearQueue()
     if collapsing is 'true'
       $('html, body').animate({scrollTop: $(e.currentTarget).offset().top - $(window).height()/2}, 600)
-    else
+    else unless _.contains($(e.target)[0].classList, 'dropdown-toggle')
       target = $(e.currentTarget)
       Meteor.setTimeout ->
         $('html, body').animate({scrollTop: target.offset().top}, 375)
