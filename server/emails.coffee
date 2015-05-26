@@ -16,7 +16,7 @@ Tickets.before.update (userId, doc, fieldNames, modifier) ->
 
   if _.contains fieldNames, "status"
     title = "User #{user.username} changed status for Triage ticket ##{doc.ticketNumber}: #{doc.title}"
-    message = "<strong>User #{user.username} changed status for ticket ##{doc.ticketNumber} from 
+    message = "<strong>User #{user.username} changed status for ticket ##{doc.ticketNumber} from
       #{doc.status} to #{modifier.$set.status}.</strong><br>
       The original ticket body was:<br>
       #{doc.body}<br><br>
