@@ -145,6 +145,9 @@ Meteor.users.attachSchema new SimpleSchema
   notificationSettings:
     type: Object
     defaultValue: notificationSettingDefaults
+  department:
+    type: String
+    optional: true
   'notificationSettings.submitted':
     type: Boolean
   'notificationSettings.authorSelfNote':
