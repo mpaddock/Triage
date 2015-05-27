@@ -1,4 +1,8 @@
 if Npm.require('cluster').isMaster
+  Changelog.before.insert (userId, doc) ->
+    if doc.type is "note"
+      doc.timestamp = new Date()
+
   Tickets.before.insert (userId, doc) ->
     max = Tickets.findOne({}, {sort:{ticketNumber:-1}})?.ticketNumber || 0
     doc.ticketNumber = max + 1
@@ -33,7 +37,7 @@ if Npm.require('cluster').isMaster
           otherId = file._id
           message = "attached file #{file.filename}"
 
-      Changelog.insert
+      Changelog.direct.insert
         ticketId: doc._id
         timestamp: new Date()
         authorId: author._id
