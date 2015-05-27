@@ -3,6 +3,8 @@ Template.ticketChangelogItem.helpers
     @type is type
   note: ->
     if this.type is "note" then return true else return false
+  file: ->
+    FileRegistry.findOne {_id: this.valueOf()}
 
 Template.ticketInfoTable.helpers
   admin: ->
