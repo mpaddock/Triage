@@ -134,6 +134,7 @@ Meteor.users.attachSchema new SimpleSchema
     label: "Display Name"
   employeeNumber:
     type: String
+    optional: true
     label: "Employee Number"
   mail:
     type: String
