@@ -5,6 +5,7 @@
       return false
     if Queues.findOne({name: doc.queueName, memberIds: userId})? or (_.contains doc.associatedUserIds, userId) or (_.contains doc.authorId, userId)
       #Either the user has access to the queue, is associated, or is the ticket author.
+      console.log "Ticket update #{modifier} on #{fields} failed: user lacks correct access to update this ticket."
       return true
   remove: -> false
 

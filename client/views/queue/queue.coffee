@@ -3,7 +3,7 @@ limitIncrement = 20
 
 Template.queue.helpers
   alpha: ->
-    Meteor.settings.public.alpha
+    true
   moreToLoad: ->
     if Tickets.find().count() < Counts.get('ticketCount') then return true
   ready: ->
@@ -64,17 +64,6 @@ Template.queue.rendered = () ->
       user: Iron.query.get('user')
     }, Session.get('limit'), myqueue, onReady: () ->
       Session.set('loadingMore', false)
-
-  $('[data-toggle=popover]').popover()
-  this.find('.animated')?._uihooks =
-    insertElement: (node, next) ->
-      $(node)
-        .hide()
-        .insertBefore(next)
-        .fadeIn(500)
-    removeElement: (node) ->
-      $(node).fadeOut 700, () ->
-        $(this).remove()
 
 Template.queue.events
   'click a[data-action=loadMore]': (e, tpl) ->

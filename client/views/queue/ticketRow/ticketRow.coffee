@@ -3,13 +3,14 @@ Template.ticketRow.events
   'click .ticket-row': (e) ->
     collapsing = $(e.currentTarget).next().find('.accordion-body').attr('aria-expanded')
     $('html, body').clearQueue()
-    if collapsing is 'true'
-      $('html, body').animate({scrollTop: $(e.currentTarget).offset().top - $(window).height()/2}, 600)
-    else unless _.contains($(e.target)[0].classList, 'dropdown-toggle')
-      target = $(e.currentTarget)
-      Meteor.setTimeout ->
-        $('html, body').animate({scrollTop: target.offset().top}, 375)
-      , 200
+    unless _.contains($(e.target)[0].classList, 'dropdown-toggle')
+      if collapsing is 'true'
+        $('html, body').animate({scrollTop: $(e.currentTarget).offset().top - $(window).height()/2}, 600)
+      else
+        target = $(e.currentTarget)
+        Meteor.setTimeout ->
+          $('html, body').animate({scrollTop: target.offset().top}, 375)
+        , 200
   'click .dropdown-menu[name=statusMenu]': (e, tpl) ->
     e.stopPropagation() #Stops table row expanding on dropdown click. Have to trigger dropdown manually below.
   'click .dropdown-menu[name=statusMenu] a': (e, tpl) ->

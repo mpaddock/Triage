@@ -131,6 +131,7 @@ Meteor.users.attachSchema new SimpleSchema
     label: "Default Queue"
   displayName:
     type: String
+    optional: true
     label: "Display Name"
   employeeNumber:
     type: String
@@ -168,7 +169,8 @@ Meteor.users.attachSchema new SimpleSchema
     type: Boolean
   physicalDeliveryOfficeName:
     type: String
-    label: "Address"
+    label: "Physical Delivery Office"
+    optional: true
   services:
     type: Object
     optional: true
