@@ -5,7 +5,7 @@ if Npm.require('cluster').isMaster
     doc.submittedTimestamp = new Date()
 
   Tickets.before.update (userId, doc, fieldNames, modifier, options) ->
-    user = Meteor.users.findOne(userId)
+    author = Meteor.users.findOne(userId)
     _.each fieldNames, (fn) ->
       switch fn
         when 'tags'
@@ -36,8 +36,8 @@ if Npm.require('cluster').isMaster
       Changelog.insert
         ticketId: doc._id
         timestamp: new Date()
-        authorId: userId
-        authorName: user.username
+        authorId: author._id
+        authorName: author.username
         type: type
         field: fn
         message: message

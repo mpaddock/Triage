@@ -18,7 +18,7 @@ Tickets.after.insert (userId, doc) ->
     
     Job.push new NotificationJob email: user.mail, subject: subject, html: message
 
-Tickets.before.update (userId, doc, fieldNames, modifier) ->
+Tickets.after.update (userId, doc, fieldNames, modifier) ->
   user = Meteor.users.findOne(userId)
   author = Meteor.users.findOne(doc.authorId)
 
@@ -58,7 +58,7 @@ Tickets.before.update (userId, doc, fieldNames, modifier) ->
         if aUser.notificationSettings.associatedAttachment
           Job.push new NotificationJob email: aUser.mail, subject: subject, html: message
 
-Changelog.before.insert (userId, doc) ->
+Changelog.after.insert (userId, doc) ->
   if doc.type is "note"
     ticket = Tickets.findOne(doc.ticketId)
     author = Meteor.users.findOne(ticket.authorId)
