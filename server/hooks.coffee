@@ -8,14 +8,17 @@ if Npm.require('cluster').isMaster
     _.each fieldNames, (fn) ->
       switch fn
         when 'tags'
+          type = "field"
           if modifier.$addToSet?.tags?
             tags = _.difference modifier.$addToSet.tags.$each, doc.tags
             message = "added tag(s) #{tags}"
           if modifier.$pull?.tags?
             message = "removed tag(s) #{modifier.$pull.tags}"
         when 'status'
+          type = "field"
           message = "changed status from #{doc.status} to #{modifier.$set.status}"
         when 'associatedUserIds'
+          type = "field"
           if modifier.$addToSet?.associatedUserIds?
             users = _.map modifier.$addToSet.associatedUserIds.$each, (x) ->
               Meteor.users.findOne({_id: x}).username
@@ -25,6 +28,8 @@ if Npm.require('cluster').isMaster
             message = "disassociated user #{user}"
         when 'attachmentIds'
           file = FileRegistry.findOne modifier.$addToSet.attachmentIds
+          type = "attachment"
+          otherId = file._id
           message = "attached file #{file.filename}"
 
       Changelog.insert
@@ -32,6 +37,7 @@ if Npm.require('cluster').isMaster
         timestamp: new Date()
         authorId: Meteor.userId()
         authorName: Meteor.user().username
-        type: "field"
+        type: type
         field: fn
         message: message
+        otherId: otherId
