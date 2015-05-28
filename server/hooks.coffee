@@ -1,14 +1,17 @@
 if Npm.require('cluster').isMaster
   Changelog.before.insert (userId, doc) ->
+    #Server-side note timestamping.
     if doc.type is "note"
       doc.timestamp = new Date()
 
   Tickets.before.insert (userId, doc) ->
+    #Ticket numbering.
     max = Tickets.findOne({}, {sort:{ticketNumber:-1}})?.ticketNumber || 0
     doc.ticketNumber = max + 1
     doc.submittedTimestamp = new Date()
 
   Tickets.before.update (userId, doc, fieldNames, modifier, options) ->
+    #Changelog events on ticket updates.
     author = Meteor.users.findOne(userId)
     _.each fieldNames, (fn) ->
       switch fn

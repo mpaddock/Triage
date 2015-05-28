@@ -205,20 +205,20 @@
   transition: opacity 200ms ease;
 }
 
-.assign-user-field{
+.assign-user-field {
   width: 200px;
   vertical-align: middle;
   white-space: nowrap;
   position: relative;
 }
-.assign-user-field input{
+.assign-user-field input {
   width: 40px;
   height: 40px;
-  background: #005DAA;
+  background: #bbb;
   border: none;
   font-size: 10pt;
   float: left;
-  color: #fff;
+  color: #000;
   padding-left: 40px;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
@@ -233,16 +233,16 @@
 }
 
 .assign-user-field input::-webkit-input-placeholder {
-   color: #ccc;
+   color: #000;
 }
 .assign-user-field input:-moz-placeholder { /* Firefox 18- */
-   color: #ccc;  
+   color: #000;  
 }
 .assign-user-field input::-moz-placeholder {  /* Firefox 19+ */
-   color: #ccc;  
+   color: #000;  
 }
 .assign-user-field input:-ms-input-placeholder {  
-   color: #ccc;  
+   color: #000;  
 }
 
 .assign-user-field .icon{
@@ -251,7 +251,7 @@
   margin-left: 14px;
   margin-top: 12px;
   z-index: 1;
-  color: #ddd;
+  color: #000;
 }
 
 .ticket-requester-portrait{

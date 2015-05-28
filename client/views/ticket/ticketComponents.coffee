@@ -11,6 +11,17 @@ Template.ticketInfoTable.helpers
     _.contains Queues.findOne({name: @queueName})?.memberIds, Meteor.userId()
   file: ->
     FileRegistry.findOne {_id: this.valueOf()}
+  settings: ->
+    {
+      position: "top"
+      limit: 5
+      rules: [
+        collection: Meteor.users
+        field: 'username'
+        template: Template.userPill
+        noMatchTemplate: Template.noMatchUserPill
+      ]
+    }
 
 Template.ticketNoteInput.helpers
   settings: ->
