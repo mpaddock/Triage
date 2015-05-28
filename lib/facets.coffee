@@ -64,7 +64,7 @@
     if typeof filter.queueName is 'string'
       facetPath = "queueName:#{filter.queueName}"
     else
-      facetPath = "queueName:#{filter.queueName.join(',')}"
+      facetPath = "queueName:#{filter.queueName?.join(',')}"
     if filter.search?.trim().length
       facetPath += "|search:#{filter.search}"
     if filter.status?.trim().length
