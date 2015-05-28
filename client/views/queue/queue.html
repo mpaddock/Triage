@@ -89,16 +89,8 @@
       </tbody>
     </table>
   </div>
-  {{#if moreToLoad}}
-    {{#if loadingMore}}
-      {{> loading}}
-    {{else}}
-      <div class="load-more">
-        <a class="btn btn-default more-button" data-action="loadMore">
-          <span class="glyphicon glyphicon-refresh"></span> Load More
-        </a>
-      </div>
-    {{/if}}
+  {{#if loadingMore}}
+    {{> loading}}
   {{/if}}
 
   {{else}}

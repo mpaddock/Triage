@@ -14,12 +14,13 @@ Template.ticketRow.events
   'click .dropdown-menu[name=statusMenu]': (e, tpl) ->
     e.stopPropagation() #Stops table row expanding on dropdown click. Have to trigger dropdown manually below.
   'click .dropdown-menu[name=statusMenu] a': (e, tpl) ->
-    Tickets.update this._id, {$set: {status: $(e.target).html()}}
+    unless @status is $(e.target).html()
+      Tickets.update @_id, {$set: {status: $(e.target).html()}}
     tpl.$('.dropdown-toggle[name=statusButton]').dropdown('toggle')
 
   'keyup input[name=customStatus]': (e, tpl) ->
     if e.which is 13
-      Tickets.update this._id, {$set: {status: $(e.target).val()}}
+      Tickets.update @_id, {$set: {status: $(e.target).val()}}
       $(e.target).val("")
       tpl.$('.dropdown-toggle[name=statusButton]').dropdown('toggle')
     
@@ -54,10 +55,10 @@ Template.ticketRow.rendered = ->
 
 Template.ticketRow.helpers
   changelog: ->
-    Changelog.find {ticketId: this._id}, {sort: timestamp: 1}
+    Changelog.find {ticketId: @_id}, {sort: timestamp: 1}
   unread: ->
-    TicketFlags.findOne({userId: Meteor.userId(), ticketId: this._id, k: 'unread'})?.v
+    TicketFlags.findOne({userId: Meteor.userId(), ticketId: @_id, k: 'unread'})?.v
   repliedTo: ->
-    TicketFlags.findOne({userId: Meteor.userId(), ticketId: this._id, k: 'replied'})
+    TicketFlags.findOne({userId: Meteor.userId(), ticketId: @_id, k: 'replied'})
   hasAttachment: ->
-    TicketFlags.findOne({ticketId: this._id, k: 'attachment'})
+    TicketFlags.findOne({ticketId: @_id, k: 'attachment'})

@@ -1,5 +1,5 @@
-limitDefault = 20
-limitIncrement = 20
+limitDefault = Meteor.settings?.public?.limitDefault || 20
+limitIncrement = Meteor.settings?.public?.limitIncrement || 20
 
 Template.queue.helpers
   alpha: ->
@@ -54,6 +54,12 @@ Template.queue.helpers
     }
 
 Template.queue.rendered = () ->
+  $(window).scroll ->
+    if $(window).scrollTop() + $(window).height() > $(document).height() - 100
+      unless Session.get('loadingMore') or (Tickets.find().count() is Counts.get('ticketCount'))
+        Session.set 'loadingMore', true
+        Session.set 'limit', Session.get('limit') + limitIncrement
+
   this.autorun () ->
     if Session.get('pseudoQueue') is 'userQueue' then myqueue = true else myqueue = false
     Meteor.subscribe 'tickets', {
@@ -66,10 +72,6 @@ Template.queue.rendered = () ->
       Session.set('loadingMore', false)
 
 Template.queue.events
-  'click a[data-action=loadMore]': (e, tpl) ->
-    Session.set 'limit', Session.get('limit') + limitIncrement
-    Session.set 'loadingMore', true
-
   'click a[data-action=clearSearch]': (e, tpl) ->
     e.stopPropagation()
     Iron.query.set 'search', ''
@@ -87,7 +89,7 @@ Template.queue.events
       tags = getTags body
       users = getUserIds body
       
-      id = Tickets.insert {
+      id = Tickets.insert
         title: body
         body: body
         tags: tags
@@ -99,7 +101,6 @@ Template.queue.events
         submittedTimestamp: new Date()
         submissionData:
           method: "Web"
-      }, (err, res) ->
-        if res
-          tpl.$('input[name=newTicket]').val('')
+     
+      tpl.$('input[name=newTicket]').val('')
 
