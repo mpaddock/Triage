@@ -1,4 +1,6 @@
 rootUrl = Meteor.absoluteUrl()
+if rootUrl[rootUrl.length-1] == '/'
+  rootUrl = rootUrl.substr(0, rootUrl.length-1)
 
 class @NotificationJob extends Job
   handleJob: ->
