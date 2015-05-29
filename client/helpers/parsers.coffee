@@ -8,7 +8,7 @@ fromNowReactive = (date) ->
   tickDeps.depend()
   return moment(date).fromNow()
 
-Template.timeParser.helpers
+Template.timeFromNow.helpers
   parsedTime: -> fromNowReactive(@date)
   fullTime: -> moment(@date).format('MMMM Do YYYY, h:mm:ss a')
 
