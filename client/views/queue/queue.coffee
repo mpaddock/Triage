@@ -1,15 +1,19 @@
-limitDefault = Meteor.settings?.public?.limitDefault || 20
-limitIncrement = Meteor.settings?.public?.limitIncrement || 20
+limit = Meteor.settings?.public?.limitDefault || 20
+offsetIncrement = Meteor.settings?.public?.offsetIncrement || 20
 
 Template.queue.helpers
   alpha: ->
     true
-  moreToLoad: ->
-    if Tickets.find().count() < Counts.get('ticketCount') then return true
   ready: ->
     Session.get 'ready'
-  loadingMore: ->
-    Session.get 'loadingMore'
+  firstVisibleTicket: ->
+    if Tickets.find().count() is 0 then 0 else Session.get('offset') + 1
+  lastVisibleTicket: ->
+    Math.min Session.get('offset') + offsetIncrement, Counts.get('ticketCount')
+  lastDisabled: ->
+    unless Number(Iron.query.get('page')) > 1 then "disabled"
+  nextDisabled: ->
+    unless ((Iron.query.get('page') || 1) * offsetIncrement) < Counts.get('ticketCount') then "disabled"
   connected: ->
     Meteor.status().connected
   noTickets: ->
@@ -54,11 +58,6 @@ Template.queue.helpers
     }
 
 Template.queue.rendered = () ->
-  $(window).scroll ->
-    if $(window).scrollTop() + $(window).height() > $(document).height() - 100
-      unless Session.get('loadingMore') or (Tickets.find().count() is Counts.get('ticketCount'))
-        Session.set 'loadingMore', true
-        Session.set 'limit', Session.get('limit') + limitIncrement
 
   this.autorun () ->
     if Session.get('pseudoQueue') is 'userQueue' then myqueue = true else myqueue = false
@@ -68,10 +67,16 @@ Template.queue.rendered = () ->
       status: Iron.query.get('status')
       tag: Iron.query.get('tag')
       user: Iron.query.get('user')
-    }, Session.get('limit'), myqueue, onReady: () ->
+    }, Session.get('offset'), limit, myqueue, onReady: () ->
       Session.set('loadingMore', false)
 
 Template.queue.events
+  'click button[data-action=nextPage]': (e, tpl) ->
+    if ((Iron.query.get('page') || 1) * offsetIncrement) < Counts.get('ticketCount')
+      Iron.query.set 'page', (Number(Iron.query.get('page')) || 1)+ 1
+  'click button[data-action=lastPage]': (e, tpl) ->
+    if Iron.query.get('page') > 1
+      Iron.query.set 'page', Number(Iron.query.get('page')) - 1
   'click a[data-action=clearSearch]': (e, tpl) ->
     e.stopPropagation()
     Iron.query.set 'search', ''

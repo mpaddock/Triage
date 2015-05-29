@@ -52,13 +52,20 @@
       </div>
     </div>
   </div>
-  <hr>
   {{/if}}
+  <div class="row">
+    <hr class="half-padding">
+    <div class="pull-right">
+      <strong>{{firstVisibleTicket}}-{{lastVisibleTicket}}</strong> of <strong>{{getPublishedCount 'ticketCount'}}</strong> 
+      <div class="btn-group">
+        <button type="button" class="btn btn-default" data-action="lastPage" {{lastDisabled}}><span class="glyphicon glyphicon-chevron-left"></span></button>
+        <button type="button" class="btn btn-default" data-action="nextPage" {{nextDisabled}}><span class="glyphicon glyphicon-chevron-right"></span></button>
+      </div>
+    </div>
+  </div>
+  <hr class="half-padding">
   {{#if ready}}
   <div class="row">
-    <div>
-      Viewing {{clientCount}} of a possible {{getPublishedCount 'ticketCount'}} tickets.
-    </div>
     <table name="ticketTable" class="table table-condensed" style="border-collapse:collapse;">
       <thead>
         <tr>
@@ -89,15 +96,11 @@
       </tbody>
     </table>
   </div>
-  {{#if loadingMore}}
-    {{> loading}}
-  {{/if}}
-
   {{else}}
     {{> loading}}
   {{/if}}
+  </div>
 
-</div>
 <div class="col-sm-2 hidden-xs">
   {{> sidebar data=tickets}}
 </div>

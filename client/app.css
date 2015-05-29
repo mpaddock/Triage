@@ -1,3 +1,12 @@
+body {
+  overflow-y: scroll;
+}
+
+.half-padding {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
 /***************************** PREFS MESSAGE *****************************/
 
 .saved-preferences {

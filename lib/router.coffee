@@ -1,4 +1,5 @@
-limitDefault = 20
+limit = Meteor.settings.public?.pageLimit || 20
+offset = Meteor.settings.public?.offset || 20
 
 Router.configure
   layoutTemplate: 'layout'
@@ -22,9 +23,9 @@ Router.map ->
     onBeforeAction: ->
       Session.set 'ready', false
       Session.set 'loadingMore', false
-      Session.set 'limit', limitDefault
       Session.set 'pseudoQueue', null
       Session.set 'queueName', @params.queueName
+      Session.set 'offset', (Iron.query.get('page')-1) * offset || 0
       @next()
       if Meteor.userId()
         [Meteor.subscribe 'tickets', {
@@ -33,7 +34,7 @@ Router.map ->
           status: Iron.query.get 'status'
           tag: Iron.query.get 'tag'
           user: Iron.query.get 'user'
-        }, limitDefault, onReady: () ->
+        }, Session.get('offset'), limit, onReady: () ->
           Session.set('ready', true)
         ]
 
@@ -50,9 +51,9 @@ Router.map ->
     onBeforeAction: ->
       Session.set 'ready', false
       Session.set 'loadingMore', false
-      Session.set 'limit', limitDefault
       Session.set 'queueName', null
       Session.set 'pseudoQueue', 'userQueue'
+      Session.set 'offset', (Iron.query.get('page')-1) * offset || 0
       @next()
       if Meteor.userId()
         [Meteor.subscribe 'tickets', {
@@ -60,7 +61,7 @@ Router.map ->
           status: Iron.query.get 'status'
           tag: Iron.query.get 'tag'
           user: Iron.query.get 'user'
-        }, limitDefault, true, onReady: () ->
+        }, Session.get('offset'), limit, true, onReady: () ->
           Session.set('ready', true)
         ]
 
@@ -69,10 +70,10 @@ Router.map ->
     template: 'queue'
     onBeforeAction: ->
       Session.set 'ready', false
-      Session.set 'limit', limitDefault
       Session.set 'loadingMore', false
       Session.set 'queueName', null
       Session.set 'pseudoQueue', 'globalQueue'
+      Session.set 'offset', (Iron.query.get('page')-1) * offset || 0
       @next()
       if Meteor.userId()
         [Meteor.subscribe 'tickets', {
@@ -80,7 +81,7 @@ Router.map ->
           status: Iron.query.get 'status'
           tag: Iron.query.get 'tag'
           user: Iron.query.get 'user'
-        }, limitDefault, onReady: () ->
+        }, Session.get('offset'), limit, onReady: () ->
           Session.set('ready', true)
         ]
 

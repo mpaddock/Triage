@@ -1,4 +1,4 @@
-Meteor.publishComposite 'tickets', (filter, limit, myqueue) ->
+Meteor.publishComposite 'tickets', (filter, offset, limit, myqueue) ->
   if @userId
     check filter, Object
     if filter.queueName? and not Queues.findOne({name: filter.queueName, memberIds: @userId})
@@ -23,7 +23,7 @@ Meteor.publishComposite 'tickets', (filter, limit, myqueue) ->
   {
     find: () ->
       Counts.publish(this, 'ticketCount', Tickets.find(mongoFilter), { noReady: true })
-      Tickets.find mongoFilter, {sort: {submittedTimestamp: -1}, limit: limit}
+      Tickets.find mongoFilter, {sort: {submittedTimestamp: -1}, limit: limit, skip: offset}
     children: [
       {
         find: (ticket) ->
