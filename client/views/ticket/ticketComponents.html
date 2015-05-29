@@ -4,7 +4,7 @@
   <div class="col-xs-4 col-md-2">
     <label for="note-{{_id}}" class="control-label pull-right">
       {{> userPortrait userId=authorId class="user-image"}}
-      <small style="font-size: 0.7em; font-weight: lighter;">{{>timeParser date=timestamp}}</small>
+      <small style="font-size: 0.7em; font-weight: lighter;">{{>timeFromNow date=timestamp}}</small>
     </label>
   </div>
   <div class="col-xs-8 col-md-10">
@@ -124,6 +124,6 @@
   <a href="/ticket/{{ticketNumber}}">#{{ticketNumber}}</a><br>
   <strong>{{queueName}}</strong><br>
   {{>timestampFormatter date=submittedTimestamp}}<br>
-  {{>timeParser date=submittedTimestamp}}
+  {{>timeFromNow date=submittedTimestamp}}
 </div>
 </template>
