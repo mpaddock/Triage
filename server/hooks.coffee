@@ -26,12 +26,14 @@ if Npm.require('cluster').isMaster
           type = "field"
           message = "changed status from #{doc.status} to #{modifier.$set.status}"
         when 'associatedUserIds'
+          console.log modifier
           type = "field"
           if modifier.$addToSet?.associatedUserIds?
             users = _.map modifier.$addToSet.associatedUserIds.$each, (x) ->
               Meteor.users.findOne({_id: x}).username
+            if users.length is 0 then users = Meteor.users.findOne(modifier.$addToSet.associatedUserIds).username
             message = "associated user(s) #{users}"
-          if modifier.$pull?.associatedUserIds?
+          else if modifier.$pull?.associatedUserIds?
             user = Meteor.users.findOne({_id: modifier.$pull.associatedUserIds}).username
             message = "disassociated user #{user}"
         when 'attachmentIds'

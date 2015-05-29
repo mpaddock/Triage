@@ -22,6 +22,17 @@ Template.ticketInfoTable.helpers
         noMatchTemplate: Template.noMatchUserPill
       ]
     }
+ 
+Template.ticketInfoTable.events
+  'keyup input[name=assignUser]': (e, tpl) ->
+    if e.which is 13
+      id = Meteor.call 'checkUsername', $(e.target).val(), (err, res) ->
+        if res
+          tpl.$('[data-toggle="tooltip"]').tooltip('hide')
+          Tickets.update tpl.data._id, {$addToSet: {associatedUserIds: res}}
+          $(e.target).val('')
+        else
+          tpl.$('[data-toggle="tooltip"]').tooltip('show')
 
 Template.ticketNoteInput.helpers
   settings: ->

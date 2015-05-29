@@ -24,17 +24,6 @@ Template.ticketRow.events
       $(e.target).val("")
       tpl.$('.dropdown-toggle[name=statusButton]').dropdown('toggle')
     
-  ### Assigning users to tickets. ###
-  'keyup input[name=assignUser]': (e, tpl) ->
-    if e.which is 13
-      id = Meteor.call 'checkUsername', $(e.target).val(), (err, res) ->
-        if res
-          tpl.$('[data-toggle="tooltip"]').tooltip('hide')
-          Tickets.update tpl.data._id, {$addToSet: {associatedUserIds: res}}
-          $(e.target).val('')
-        else
-          tpl.$('[data-toggle="tooltip"]').tooltip('show')
-
   'show.bs.collapse': (e, tpl) ->
     Meteor.call 'removeFlag', Meteor.userId(), @_id, 'unread'
     tpl.$('span[name=plusminus]').removeClass('glyphicon-plus').addClass('glyphicon-minus')

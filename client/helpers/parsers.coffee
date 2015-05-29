@@ -1,4 +1,4 @@
-tickDeps = new Tracker.Dependency
+tickDeps = new Tracker.Dependency()
 
 Meteor.setInterval ->
   tickDeps.changed()
