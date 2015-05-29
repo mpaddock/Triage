@@ -10,7 +10,6 @@ boilerplate-generator@1.0.3
 callback-hook@1.0.3
 check@1.0.5
 coffeescript@1.0.6
-copleykj:livestamp@1.1.7
 cottz:iron-query@1.2.1
 dandv:caret-position@2.1.1
 ddp@1.1.0
@@ -52,7 +51,6 @@ mizzao:autocomplete@0.5.1
 mizzao:timesync@0.3.1
 mizzao:user-status@0.6.4
 mobile-status-bar@1.0.3
-momentjs:moment@2.9.0
 mongo@1.1.0
 mongo-livedata@1.0.8
 mrt:moment@2.8.1
