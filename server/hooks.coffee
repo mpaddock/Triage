@@ -26,7 +26,6 @@ if Npm.require('cluster').isMaster
           type = "field"
           message = "changed status from #{doc.status} to #{modifier.$set.status}"
         when 'associatedUserIds'
-          console.log modifier
           type = "field"
           if modifier.$addToSet?.associatedUserIds?
             users = _.map modifier.$addToSet.associatedUserIds.$each, (x) ->
