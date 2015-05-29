@@ -1,7 +1,6 @@
 #TODO: Compress these into one template that takes an argument.
 
 Template.timeParser.helpers
-  parsedTime: -> moment(@date).fromNow()
   fullTime: -> moment(@date).format('MMMM Do YYYY, h:mm:ss a')
 
 Template.timestampFormatter.helpers
