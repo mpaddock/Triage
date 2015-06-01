@@ -11,9 +11,9 @@ Template.queue.helpers
   lastVisibleTicket: ->
     Math.min Session.get('offset') + offsetIncrement, Counts.get('ticketCount')
   lastDisabled: ->
-    unless Number(Iron.query.get('page')) > 1 then "disabled"
+    if (Session.get('offset') - offsetIncrement + 1) <= 0 then "disabled"
   nextDisabled: ->
-    unless ((Iron.query.get('page') || 1) * offsetIncrement) < Counts.get('ticketCount') then "disabled"
+    if (Session.get('offset') + offsetIncrement + 1) > Counts.get('ticketCount') then "disabled"
   connected: ->
     Meteor.status().connected
   noTickets: ->
@@ -57,32 +57,23 @@ Template.queue.helpers
       ]
     }
 
-Template.queue.rendered = () ->
-
-  this.autorun () ->
-    if Session.get('pseudoQueue') is 'userQueue' then myqueue = true else myqueue = false
-    Meteor.subscribe 'tickets', {
-      queueName: Session.get('queueName')
-      search: Iron.query.get('search')
-      status: Iron.query.get('status')
-      tag: Iron.query.get('tag')
-      user: Iron.query.get('user')
-    }, Session.get('offset'), limit, myqueue, onReady: () ->
-      Session.set('loadingMore', false)
-
 Template.queue.events
   'click button[data-action=nextPage]': (e, tpl) ->
-    if ((Iron.query.get('page') || 1) * offsetIncrement) < Counts.get('ticketCount')
-      Iron.query.set 'page', (Number(Iron.query.get('page')) || 1)+ 1
+    start = Number(Iron.query.get('start')) || 0
+    if (start + offsetIncrement) < Counts.get('ticketCount')
+      Iron.query.set 'start', start + offsetIncrement
   'click button[data-action=lastPage]': (e, tpl) ->
-    if Iron.query.get('page') > 1
-      Iron.query.set 'page', Number(Iron.query.get('page')) - 1
+    start = Number(Iron.query.get('start')) || 0
+    if (start - offsetIncrement) >= 0
+      Iron.query.set 'start', start - offsetIncrement
+
   'click a[data-action=clearSearch]': (e, tpl) ->
     e.stopPropagation()
     Iron.query.set 'search', ''
     Iron.query.set 'tag', ''
     Iron.query.set 'status', ''
     Iron.query.set 'user', ''
+    Iron.query.set 'start', ''
 
   'click button[data-action=openQuickAdd]': (e, tpl) ->
     Session.set 'addingTicket', !Session.get('addingTicket')

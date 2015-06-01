@@ -75,6 +75,7 @@ Template.sidebar.events
       Iron.query.set 'tag', newTags.join()
       Iron.query.set 'status', newStatus.join()
       Iron.query.set 'user', newUsers.join()
+      Iron.query.set 'start', 0
       $(e.target).val('')
 
   'click a[data-action="removeFilter"]': (e, tpl) ->
@@ -84,6 +85,7 @@ Template.sidebar.events
     value = this.valueOf()
     filter = _.without filter, value
     Iron.query.set type, filter.join()
+    Iron.query.set 'start', 0
 
   'change input:checkbox': (e, tpl) ->
     filter = Iron.query.get(@type)?.split(',') || []
@@ -93,6 +95,7 @@ Template.sidebar.events
     else
       filter = _.without filter, @name
     Iron.query.set @type, filter.join()
+    Iron query.set 'start', 0
 
   'hide.bs.collapse': (e, tpl) ->
     tpl.$('span[name='+e.target.id+']').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-right')

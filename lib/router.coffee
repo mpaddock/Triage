@@ -25,7 +25,7 @@ Router.map ->
       Session.set 'loadingMore', false
       Session.set 'pseudoQueue', null
       Session.set 'queueName', @params.queueName
-      Session.set 'offset', (Iron.query.get('page')-1) * offset || 0
+      Session.set 'offset', (Number(Iron.query.get('start')) || 0)
       @next()
       if Meteor.userId()
         [Meteor.subscribe 'tickets', {
@@ -53,7 +53,7 @@ Router.map ->
       Session.set 'loadingMore', false
       Session.set 'queueName', null
       Session.set 'pseudoQueue', 'userQueue'
-      Session.set 'offset', (Iron.query.get('page')-1) * offset || 0
+      Session.set 'offset', (Number(Iron.query.get('start')) || 0)
       @next()
       if Meteor.userId()
         [Meteor.subscribe 'tickets', {
@@ -73,7 +73,7 @@ Router.map ->
       Session.set 'loadingMore', false
       Session.set 'queueName', null
       Session.set 'pseudoQueue', 'globalQueue'
-      Session.set 'offset', (Iron.query.get('page')-1) * offset || 0
+      Session.set 'offset', (Number(Iron.query.get('start')) || 0)
       @next()
       if Meteor.userId()
         [Meteor.subscribe 'tickets', {

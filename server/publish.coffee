@@ -1,4 +1,5 @@
 Meteor.publishComposite 'tickets', (filter, offset, limit, myqueue) ->
+  if offset < 0 then offset = 0
   if @userId
     check filter, Object
     if filter.queueName? and not Queues.findOne({name: filter.queueName, memberIds: @userId})
