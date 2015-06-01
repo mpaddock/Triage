@@ -11,7 +11,7 @@ Template.queue.helpers
   lastVisibleTicket: ->
     Math.min Session.get('offset') + offsetIncrement, Counts.get('ticketCount')
   lastDisabled: ->
-    if (Session.get('offset') - offsetIncrement + 1) <= 0 then "disabled"
+    if Session.get('offset') is 0 then "disabled"
   nextDisabled: ->
     if (Session.get('offset') + offsetIncrement + 1) > Counts.get('ticketCount') then "disabled"
   connected: ->
@@ -64,8 +64,7 @@ Template.queue.events
       Iron.query.set 'start', start + offsetIncrement
   'click button[data-action=lastPage]': (e, tpl) ->
     start = Number(Iron.query.get('start')) || 0
-    if (start - offsetIncrement) >= 0
-      Iron.query.set 'start', start - offsetIncrement
+    Iron.query.set 'start', Math.max start - offsetIncrement, 0
 
   'click a[data-action=clearSearch]': (e, tpl) ->
     e.stopPropagation()
