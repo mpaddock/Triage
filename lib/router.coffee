@@ -100,7 +100,7 @@ Router.map ->
     where: 'server'
     action: ->
       # TODO: check X-Auth-Token header
-      unless @request.headers.host.split(':')[0] in Meteor.settings?.remoteWhitelist?
+      unless @request.headers['x-forwarded-for'] in Meteor.settings?.remoteWhitelist?
         throw new Meteor.Error 403,
           'Access denied.  Submit from a whitelisted IP address or use an API token.'
 
