@@ -100,8 +100,8 @@ Router.map ->
     where: 'server'
     action: ->
       # TODO: check X-Auth-Token header
-      unless @request.headers['x-forwarded-for'] in Meteor.settings?.remoteWhitelist?
-        console.info 'API submit request from '+@request.headers['x-forwarded-for']+' not in API whitelist'
+      unless @request.headers['x-forwarded-for'].toString() in Meteor.settings?.remoteWhitelist?
+        console.log 'API submit request from '+@request.headers['x-forwarded-for']+' not in API whitelist'
         throw new Meteor.Error 403,
           'Access denied.  Submit from a whitelisted IP address or use an API token.'
 
