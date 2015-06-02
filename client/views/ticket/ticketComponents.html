@@ -66,7 +66,7 @@
           {{#if file.thumbnail}}
           <img style="max-width: 64px; max-height:24px;" src="/file/{{file.thumbnail}}" />
           {{/if}}
-          <a data-action="downloadAttachment" href="/file/{{file.filenameOnDisk}}">{{file.filename}}</a><br />
+          <a data-action="downloadAttachment" href="/file/{{file.filenameOnDisk}}" target="_blank">{{file.filename}}</a><br />
           {{/each}}
         </td>
       </tr>
