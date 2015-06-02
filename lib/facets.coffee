@@ -22,6 +22,8 @@
     mongoFilter = {}
     if typeof filter.queueName is 'string'
       mongoFilter.queueName = filter.queueName
+    else if filter.queueName is null
+      return
     else
       mongoFilter.queueName = {$in: filter.queueName}
     userIds = []
@@ -91,6 +93,23 @@
       else
         filter[f[0]] = f[1]
     return filter
+ 
+  verifyFilterObject: (filter, userId) ->
+    if not userId then null
+    check filter, Object
+    f = filter
+    if filter.queueName? and not Queues.findOne({name: filter.queueName, memberIds: userId})
+      f.queueName = null
+    else if not filter.queueName?
+      f.userId = null
+      f.queueName = _.pluck Queues.find({memberIds: userId, {sort: {name: 1}}}).fetch(), 'name'
+    else
+      f.userId = null
+    if not (filter.status or filter.ticketNumber)
+      #If no status filter and we're not looking at a specific ticket, default to 'not Closed' tickets.
+      f.status = "!Closed"
+
+    return f
 
 if Meteor.isServer
   Meteor.startup ->
