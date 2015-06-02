@@ -5,7 +5,7 @@ Meteor.publishComposite 'tickets', (filter, offset, limit, myqueue) ->
       filter.userId = @userId
       filter.queueName = _.pluck Queues.find({}, {sort: {name: 1}}).fetch(), 'name'
 
-    f = Filter.verifyFilterObject filter
+    f = Filter.verifyFilterObject filter, @userId
 
     mongoFilter = Filter.toMongoSelector f
     facetPath = Filter.toFacetString f
