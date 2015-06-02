@@ -14,6 +14,9 @@
     "username": "ldaptestaccount",
     "password": "password"
   },
+  "remoteWhitelist": [
+    "127.0.0.1"
+  ],
   "public": {
     "pageLimitDefault": 20,
     "pageLimitIncrement": 20

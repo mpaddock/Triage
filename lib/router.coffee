@@ -99,11 +99,10 @@ Router.map ->
     path: '/api/1.0/submit'
     where: 'server'
     action: ->
-      # TODO: check IP whitelist
       # TODO: check X-Auth-Token header
-
-      throw new Meteor.Error 403,
-        'Access denied.  Submit from a whitelisted IP address or use an API token.'
+      unless @request.headers['x-forwarded-for'] in Meteor.settings?.remoteWhitelist?
+        throw new Meteor.Error 403,
+          'Access denied.  Submit from a whitelisted IP address or use an API token.'
 
       _.each ['username', 'email', 'description', 'ip_address'], (k) ->
         if not @request.params.k? then throw new Meteor.Error 412, "Missing required parameter #{k} in request."
