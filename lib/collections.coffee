@@ -52,6 +52,9 @@
     type: Number
     unique: true
     optional: true
+  onBehalfOfSubmitterId:
+    type: String
+    optional: true
 
 @TicketFlags = new Mongo.Collection 'ticketFlags'
 # TODO: SimpleSchema doesnt handle v very well, so skip for now
