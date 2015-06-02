@@ -105,20 +105,22 @@ Router.map ->
         throw new Meteor.Error 403,
           'Access denied.  Submit from a whitelisted IP address or use an API token.'
 
-      _.each ['username', 'email', 'description', 'ip_address'], (k) ->
-        if not @request.params.k? then throw new Meteor.Error 412, "Missing required parameter #{k} in request."
+      console.log @request.body
+      for k in ['username', 'email', 'description', 'ip_address']
+        if not @request.body[k]? then throw new Meteor.Error 412, "Missing required parameter #{k} in request."
 
       Tickets.insert
-        title: @request.params.description.substr 0, 60 # TODO: better summarizer
-        body: @request.params.description
-        authorId: Meteor.users.findOne({username: @request.params.username})._id
+        title: @request.body.description.substr 0, 60 # TODO: better summarizer
+        body: @request.body.description
+        authorName: @request.body.username
+        authorId: Meteor.users.findOne({username: @request.body.username})._id
         submissionData:
           method: 'Web'
-          ipAddress: @request.params.ip_address
-          hostname: @request.params.hostname? @request.params.ip_address
+          ipAddress: @request.body.ip_address
+          hostname: @request.body.hostname? @request.body.ip_address
         submittedTimestamp: Date.now()
         queueName: 'Triage'
-        tags: @request.params.tags?.split(';\n') || []
+        tags: @request.body.tags?.split(';\n') || []
 
       @response.end 'Submission successful.'
 
