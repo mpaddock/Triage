@@ -12,13 +12,13 @@ class @NotificationJob extends Job
 
 Tickets.after.insert (userId, doc) ->
   #After insert so we can get ticketNumber.
-  user = Meteor.users.findOne(userId)
-  if user.notificationSettings.submitted
+  author = Meteor.users.findOne(doc.authorId)
+  if author.notificationSettings.submitted
     subject = "Triage ticket ##{doc.ticketNumber} submitted: #{doc.title}"
     message = "You submitted ticket #{doc.ticketNumber} with body:<br>#{doc.body}<br><br>
       <a href='#{rootUrl}/ticket/#{doc.ticketNumber}'>View the ticket here.</a>"
     
-    Job.push new NotificationJob email: user.mail, subject: subject, html: message
+    Job.push new NotificationJob email: author.mail, subject: subject, html: message
 
 Tickets.after.update (userId, doc, fieldNames, modifier) ->
   user = Meteor.users.findOne(userId)
