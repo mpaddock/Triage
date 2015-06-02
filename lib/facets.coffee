@@ -102,7 +102,7 @@
       f.queueName = null
     else if not filter.queueName?
       f.userId = null
-      f.queueName = _.pluck Queues.find({memberIds: userIdi}, {sort: {name: 1}}).fetch(), 'name'
+      f.queueName = _.pluck Queues.find({memberIds: userId}, {sort: {name: 1}}).fetch(), 'name'
     else
       f.userId = null
     if not (filter.status or filter.ticketNumber)
