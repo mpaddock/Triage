@@ -5,5 +5,7 @@ Template.ticket.helpers
     ticket = Tickets.findOne {ticketNumber: Session.get('ticketNumber')}
     Session.set 'queueName', ticket?.queueName
     return ticket
+  bodyParagraph: ->
+    @body.split('\n')
   changelog: ->
     Changelog.find {ticketId: this._id}, {sort: timestamp: 1}

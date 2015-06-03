@@ -43,6 +43,8 @@ Template.ticketRow.rendered = ->
   $('form[name=ticketForm]').submit (e) -> e.preventDefault()
 
 Template.ticketRow.helpers
+  bodyParagraph: ->
+    @body.split('\n')
   changelog: ->
     Changelog.find {ticketId: @_id}, {sort: timestamp: 1}
   unread: ->

@@ -46,7 +46,9 @@
         <div class="panel-body ticket-row-panel-body">
 
           <blockquote>
-            {{body}}
+            {{#each bodyParagraph}}
+            <p>{{this}}</p>
+            {{/each}}
           </blockquote>
 
           {{> ticketInfoTable}}
