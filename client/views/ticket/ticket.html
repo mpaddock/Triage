@@ -16,7 +16,9 @@ No ticket found.
     </blockquote>
     <label for="body">Body:</label>
     <blockquote>
-      {{body}}
+      {{#each bodyParagraph}}
+        <p>{{this}}</p>
+      {{/each}}
     </blockquote>
 
     {{> ticketInfoTable}}
