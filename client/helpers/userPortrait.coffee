@@ -1,8 +1,8 @@
 Template.userPortrait.helpers
-  user: -> Meteor.users.findOne {_id: @userId}
+  user: -> Meteor.users.findOne @userId
   online: ->
     if @fadeIfOffline
-      unless Meteor.users.findOne({_id: @userId}).status?.online
+      if Meteor.users.findOne(@userId).status?.idle or not Meteor.users.findOne(@userId).status?.online
         return "offline"
 
 Template.userPortrait.events
