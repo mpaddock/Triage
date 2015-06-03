@@ -14,8 +14,10 @@ Tickets.after.insert (userId, doc) ->
   #After insert so we can get ticketNumber.
   author = Meteor.users.findOne(doc.authorId)
   if author.notificationSettings.submitted
-    subject = "Triage ticket ##{doc.ticketNumber} submitted: #{doc.title}"
-    message = "You submitted ticket #{doc.ticketNumber} with body:<br>#{doc.body}<br><br>
+    title = validator.escape(doc.title)
+    body = validator.escape(doc.body)
+    subject = "Triage ticket ##{doc.ticketNumber} submitted: #{title}"
+    message = "You submitted ticket #{doc.ticketNumber} with body:<br>#{body}<br><br>
       <a href='#{rootUrl}/ticket/#{doc.ticketNumber}'>View the ticket here.</a>"
     
     Job.push new NotificationJob email: author.mail, subject: subject, html: message
@@ -23,13 +25,17 @@ Tickets.after.insert (userId, doc) ->
 Tickets.after.update (userId, doc, fieldNames, modifier) ->
   user = Meteor.users.findOne(userId)
   author = Meteor.users.findOne(doc.authorId)
+  title = validator.escape(doc.title)
+  body = validator.escape(doc.body)
 
   if _.contains fieldNames, "status"
-    subject = "User #{user.username} changed status for Triage ticket ##{doc.ticketNumber}: #{doc.title}"
+    oldStatus = validator.escape(doc.status)
+    newStatus = validator.escape(modifier.$set.status)
+    subject = "User #{user.username} changed status for Triage ticket ##{doc.ticketNumber}: #{title}"
     message = "<strong>User #{user.username} changed status for ticket ##{doc.ticketNumber} from
-      #{doc.status} to #{modifier.$set.status}.</strong><br>
+      #{oldStatus} to #{newStatus}.</strong><br>
       The original ticket body was:<br>
-      #{doc.body}<br><br>
+      #{body}<br><br>
       <a href='#{rootUrl}/ticket/#{doc.ticketNumber}'>View the ticket here.</a>"
     
     authorSent = false
@@ -44,10 +50,10 @@ Tickets.after.update (userId, doc, fieldNames, modifier) ->
 
   if _.contains fieldNames, "attachmentIds"
     file = FileRegistry.findOne(modifier.$addToSet.attachmentIds)
-    subject = "User #{user.username} added an attachment to Triage ticket ##{doc.ticketNumber}: #{doc.title}"
+    subject = "User #{user.username} added an attachment to Triage ticket ##{doc.ticketNumber}: #{title}"
     message = "Attachment #{file.filename} added to ticket #{doc.ticketNumber}.
       <a href='#{rootUrl}/file/#{file.filenameOnDisk}'>View the attachment here.<br><br>
-      The original ticket body was:<br>#{doc.body}<br><br>
+      The original ticket body was:<br>#{body}<br><br>
       <a href='#{rootUrl}/ticket/#{doc.ticketNumber}'>View the ticket here.</a>"
     
     authorSent = false
@@ -65,12 +71,16 @@ Changelog.after.insert (userId, doc) ->
     ticket = Tickets.findOne(doc.ticketId)
     author = Meteor.users.findOne(ticket.authorId)
     user = Meteor.users.findOne(userId)
+    title = validator.escape(ticket.title)
+    body = validator.escape(ticket.body)
+    note = validator.escape(doc.message)
     authorSent = false
-    subject = "Note added to Triage ticket ##{ticket.ticketNumber}: #{ticket.title}"
+
+    subject = "Note added to Triage ticket ##{ticket.ticketNumber}: #{title}"
     message = "<strong>User #{doc.authorName} added a note to ticket ##{ticket.ticketNumber}:</strong><br>
-      #{doc.message}<br><br>
+      #{note}<br><br>
       <strong>#{ticket.authorName}'s original ticket body was:</strong><br>
-      #{ticket.body}<br><br>
+      #{body}<br><br>
       <a href='#{rootUrl}/ticket/#{ticket.ticketNumber}'>View the ticket here.</a>"
 
     if (user._id is author._id) and (user.notificationSettings.authorSelfNote)
@@ -87,4 +97,5 @@ Changelog.after.insert (userId, doc) ->
           Job.push new NotificationJob email: aUser.mail, subject: subject, html: message
         else if aUser.notificationSettings.associatedOtherNote
           Job.push new NotificationJob email: aUser.mail, subject: subject, html: message
+
 
