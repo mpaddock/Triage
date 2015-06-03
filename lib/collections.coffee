@@ -52,7 +52,8 @@
     type: Number
     unique: true
     optional: true
-  onBehalfOfSubmitterId:
+  submittedByUserId:
+    #A record of the 'true' submitter for on behalf of submissions.
     type: String
     optional: true
 

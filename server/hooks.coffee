@@ -6,8 +6,7 @@ if Npm.require('cluster').isMaster
 
   Tickets.before.insert (userId, doc) ->
     #Ticket numbering and server-side ticket timestamping.
-    if userId and userId isnt doc.authorId
-      doc.onBehalfOfSubmitterId = userId
+    if userId then doc.submittedByUserId = userId
     max = Tickets.findOne({}, {sort:{ticketNumber:-1}})?.ticketNumber || 0
     doc.ticketNumber = max + 1
     doc.submittedTimestamp = new Date()
