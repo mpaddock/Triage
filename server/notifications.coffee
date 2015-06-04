@@ -13,7 +13,7 @@ class @NotificationJob extends Job
 Tickets.after.insert (userId, doc) ->
   #After insert so we can get ticketNumber.
   author = Meteor.users.findOne(doc.authorId)
-  if author.notificationSettings.submitted
+  if author.notificationSettings?.submitted
     title = validator.escape(doc.title)
     body = validator.escape(doc.body)
     subject = "Triage ticket ##{doc.ticketNumber} submitted: #{title}"
@@ -39,13 +39,13 @@ Tickets.after.update (userId, doc, fieldNames, modifier) ->
       <a href='#{rootUrl}/ticket/#{doc.ticketNumber}'>View the ticket here.</a>"
     
     authorSent = false
-    if author.notificationSettings.authorStatusChanged
+    if author.notificationSettings?.authorStatusChanged
       Job.push new NotificationJob email: author.mail, subject: subject, html: message
       authorSent = true
     _.each doc.associatedUserIds, (a) ->
       unless (a is doc.authorId) and authorSent = true
         aUser = Meteor.users.findOne(a)
-        if aUser.notificationSettings.associatedStatusChanged
+        if aUser.notificationSettings?.associatedStatusChanged
           Job.push new NotificationJob email: aUser.mail, subject: subject, html: message
 
   if _.contains fieldNames, "attachmentIds"
@@ -57,13 +57,13 @@ Tickets.after.update (userId, doc, fieldNames, modifier) ->
       <a href='#{rootUrl}/ticket/#{doc.ticketNumber}'>View the ticket here.</a>"
     
     authorSent = false
-    if author.notificationSettings.authorAttachment
+    if author.notificationSettings?.authorAttachment
       Job.push new NotificationJob email: author.mail, subject: subject, html: message
       authorSent = true
     _.each doc.associatedUserIds, (a) ->
       unless (a is doc.authorId) and (authorSent = true)
         aUser = Meteor.users.findOne(a)
-        if aUser.notificationSettings.associatedAttachment
+        if aUser.notificationSettings?.associatedAttachment
           Job.push new NotificationJob email: aUser.mail, subject: subject, html: message
 
 Changelog.after.insert (userId, doc) ->
@@ -83,19 +83,19 @@ Changelog.after.insert (userId, doc) ->
       #{body}<br><br>
       <a href='#{rootUrl}/ticket/#{ticket.ticketNumber}'>View the ticket here.</a>"
 
-    if (user._id is author._id) and (user.notificationSettings.authorSelfNote)
+    if (user._id is author._id) and (user.notificationSettings?.authorSelfNote)
       Job.push new NotificationJob email: user.mail, subject: subject, html: message
       authorSent = true
-    else if author.notificationSettings.authorOtherNote
+    else if author.notificationSettings?.authorOtherNote
       Job.push new NotificationJob email: author.mail, subject: subject, html: message
       authorSent = true
     
     _.each ticket.associatedUserIds, (a) ->
       unless (a is author._id) and (authorSent = true)
         aUser = Meteor.users.findOne(a)
-        if (aUser._id is userId) and (aUser.notificationSettings.associatedSelfNote)
+        if (aUser._id is userId) and (aUser.notificationSettings?.associatedSelfNote)
           Job.push new NotificationJob email: aUser.mail, subject: subject, html: message
-        else if aUser.notificationSettings.associatedOtherNote
+        else if aUser.notificationSettings?.associatedOtherNote
           Job.push new NotificationJob email: aUser.mail, subject: subject, html: message
 
 
