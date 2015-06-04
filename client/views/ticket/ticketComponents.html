@@ -88,7 +88,7 @@
         <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="False">Attach File <span class="caret"></span></button>
         <ul class="dropdown-menu" role="menu">
           <li><a data-action="uploadFile">Upload File</a></li>
-          <li><a href="#">Take Picture</a></li>
+          {{#if isCordova}}<li><a href="#">Take Picture</a></li>{{/if}}
         </ul>
       </div>
     </div>
