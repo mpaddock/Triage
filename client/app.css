@@ -332,3 +332,7 @@ blockquote {
 .note-well {
   margin-bottom: 0px;
 }
+
+.panel {
+  word-wrap: break-word;
+}
