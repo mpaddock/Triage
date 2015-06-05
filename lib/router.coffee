@@ -109,6 +109,8 @@ Router.map ->
       for k in ['username', 'email', 'description', 'ip_address', 'queueName']
         if not @request.body[k]? then throw new Meteor.Error 412, "Missing required parameter #{k} in request."
 
+      Meteor.call 'checkUsername', @request.body.username
+
       Tickets.insert
         title: @request.body.description.substr 0, 60 # TODO: better summarizer
         body: @request.body.description
