@@ -336,3 +336,8 @@ blockquote {
 .panel {
   word-wrap: break-word;
 }
+
+.error {
+  font-weight: bold;
+  color: red;
+}

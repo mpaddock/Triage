@@ -1,5 +1,6 @@
 Template.ticketModal.helpers
   queues: -> Queues.find()
+  errorText: -> Session.get 'errorText'
   settings: ->
     {
       position: "bottom"
@@ -41,8 +42,7 @@ Template.ticketModal.events
     users = _.uniq users?.concat getUserIds(title) || []
     
     #If no onBehalfOf, submitter is the user.
-    submitter = tpl.find('input[name=onBehalfOf]').value || Meteor.user().username
-
+    submitter = tpl.$('input[name=onBehalfOf]').val() || Meteor.user().username
     queueName = tpl.$('select[name=queue]').val()
 
     Meteor.call 'checkUsername', submitter, (err, res) ->
@@ -67,9 +67,9 @@ Template.ticketModal.events
             method: "Web"
         }, (err, res) ->
           if err
-            console.log err
+            Session.set 'errorText', "Error: #{err.message}."
             tpl.$('.has-error').removeClass('has-error')
-            for key in err.invalidKeys?
+            for key in err.invalidKeys
               tpl.$('[name='+key.name+']').closest('div .form-group').addClass('has-error')
           else
             clearFields tpl
@@ -117,6 +117,7 @@ Template.ticketModal.rendered = () ->
   })
 
 clearFields = (tpl) ->
+  Session.set 'errorText', null
   tpl.$('input, textarea').val('')
   tpl.$('.has-error').removeClass('has-error')
   tpl.$('.has-success').removeClass('has-success')
