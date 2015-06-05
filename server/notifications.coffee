@@ -86,7 +86,7 @@ Changelog.after.insert (userId, doc) ->
     if (user._id is author._id) and (user.notificationSettings?.authorSelfNote)
       Job.push new NotificationJob email: user.mail, subject: subject, html: message
       authorSent = true
-    else if author.notificationSettings?.authorOtherNote
+    else if (user._id isnt author._id) and (author.notificationSettings?.authorOtherNote)
       Job.push new NotificationJob email: author.mail, subject: subject, html: message
       authorSent = true
     
