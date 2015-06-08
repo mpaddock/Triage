@@ -1,11 +1,12 @@
 rootUrl = Meteor.absoluteUrl()
 if rootUrl[rootUrl.length-1] == '/'
   rootUrl = rootUrl.substr(0, rootUrl.length-1)
+fromEmail = Meteor.settings.email?.fromEmail || "triagebot@as.uky.edu"
 
 class @NotificationJob extends Job
   handleJob: ->
     Email.send
-      from: Meteor.settings.email.fromEmail
+      from: @params.fromEmail
       to: @params.email
       subject: @params.subject
       html: @params.html
@@ -20,7 +21,7 @@ Tickets.after.insert (userId, doc) ->
     message = "You submitted ticket #{doc.ticketNumber} with body:<br>#{body}<br><br>
       <a href='#{rootUrl}/ticket/#{doc.ticketNumber}'>View the ticket here.</a>"
     
-    Job.push new NotificationJob email: author.mail, subject: subject, html: message
+    Job.push new NotificationJob fromEmail: fromEmail, toEmail: author.mail, subject: subject, html: message
 
 Tickets.after.update (userId, doc, fieldNames, modifier) ->
   user = Meteor.users.findOne(userId)
@@ -40,13 +41,13 @@ Tickets.after.update (userId, doc, fieldNames, modifier) ->
     
     authorSent = false
     if author.notificationSettings?.authorStatusChanged
-      Job.push new NotificationJob email: author.mail, subject: subject, html: message
+      Job.push new NotificationJob fromEmail: fromEmail, toEmail: author.mail, subject: subject, html: message
       authorSent = true
     _.each doc.associatedUserIds, (a) ->
       unless (a is doc.authorId) and authorSent = true
         aUser = Meteor.users.findOne(a)
         if aUser.notificationSettings?.associatedStatusChanged
-          Job.push new NotificationJob email: aUser.mail, subject: subject, html: message
+          Job.push new NotificationJob fromEmail: fromEmail, toEmail: aUser.mail, subject: subject, html: message
 
   if _.contains fieldNames, "attachmentIds"
     file = FileRegistry.findOne(modifier.$addToSet.attachmentIds)
@@ -58,13 +59,13 @@ Tickets.after.update (userId, doc, fieldNames, modifier) ->
     
     authorSent = false
     if author.notificationSettings?.authorAttachment
-      Job.push new NotificationJob email: author.mail, subject: subject, html: message
+      Job.push new NotificationJob fromEmail: fromEmail, toEmail: author.mail, subject: subject, html: message
       authorSent = true
     _.each doc.associatedUserIds, (a) ->
       unless (a is doc.authorId) and (authorSent = true)
         aUser = Meteor.users.findOne(a)
         if aUser.notificationSettings?.associatedAttachment
-          Job.push new NotificationJob email: aUser.mail, subject: subject, html: message
+          Job.push new NotificationJob fromEmail: fromEmail, toEmail: aUser.mail, subject: subject, html: message
 
 Changelog.after.insert (userId, doc) ->
   if doc.type is "note"
@@ -84,18 +85,18 @@ Changelog.after.insert (userId, doc) ->
       <a href='#{rootUrl}/ticket/#{ticket.ticketNumber}'>View the ticket here.</a>"
 
     if (user._id is author._id) and (user.notificationSettings?.authorSelfNote)
-      Job.push new NotificationJob email: user.mail, subject: subject, html: message
+      Job.push new NotificationJob fromEmail: fromEmail, toEmail: user.mail, subject: subject, html: message
       authorSent = true
     else if (user._id isnt author._id) and (author.notificationSettings?.authorOtherNote)
-      Job.push new NotificationJob email: author.mail, subject: subject, html: message
+      Job.push new NotificationJob fromEmail: fromEmail, toEmail: author.mail, subject: subject, html: message
       authorSent = true
     
     _.each ticket.associatedUserIds, (a) ->
       unless (a is author._id) and (authorSent = true)
         aUser = Meteor.users.findOne(a)
         if (aUser._id is userId) and (aUser.notificationSettings?.associatedSelfNote)
-          Job.push new NotificationJob email: aUser.mail, subject: subject, html: message
+          Job.push new NotificationJob fromEmail: fromEmail, toEmail: aUser.mail, subject: subject, html: message
         else if aUser.notificationSettings?.associatedOtherNote
-          Job.push new NotificationJob email: aUser.mail, subject: subject, html: message
+          Job.push new NotificationJob fromEmail: fromEmail, toEmail: aUser.mail, subject: subject, html: message
 
 
