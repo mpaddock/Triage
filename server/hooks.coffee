@@ -20,19 +20,24 @@ if Npm.require('cluster').isMaster
           type = "field"
           if modifier.$addToSet?.tags?
             tags = _.difference modifier.$addToSet.tags.$each, doc.tags
-            message = "added tag(s) #{tags}"
+            unless tags.length is 0
+              message = "added tag(s) #{tags}"
           if modifier.$pull?.tags?
             message = "removed tag(s) #{modifier.$pull.tags}"
         when 'status'
-          type = "field"
-          message = "changed status from #{doc.status} to #{modifier.$set.status}"
+          unless doc.status is modifier.$set.status
+            type = "field"
+            message = "changed status from #{doc.status} to #{modifier.$set.status}"
         when 'associatedUserIds'
           type = "field"
-          if modifier.$addToSet?.associatedUserIds?
-            users = _.map modifier.$addToSet.associatedUserIds.$each, (x) ->
+          if modifier.$addToSet?.associatedUserIds?.$each?
+            users = _.map _.difference(modifier.$addToSet.associatedUserIds.$each, doc.associatedUserIds), (x) ->
               Meteor.users.findOne({_id: x}).username
-            if users.length is 0 then users = Meteor.users.findOne(modifier.$addToSet.associatedUserIds).username
-            message = "associated user(s) #{users}"
+            unless users.length is 0
+              message = "associated user(s) #{users}"
+          else if modifier.$addToSet?.associatedUserIds?
+            user = Meteor.users.findOne(modifier.$addToSet.associatedUserIds).username
+            message = "associated user #{user}"
           else if modifier.$pull?.associatedUserIds?
             user = Meteor.users.findOne({_id: modifier.$pull.associatedUserIds}).username
             message = "disassociated user #{user}"
@@ -42,12 +47,13 @@ if Npm.require('cluster').isMaster
           otherId = file._id
           message = "attached file #{file.filename}"
 
-      Changelog.direct.insert
-        ticketId: doc._id
-        timestamp: new Date()
-        authorId: author._id
-        authorName: author.username
-        type: type
-        field: fn
-        message: message
-        otherId: otherId
+      if message
+        Changelog.direct.insert
+          ticketId: doc._id
+          timestamp: new Date()
+          authorId: author._id
+          authorName: author.username
+          type: type
+          field: fn
+          message: message
+          otherId: otherId

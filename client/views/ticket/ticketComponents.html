@@ -55,6 +55,8 @@
             {{#each tags}}
               {{> ticketTag}}
             {{/each}}
+            <a data-action="addTag">+add a tag</a>
+            <input type="text" name="addTag" style="display: none;">
           {{else}}
             {{#each tags}}
               {{this}}

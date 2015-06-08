@@ -24,6 +24,17 @@ Template.ticketInfoTable.helpers
     }
  
 Template.ticketInfoTable.events
+  'click a[data-action=addTag]': (e, tpl) ->
+    #Manual DOM manipulation since we don't want to update every ticket row at once.
+    $(e.target).hide()
+    tpl.$('input[name=addTag]').show()
+  'keyup input[name=addTag]': (e, tpl) ->
+    if e.which is 13
+      val = $(e.target).val()?.split(' ')
+      Tickets.update tpl.data._id, {$addToSet: {tags: $each: val}}
+      $(e.target).hide()
+      $(e.target).val('')
+      tpl.$('a[data-action=addTag]').show()
   'keyup input[name=assignUser]': (e, tpl) ->
     if e.which is 13
       id = Meteor.call 'checkUsername', $(e.target).val(), (err, res) ->
