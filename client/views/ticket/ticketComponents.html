@@ -43,7 +43,7 @@
           {{#if admin}}
           <div class="assign-user-field">
             <span class="icon glyphicon glyphicon-plus"></span>
-            {{>inputAutocomplete settings=settings name="assignUser" placeholder="Assign User" data-toggle="tooltip" data-trigger="manual" title="User not found."}}
+            {{>inputAutocomplete settings=userSettings name="assignUser" placeholder="Assign User" data-toggle="tooltip" data-trigger="manual" title="User not found."}}
           </div>
           {{/if}}
           {{#each associatedUserIds}}
@@ -52,11 +52,13 @@
         </td>
         <td>
           {{#if admin}}
+          <div class="add-tag-field">
+            <span class="icon glyphicon glyphicon-plus"></span>
+            {{>inputAutocomplete settings=tagSettings name="addTag" placeholder="Add a tag"}}
+          </div> 
             {{#each tags}}
               {{> ticketTag}}
             {{/each}}
-            <a data-action="addTag">+add a tag</a>
-            <input type="text" name="addTag" style="display: none;">
           {{else}}
             {{#each tags}}
               {{this}}

@@ -263,6 +263,82 @@ body {
   color: #000;
 }
 
+.assign-user-field input:focus, .assign-user-field input:active {
+  outline:none;
+}
+.assign-user-field input:hover, .assign-user-field input:focus {
+    outline:none; 
+    width: 200px;
+}
+.assign-user-field:hover .icon +input{
+    width: 200px;
+}
+.assign-user-field:hover .icon {
+    color: #fff;
+}
+
+
+.add-tag-field {
+  width: 200px;
+  vertical-align: middle;
+  white-space: nowrap;
+  position: relative;
+  margin-right: 10px;
+}
+.add-tag-field input {
+  width: 20px;
+  height: 20px;
+  background: #bbb;
+  border: none;
+  font-size: 10pt;
+  float: left;
+  color: #000;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  padding-left: 20px;
+  margin-right: 8px;
+  
+  -webkit-transition: width .55s ease;
+  -moz-transition: width .55s ease;
+  -ms-transition: width .55s ease;
+  -o-transition: width .55s ease;
+  transition: width .55s ease;
+  
+}
+
+.add-tag-field input::-webkit-input-placeholder {
+   color: #000;
+}
+.add-tag-field input:-moz-placeholder { /* Firefox 18- */
+   color: #000;  
+}
+.add-tag-field input::-moz-placeholder {  /* Firefox 19+ */
+   color: #000;  
+}
+.add-tag-field input:-ms-input-placeholder {  
+   color: #000;  
+}
+
+.add-tag-field .icon{
+  padding-left: 4px;
+  padding-top: 1px;
+  position: absolute;
+  z-index: 1;
+  color: #000;
+}
+
+.add-tag-field input:hover, .add-tag-field input:focus {
+  width: 100px;
+}
+.add-tag-field:hover .icon +input{
+  width: 100px;
+}
+.add-tag-field:hover .icon {
+  color: #fff;
+}
+
+
 .ticket-requester-portrait{
   float: left;
   text-align: center;
@@ -270,19 +346,6 @@ body {
   max-height: 24px;
   width: 40px;
 }
-
-  /* ANIMATION EFFECTS */
-.assign-user-field input:focus, .assign-user-field input:active {
-  outline:none;
-}
-  .assign-user-field input:hover, .assign-user-field input:focus {
-    outline:none; 
-    width: 200px;
-  }
-  .assign-user-field:hover .icon{
-    color: #fff;
-  }
-
 .ticket-status-input {
   padding-left: 20px;
   padding-right: 5px;
