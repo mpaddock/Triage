@@ -112,7 +112,7 @@ Router.map ->
       Meteor.call 'checkUsername', @request.body.username
 
       Tickets.insert
-        title: @request.body.description.substr 0, 60 # TODO: better summarizer
+        title: @request.body.subject_line
         body: @request.body.description
         authorName: @request.body.username
         authorId: Meteor.users.findOne({username: @request.body.username})._id
