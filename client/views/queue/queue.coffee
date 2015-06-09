@@ -35,7 +35,10 @@ Template.queue.helpers
   queues: ->
     Queues.find()
   selected: ->
-    if this.name is Meteor.user().defaultQueue then "selected"
+    if Session.get('pseudoQueue')
+      if this.name is Meteor.user().defaultQueue then "selected"
+    else
+      if this.name is Session.get('queueName') then "selected"
   settings: ->
     {
       position: "bottom"
@@ -79,23 +82,37 @@ Template.queue.events
 
   'keyup input[name=newTicket]': (e, tpl) ->
     if e.which is 13
-      body = tpl.find('input[name=newTicket]').value
-      queue = tpl.find('select[name=queue]')?.value || Session.get('queueName')
-      tags = getTags body
-      users = getUserIds body
-      
-      id = Tickets.insert
-        title: body
-        body: body
-        tags: tags
-        associatedUserIds: users
-        queueName: queue
-        authorId: Meteor.userId()
-        authorName: Meteor.user().username
-        status: "Open"
-        submittedTimestamp: new Date()
-        submissionData:
-          method: "Web"
-     
-      tpl.$('input[name=newTicket]').val('')
+      submitQuickAddTicket tpl
+
+  'keyup input[name=newTicketStatus]': (e, tpl) ->
+    if e.which is 13
+      sumbitQuickAddTicket tpl
+
+  'click button[name=quickAddTicket]': (e, tpl) ->
+    submitQuickAddTicket tpl
+
+submitQuickAddTicket = (tpl) ->
+  tpl.$('.has-error').removeClass('has-error')
+  body = tpl.$('input[name=newTicket]').val()
+  if body is "" then tpl.$('input[name=newTicket]').closest('div').addClass('has-error')
+  status = tpl.$('input[name=newTicketStatus]').val()
+  if status is "" then tpl.$('input[name=newTicketStatus]').closest('div').addClass('has-error')
+  queue = tpl.$('select[name=queue]')?.val() || Session.get('queueName')
+  tags = getTags body
+  users = getUserIds body
+  if tpl.$('.has-error').length is 0
+    Tickets.insert
+      title: body
+      body: body
+      tags: tags
+      associatedUserIds: users
+      queueName: queue
+      authorId: Meteor.userId()
+      authorName: Meteor.user().username
+      status: status
+      submittedTimestamp: new Date()
+      submissionData:
+        method: "Web"
+
+    tpl.$('input[name=newTicket]').val('')
 

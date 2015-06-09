@@ -404,3 +404,14 @@ blockquote {
   font-weight: bold;
   color: red;
 }
+
+.form-inline .form-group .quick-add-input {
+  width: 35em;
+  margin-right: 10px;
+}
+
+.form-inline .form-group .quick-add-status-input {
+  width: 10em;
+  margin-right: 10px;
+}
+
