@@ -279,25 +279,24 @@ body {
 
 
 .add-tag-field {
-  width: 200px;
+  width: 100px;
   vertical-align: middle;
   white-space: nowrap;
   position: relative;
-  margin-right: 10px;
 }
 .add-tag-field input {
-  width: 20px;
-  height: 20px;
+  width: 40px;
+  height: 40px;
   background: #bbb;
   border: none;
   font-size: 10pt;
   float: left;
   color: #000;
-  -webkit-border-radius: 3px;
-  -moz-border-radius: 3px;
-  border-radius: 3px;
-  padding-left: 20px;
-  margin-right: 8px;
+  padding-left: 40px;
+  margin-right: 10px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
   
   -webkit-transition: width .55s ease;
   -moz-transition: width .55s ease;
@@ -321,18 +320,19 @@ body {
 }
 
 .add-tag-field .icon{
-  padding-left: 4px;
-  padding-top: 1px;
   position: absolute;
+  top: 50%;
+  margin-left: 14px;
+  margin-top: 12px;
   z-index: 1;
   color: #000;
 }
 
 .add-tag-field input:hover, .add-tag-field input:focus {
-  width: 100px;
+  width: 130px;
 }
 .add-tag-field:hover .icon +input{
-  width: 100px;
+  width: 130px;
 }
 .add-tag-field:hover .icon {
   color: #fff;
