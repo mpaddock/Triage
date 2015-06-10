@@ -53,7 +53,7 @@ Template.ticketModal.events
           tpl.$('button[data-action=checkUsername]').html('<span class="glyphicon glyphicon-ok"></span>')
           tpl.$('button[data-action=checkUsername]').removeClass('btn-danger').removeClass('btn-primary').addClass('btn-success')
 
-        id = Tickets.insert {
+        Tickets.insert {
           title: title
           body: body
           tags: hashtags
@@ -123,3 +123,4 @@ clearFields = (tpl) ->
   tpl.$('.has-success').removeClass('has-success')
   tpl.$('button[data-action=checkUsername]').removeClass('btn-success').removeClass('btn-danger').addClass('btn-primary').html('Check')
   tpl.$('select[name=queue]').select2('val', '')
+

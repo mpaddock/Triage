@@ -4,9 +4,7 @@ Meteor.publishComposite 'tickets', (filter, offset, limit, myqueue) ->
     if myqueue
       filter.userId = @userId
       filter.queueName = _.pluck Queues.find({}, {sort: {name: 1}}).fetch(), 'name'
-
     f = Filter.verifyFilterObject filter, @userId
-
     mongoFilter = Filter.toMongoSelector f
     facetPath = Filter.toFacetString f
 
@@ -42,9 +40,30 @@ Meteor.publishComposite 'tickets', (filter, offset, limit, myqueue) ->
     ]
   }
 
+Meteor.publishComposite 'currentViewOfTickets', (tickets) ->
+  {
+    find: () ->
+      Tickets.find {_id: {$in: tickets}}
+    children: [
+      {
+        find: (ticket) ->
+          Changelog.find {ticketId: ticket._id}
+      },
+      {
+        find: (ticket) ->
+          TicketFlags.find {ticketId: ticket._id, userId: @userId}
+      },
+      {
+        find: (ticket) ->
+          if ticket.attachmentIds?.length > 0
+            FileRegistry.find {_id: {$in: ticket.attachmentIds}}
+      }
+    ]
+  }
+
+
 Meteor.publishComposite 'ticket', (ticketNumber) ->
   find: () ->
-    #Check username for API submissions that may not have an authorId associated?
     username = Meteor.users.findOne(@userId).username
     queues = _.pluck Queues.find({memberIds: @userId}).fetch(), 'name'
     return Tickets.find {ticketNumber: ticketNumber, $or: [{associatedUserIds: @userId}, {authorId: @userId}, {authorName: username}, {queueName: {$in: queues}}]}

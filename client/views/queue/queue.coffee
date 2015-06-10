@@ -9,7 +9,10 @@ Template.queue.helpers
   firstVisibleTicket: ->
     if Tickets.find().count() is 0 then 0 else Session.get('offset') + 1
   lastVisibleTicket: ->
-    Math.min Session.get('offset') + offsetIncrement, Counts.get('ticketCount')
+    if Session.get('ready')
+      Math.min Session.get('offset') + Tickets.find().count(), Counts.get('ticketCount')
+    else
+      Math.min Session.get('offset') + offsetIncrement, Counts.get('ticketCount')
   lastDisabled: ->
     if Session.get('offset') is 0 then "disabled"
   nextDisabled: ->
@@ -111,8 +114,31 @@ submitQuickAddTicket = (tpl) ->
       authorName: Meteor.user().username
       status: status
       submittedTimestamp: new Date()
-      submissionData:
-        method: "Web"
 
     tpl.$('input[name=newTicket]').val('')
 
+
+#Get the filter and observe on it. Tickets matching the filter should stay in the client's view
+#until they refresh the page. So, we keep an array of tickets to be stored
+#and subscribe to that array of tickets.
+
+filter = {
+  queueName: Session.get('queueName')
+  search: Iron.query.get 'search'
+  status: Iron.query.get 'status'
+  tag: Iron.query.get 'tag'
+  user: Iron.query.get 'user'
+}
+if Session.get('pseudoQueue') is 'userQueue'
+  filter.userId = Meteor.userId()
+  filter.queueName = _.pluck Queues.find({memberIds: Meteor.userId()}).fetch(), 'name'
+
+mongoFilter = Filter.toMongoSelector(Filter.verifyFilterObject filter, Meteor.userId())
+
+Tickets.find(mongoFilter).observe
+  added: (ticket) ->
+    unless (Meteor.userId() is ticket.authorId) and (Session.get('offset') > 0)
+      Session.set 'currentViewOfTickets', Session.get('currentViewOfTickets').concat(ticket._id)
+
+Tracker.autorun () ->
+  Meteor.subscribe 'currentViewOfTickets', Session.get('currentViewOfTickets')

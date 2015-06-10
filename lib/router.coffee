@@ -25,6 +25,7 @@ Router.map ->
       Session.set 'loadingMore', false
       Session.set 'pseudoQueue', null
       Session.set 'queueName', @params.queueName
+      Session.set 'currentViewOfTickets', []
       Session.set 'offset', (Number(Iron.query.get('start')) || 0)
       @next()
       if Meteor.userId()
