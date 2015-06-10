@@ -98,7 +98,9 @@
     if not userId then return null
     check filter, Object
     f = filter
-    if filter.queueName? and not Queues.findOne({name: filter.queueName, memberIds: userId})
+    if filter.userId and filter.userId is userId
+      f.queueName = _.pluck Queues.find().fetch(), 'name'
+    else if filter.queueName? and not Queues.findOne({name: filter.queueName, memberIds: userId})
       f.queueName = null
     else if not filter.queueName?
       f.userId = null
