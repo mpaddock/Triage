@@ -118,27 +118,25 @@ submitQuickAddTicket = (tpl) ->
     tpl.$('input[name=newTicket]').val('')
 
 
-#Get the filter and observe on it. Tickets matching the filter should stay in the client's view
-#until they refresh the page. So, we keep an array of tickets to be stored
-#and subscribe to that array of tickets.
-
-filter = {
-  queueName: Session.get('queueName')
-  search: Iron.query.get 'search'
-  status: Iron.query.get 'status'
-  tag: Iron.query.get 'tag'
-  user: Iron.query.get 'user'
-}
-if Session.get('pseudoQueue') is 'userQueue'
-  filter.userId = Meteor.userId()
-  filter.queueName = _.pluck Queues.find({memberIds: Meteor.userId()}).fetch(), 'name'
-
-mongoFilter = Filter.toMongoSelector(Filter.verifyFilterObject filter, Meteor.userId())
-
-Tickets.find(mongoFilter).observe
-  added: (ticket) ->
-    unless (Meteor.userId() is ticket.authorId) and (Session.get('offset') > 0)
-      Session.set 'currentViewOfTickets', Session.get('currentViewOfTickets').concat(ticket._id)
-
 Tracker.autorun () ->
-  Meteor.subscribe 'currentViewOfTickets', Session.get('currentViewOfTickets')
+  renderedTime = new Date()
+  queueName = Session.get('queueName') || _.pluck Queues.find().fetch(), 'name'
+  filter = {
+    queueName: queueName
+    search: Iron.query.get 'search'
+    status: Iron.query.get 'status'
+    tag: Iron.query.get 'tag'
+    user: Iron.query.get 'user'
+  }
+  if Session.get('pseudoQueue') is 'userQueue'
+    filter.userId = Meteor.userId()
+
+  mongoFilter = Filter.toMongoSelector filter
+  _.extend mongoFilter, {submittedTimestamp: {$gt: renderedTime}}
+
+  Tickets.find(mongoFilter).observe
+    added: (ticket) ->
+      if Session.get('offset') < 1
+        Session.set 'newTickets', Session.get('newTickets')?.concat(ticket._id) || [ticket._id]
+
+  Meteor.subscribe 'newTickets', Session.get('newTickets')

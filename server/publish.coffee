@@ -11,7 +11,8 @@ Meteor.publishComposite 'tickets', (filter, offset, limit, myqueue) ->
   {
     find: () ->
       Counts.publish(this, 'ticketCount', Tickets.find(mongoFilter), { noReady: true })
-      Tickets.find mongoFilter, {sort: {submittedTimestamp: -1}, limit: limit, skip: offset}
+      ticketSet = _.pluck Tickets.find(mongoFilter, {sort: {submittedTimestamp: -1}, limit: limit, skip: offset}).fetch(), '_id'
+      Tickets.find {_id: {$in: ticketSet}}, {sort: {submittedTimestamp: -1}}
     children: [
       {
         find: (ticket) ->
@@ -40,10 +41,11 @@ Meteor.publishComposite 'tickets', (filter, offset, limit, myqueue) ->
     ]
   }
 
-Meteor.publishComposite 'currentViewOfTickets', (tickets) ->
+Meteor.publishComposite 'newTickets', (tickets) ->
   {
     find: () ->
-      Tickets.find {_id: {$in: tickets}}
+      queues = _.pluck Queues.find({memberIds: @userId}).fetch(), 'name'
+      Tickets.find {_id: {$in: tickets}, $or: [{associatedUserIds: @userId}, {authorId: @userId}, {queueName: {$in: queues}}]}
     children: [
       {
         find: (ticket) ->
