@@ -61,8 +61,10 @@
 
   toFacetString: (filter) ->
     check filter, Object
-    if filter.queueName
+    if typeof filter.queueName is 'string'
       facetPath = "queueName:#{filter.queueName}"
+    else
+      facetPath = "queueName:#{filter.queueName?.join(',')}"
     if filter.search?.trim().length
       facetPath += "|search:#{filter.search}"
     if filter.status?.trim().length
