@@ -1,12 +1,8 @@
-Meteor.publishComposite 'tickets', (filter, offset, limit, myqueue) ->
+Meteor.publishComposite 'tickets', (filter, offset, limit) ->
   if offset < 0 then offset = 0
-  if @userId
-    if myqueue
-      filter.userId = @userId
-      filter.queueName = _.pluck Queues.find({}, {sort: {name: 1}}).fetch(), 'name'
-    f = Filter.verifyFilterObject filter, @userId
-    mongoFilter = Filter.toMongoSelector f
-    facetPath = Filter.toFacetString f
+  if Filter.verifyFilterObject filter, _.pluck(Queues.find({memberIds: @userId}).fetch(), 'name'), @userId
+    mongoFilter = Filter.toMongoSelector filter
+    facetPath = Filter.toFacetString filter
 
   {
     find: () ->
@@ -44,6 +40,7 @@ Meteor.publishComposite 'tickets', (filter, offset, limit, myqueue) ->
 Meteor.publishComposite 'newTickets', (tickets) ->
   {
     find: () ->
+      if not tickets then return
       queues = _.pluck Queues.find({memberIds: @userId}).fetch(), 'name'
       Tickets.find {_id: {$in: tickets}, $or: [{associatedUserIds: @userId}, {authorId: @userId}, {queueName: {$in: queues}}]}
     children: [

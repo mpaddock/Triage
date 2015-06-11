@@ -20,12 +20,10 @@
 @Filter =
   toMongoSelector: (filter) ->
     mongoFilter = {}
-    if typeof filter.queueName is 'string'
-      mongoFilter.queueName = filter.queueName
-    else if filter.queueName is null
-      return
-    else
+    if Array.isArray(filter.queueName)
       mongoFilter.queueName = {$in: filter.queueName}
+    else
+      mongoFilter.queueName = filter.queueName
     userIds = []
     if filter.user?
       userIds = filter.user.split(',').map (x) ->
@@ -63,10 +61,8 @@
 
   toFacetString: (filter) ->
     check filter, Object
-    if typeof filter.queueName is 'string'
+    if filter.queueName
       facetPath = "queueName:#{filter.queueName}"
-    else
-      facetPath = "queueName:#{filter.queueName?.join(',')}"
     if filter.search?.trim().length
       facetPath += "|search:#{filter.search}"
     if filter.status?.trim().length
@@ -94,24 +90,22 @@
         filter[f[0]] = f[1]
     return filter
  
-  verifyFilterObject: (filter, userId) ->
-    if not userId then return null
+  verifyFilterObject: (filter, queues, userId) ->
     check filter, Object
-    f = filter
-    if filter.userId and filter.userId is userId
-      f.queueName = _.pluck Queues.find().fetch(), 'name'
-    else if filter.queueName? and not Queues.findOne({name: filter.queueName, memberIds: userId})
-      f.queueName = null
-    else if not filter.queueName?
-      f.userId = null
-      f.queueName = _.pluck Queues.find({memberIds: userId}, {sort: {name: 1}}).fetch(), 'name'
-    else
-      f.userId = null
-    if not (filter.status or filter.ticketNumber)
-      #If no status filter and we're not looking at a specific ticket, default to 'not Closed' tickets.
-      f.status = "!Closed"
+    if filter.userId and filter.userId isnt userId
+      console.log "Error verifying filter: userId match error"
+      return false
+    if not filter.queueName
+      console.log "Error verifying filter: Queue name is required"
+      return false
+    if not filter.userId and Array.isArray(filter.queueName) and _.difference(filter.queueName, queues).length isnt 0
+      console.log "Error verifying filter: User lacks permission to at least one queue"
+      return false
+    if not filter.userId and typeof(filter.queueName) is "string" and not _.contains(queues, filter.queueName)
+      console.log "Error verifying filter: User lacks permission to a queue"
+      return false
 
-    return f
+    return true
 
 if Meteor.isServer
   Meteor.startup ->

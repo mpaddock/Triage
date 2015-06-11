@@ -31,10 +31,10 @@ Router.map ->
       if Meteor.userId()
         [Meteor.subscribe 'tickets', {
           queueName: @params.queueName
-          search: Iron.query.get 'search'
-          status: Iron.query.get 'status'
-          tag: Iron.query.get 'tag'
-          user: Iron.query.get 'user'
+          search: @params.query.search
+          status: @params.query.status || '!Closed'
+          tag: @params.query.tag
+          user: @params.query.user
         }, Session.get('offset'), limit, onReady: () ->
           Session.set('ready', true)
         ]
@@ -49,6 +49,8 @@ Router.map ->
   @route 'userQueue',
     path: '/my/tickets'
     template: 'queue'
+    waitOn: ->
+      Meteor.subscribe 'queueNames'
     onBeforeAction: ->
       Session.set 'ready', false
       Session.set 'loadingMore', false
@@ -59,17 +61,21 @@ Router.map ->
       @next()
       if Meteor.userId()
         [Meteor.subscribe 'tickets', {
-          search: Iron.query.get 'search'
-          status: Iron.query.get 'status'
-          tag: Iron.query.get 'tag'
-          user: Iron.query.get 'user'
-        }, Session.get('offset'), limit, true, onReady: () ->
+          queueName: _.pluck(Queues.find().fetch(), 'name')
+          search: @params.query.search
+          status: @params.query.status || '!Closed'
+          tag: @params.query.tag
+          user: @params.query.user
+          userId: Meteor.userId()
+        }, Session.get('offset'), limit, onReady: () ->
           Session.set('ready', true)
         ]
 
   @route 'globalQueue',
     path: '/all/tickets'
     template: 'queue'
+    waitOn: ->
+      Meteor.subscribe 'queueNames'
     onBeforeAction: ->
       Session.set 'ready', false
       Session.set 'loadingMore', false
@@ -80,10 +86,11 @@ Router.map ->
       @next()
       if Meteor.userId()
         [Meteor.subscribe 'tickets', {
-          search: Iron.query.get 'search'
-          status: Iron.query.get 'status'
-          tag: Iron.query.get 'tag'
-          user: Iron.query.get 'user'
+          queueName: _.pluck(Queues.find({memberIds: Meteor.userId()}).fetch(), 'name')
+          search: @params.query.search
+          status: @params.query.status || '!Closed'
+          tag: @params.query.tag
+          user: @params.query.user
         }, Session.get('offset'), limit, onReady: () ->
           Session.set('ready', true)
         ]
