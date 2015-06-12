@@ -67,10 +67,12 @@ Template.queue.events
   'click button[data-action=nextPage]': (e, tpl) ->
     start = Number(Iron.query.get('start')) || 0
     if (start + offsetIncrement) < Counts.get('ticketCount')
+      Session.set 'newTicketSet', []
       Iron.query.set 'start', start + offsetIncrement
   'click button[data-action=lastPage]': (e, tpl) ->
     start = Number(Iron.query.get('start')) || 0
     Iron.query.set 'start', Math.max start - offsetIncrement, 0
+    Session.set 'newTicketSet', []
 
   'click a[data-action=clearSearch]': (e, tpl) ->
     e.stopPropagation()
@@ -118,25 +120,26 @@ submitQuickAddTicket = (tpl) ->
     tpl.$('input[name=newTicket]').val('')
 
 
-Tracker.autorun () ->
-  renderedTime = new Date()
-  queueName = Session.get('queueName') || _.pluck Queues.find().fetch(), 'name'
-  filter = {
-    queueName: queueName
-    search: Iron.query.get 'search'
-    status: Iron.query.get 'status'
-    tag: Iron.query.get 'tag'
-    user: Iron.query.get 'user'
-  }
-  if Session.get('pseudoQueue') is 'userQueue'
-    filter.userId = Meteor.userId()
+Template.queue.rendered = () ->
+  Tracker.autorun () ->
+    renderedTime = new Date()
+    queueName = Session.get('queueName') || _.pluck Queues.find().fetch(), 'name'
+    filter = {
+      queueName: queueName
+      search: Iron.query.get 'search'
+      status: Iron.query.get 'status'
+      tag: Iron.query.get 'tag'
+      user: Iron.query.get 'user'
+    }
+    if Session.get('pseudoQueue') is 'userQueue'
+      filter.userId = Meteor.userId()
 
-  mongoFilter = Filter.toMongoSelector filter
-  _.extend mongoFilter, {submittedTimestamp: {$gt: renderedTime}}
+    mongoFilter = Filter.toMongoSelector filter
+    _.extend mongoFilter, {submittedTimestamp: {$gt: renderedTime}}
 
-  Tickets.find(mongoFilter).observe
-    added: (ticket) ->
-      if Session.get('offset') < 1
-        Session.set 'newTickets', Session.get('newTickets')?.concat(ticket._id) || [ticket._id]
+    Tickets.find(mongoFilter).observe
+      added: (ticket) ->
+        if Session.get('offset') < 1
+          Session.set 'newTicketSet', Session.get('newTicketSet')?.concat(ticket._id) || [ticket._id]
 
-  Meteor.subscribe 'newTickets', Session.get('newTickets')
+    Meteor.subscribe 'ticketSet', Session.get('newTicketSet')

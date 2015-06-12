@@ -3,7 +3,6 @@ Meteor.publishComposite 'tickets', (filter, offset, limit) ->
   if Filter.verifyFilterObject filter, _.pluck(Queues.find({memberIds: @userId}).fetch(), 'name'), @userId
     mongoFilter = Filter.toMongoSelector filter
     facetPath = Filter.toFacetString filter
-
   {
     find: () ->
       Counts.publish(this, 'ticketCount', Tickets.find(mongoFilter), { noReady: true })
@@ -37,12 +36,35 @@ Meteor.publishComposite 'tickets', (filter, offset, limit) ->
     ]
   }
 
-Meteor.publishComposite 'newTickets', (tickets) ->
+Meteor.publishComposite 'newTickets', (filter, time) ->
+  if Filter.verifyFilterObject filter, _.pluck(Queues.find({memberIds: @userId}).fetch(), 'name'), @userId
+    mongoFilter = Filter.toMongoSelector filter
+    _.extend mongoFilter, {submittedTimestamp: {$gt: time}}
   {
     find: () ->
-      if not tickets then return
+      Tickets.find mongoFilter, {sort: {submittedTimestamp: -1}}
+    children: [
+      {
+        find: (ticket) ->
+          Changelog.find {ticketId: ticket._id}
+      },
+      {
+        find: (ticket) ->
+          TicketFlags.find {ticketId: ticket._id, userId: @userId}
+      },
+      {
+        find: (ticket) ->
+          if ticket.attachmentIds?.length > 0
+            FileRegistry.find {_id: {$in: ticket.attachmentIds}}
+      }
+    ]
+  }
+
+Meteor.publishComposite 'ticketSet', (ticketSet) ->
+  {
+    find: () ->
       queues = _.pluck Queues.find({memberIds: @userId}).fetch(), 'name'
-      Tickets.find {_id: {$in: tickets}, $or: [{associatedUserIds: @userId}, {authorId: @userId}, {queueName: {$in: queues}}]}
+      Tickets.find {_id: {$in: ticketSet}, $or: [{associatedUserIds: @userId}, {authorId: @userId}, {queueName: {$in: queues}}]}, {sort: {submittedTimestamp: -1}}
     children: [
       {
         find: (ticket) ->
@@ -61,27 +83,29 @@ Meteor.publishComposite 'newTickets', (tickets) ->
   }
 
 
-Meteor.publishComposite 'ticket', (ticketNumber) ->
-  find: () ->
-    username = Meteor.users.findOne(@userId).username
-    queues = _.pluck Queues.find({memberIds: @userId}).fetch(), 'name'
-    return Tickets.find {ticketNumber: ticketNumber, $or: [{associatedUserIds: @userId}, {authorId: @userId}, {authorName: username}, {queueName: {$in: queues}}]}
 
-  children: [
-    {
-      find: (ticket) ->
-        Changelog.find {ticketId: ticket._id}
-    },
-    {
-      find: (ticket) ->
-        TicketFlags.find {ticketId: ticket._id, userId: @userId}
-    },
-    {
-      find: (ticket) ->
-        if ticket.attachmentIds?.length > 0
-          FileRegistry.find {_id: {$in: ticket.attachmentIds}}
-    }
-  ]
+Meteor.publishComposite 'ticket', (ticketNumber) ->
+  {
+    find: () ->
+      username = Meteor.users.findOne(@userId).username
+      queues = _.pluck Queues.find({memberIds: @userId}).fetch(), 'name'
+      return Tickets.find {ticketNumber: ticketNumber, $or: [{associatedUserIds: @userId}, {authorId: @userId}, {authorName: username}, {queueName: {$in: queues}}]}
+    children: [
+      {
+        find: (ticket) ->
+          Changelog.find {ticketId: ticket._id}
+      },
+      {
+        find: (ticket) ->
+          TicketFlags.find {ticketId: ticket._id, userId: @userId}
+      },
+      {
+        find: (ticket) ->
+          if ticket.attachmentIds?.length > 0
+            FileRegistry.find {_id: {$in: ticket.attachmentIds}}
+      }
+    ]
+  }
 
 Meteor.publish 'userData', () ->
   Meteor.users.find {_id: @userId}

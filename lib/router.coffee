@@ -29,15 +29,19 @@ Router.map ->
       Session.set 'offset', (Number(Iron.query.get('start')) || 0)
       @next()
       if Meteor.userId()
-        [Meteor.subscribe 'tickets', {
+        filter =
           queueName: @params.queueName
           search: @params.query.search
           status: @params.query.status || '!Closed'
           tag: @params.query.tag
           user: @params.query.user
-        }, Session.get('offset'), limit, onReady: () ->
+        
+        if Session.get('offset') < 1
+          renderedTime = new Date()
+          Meteor.subscribe 'newTickets', filter, renderedTime
+        Meteor.subscribe 'tickets', filter, Session.get('offset'), limit, onReady: () ->
           Session.set('ready', true)
-        ]
+        
 
   @route 'userDashboard',
     path: '/my/dashboard'
@@ -60,16 +64,19 @@ Router.map ->
       Session.set 'offset', (Number(Iron.query.get('start')) || 0)
       @next()
       if Meteor.userId()
-        [Meteor.subscribe 'tickets', {
+        filter =
           queueName: _.pluck(Queues.find().fetch(), 'name')
           search: @params.query.search
           status: @params.query.status || '!Closed'
           tag: @params.query.tag
           user: @params.query.user
           userId: Meteor.userId()
-        }, Session.get('offset'), limit, onReady: () ->
+        if Session.get('offset') < 1
+          renderedTime = new Date()
+          Meteor.subscribe 'newTickets', filter, renderedTime
+        Meteor.subscribe 'tickets', filter, Session.get('offset'), limit, onReady: () ->
           Session.set('ready', true)
-        ]
+        
 
   @route 'globalQueue',
     path: '/all/tickets'
@@ -85,15 +92,20 @@ Router.map ->
       Session.set 'offset', (Number(Iron.query.get('start')) || 0)
       @next()
       if Meteor.userId()
-        [Meteor.subscribe 'tickets', {
+        filter =
           queueName: _.pluck(Queues.find({memberIds: Meteor.userId()}).fetch(), 'name')
           search: @params.query.search
           status: @params.query.status || '!Closed'
           tag: @params.query.tag
           user: @params.query.user
-        }, Session.get('offset'), limit, onReady: () ->
+
+        if Session.get('offset') < 1
+          renderedTime = new Date()
+          Meteor.subscribe 'newTickets', filter, renderedTime
+
+        Meteor.subscribe 'tickets', filter, Session.get('offset'), limit, onReady: () ->
           Session.set('ready', true)
-        ]
+        
 
   @route 'ticket',
     path: '/ticket/:ticketNumber'
@@ -102,7 +114,7 @@ Router.map ->
       Session.set 'ticketNumber', Number(@params.ticketNumber)
       @next()
       if Meteor.userId()
-        [Meteor.subscribe 'ticket', Number(@params.ticketNumber)]
+        Meteor.subscribe 'ticket', Number(@params.ticketNumber)
 
 
   @route 'apiSubmit',
