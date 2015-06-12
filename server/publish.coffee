@@ -63,6 +63,7 @@ Meteor.publishComposite 'newTickets', (filter, time) ->
 Meteor.publishComposite 'ticketSet', (ticketSet) ->
   {
     find: () ->
+      if not ticketSet then return
       queues = _.pluck Queues.find({memberIds: @userId}).fetch(), 'name'
       Tickets.find {_id: {$in: ticketSet}, $or: [{associatedUserIds: @userId}, {authorId: @userId}, {queueName: {$in: queues}}]}, {sort: {submittedTimestamp: -1}}
     children: [
