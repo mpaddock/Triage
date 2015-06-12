@@ -37,6 +37,7 @@
         <label for="status" class="control-label">Status:</label>
         <input type="text" class="form-control quick-add-status-input" name="newTicketStatus" value="Open">
       </div>
+      {{#if pseudoqueue}}
       <div class="form-group">
         <label for="queue" class="control-label">Queue:</label>
         <select name="queue" class="form-control" data-placeholder="Select queue">
@@ -45,6 +46,7 @@
           {{/each}}
         </select>
       </div>
+      {{/if}}
       <button type="button" name="quickAddTicket" class="btn btn-primary">Add</button>
     </div>
   </div>

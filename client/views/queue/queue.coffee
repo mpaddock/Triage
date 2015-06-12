@@ -33,7 +33,7 @@ Template.queue.helpers
     Tickets.find {}, {sort: {submittedTimestamp: -1}}
   addingTicket: ->
     Session.get 'addingTicket'
-  psuedoqueue: ->
+  pseudoqueue: ->
     Session.get('pseudoQueue') in ['globalQueue', 'userQueue']
   queues: ->
     Queues.find()

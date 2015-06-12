@@ -94,10 +94,10 @@ Template.ticketModal.events
           tpl.$('button[data-action=checkUsername]').html('<span class="glyphicon glyphicon-remove"></span>')
   
   #When the modal is shown, we get the set of unique tags and update the modal with them.
-  'show.bs.modal #ticketModal': (e, tmpl) ->
-    $('select[name=queue]').val(Session.get('queueName'))
+  'show.bs.modal #ticketModal': (e, tpl) ->
+    tpl.$('select[name=queue]').val(Session.get('queueName'))
     tags = _.pluck Tags.find().fetch(), 'name'
-    tmpl.$('input[name=tags]').select2({
+    tpl.$('input[name=tags]').select2({
       tags: tags
       tokenSeparators: [' ', ',']
     })
@@ -105,9 +105,6 @@ Template.ticketModal.events
   'click button[data-dismiss="modal"]': (e, tpl) ->
     clearFields tpl
   
-
-Deps.autorun () ->
-  $('select[name=queue]').val(Session.get('queueName'))
 
 Template.ticketModal.rendered = () ->
   tags = _.pluck Tags.find().fetch(), 'name'
