@@ -18,7 +18,7 @@ testFiles = [
 
 Tinytest.add 'Email - ingest reply parsing', (test) ->
   _.each testFiles, (t) ->
-    parsed = EmailIngestion.parse(t.file)
+    parsed = EmailIngestion.parse(t.message)
     check parsed.subject, String
     check parsed.body, String
     check parsed.attachments, Array

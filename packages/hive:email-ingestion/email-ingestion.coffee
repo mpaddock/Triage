@@ -1,4 +1,4 @@
-@EmailIngestion = {}
+EmailIngestion = {}
 
 # Input:
 #   message - a String or Buffer representing an unparsed SMTP mail message
@@ -10,14 +10,16 @@
 # .attachments: ['fileIdX', 'fileIdY']
 # .ticketNumber: 1234
 # .fromEmail: "some.address@mailserver.com"
-# .inReplyTo: "000.111@mailserver.com"
+# .headers: { 'header1': 'value1', 'header2': 'value2'}
 
 EmailIngestion.parse = (message) ->
-  subject: "RE: Ticket about something"
-  body: "This is a reply."
-  attachments: ['fileIdX', 'fileIdY']
-  ticketNumber: 1234
-  fromEmail: "some.address@mailserver.com"
-  inReplyTo: "000.111@mailserver.com"
+  MailParser = Npm.require("mailparser").MailParser
+  mailparser = new MailParser({
+    streamAttachments: true
+  })
 
-
+  mailparser.on 'end', (mailObject) ->
+    console.log mailObject
+  mailparser.write message
+  mailparser.end()
+      

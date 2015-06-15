@@ -14,6 +14,7 @@ Package.onUse(function(api) {
   api.versionsFrom('1.1.0.2');
   api.use('coffeescript', 'server');
   api.addFiles('email-ingestion.coffee', 'server');
+  api.export('EmailIngestion', 'server');
 });
 
 Package.onTest(function(api) {
