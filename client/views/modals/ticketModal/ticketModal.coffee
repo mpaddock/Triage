@@ -1,6 +1,7 @@
 Template.ticketModal.helpers
   queues: -> Queues.find()
   errorText: -> Session.get 'errorText'
+  submitting: -> Session.get 'submitting'
   settings: ->
     {
       position: "bottom"
@@ -24,6 +25,7 @@ Template.ticketModal.helpers
 
 Template.ticketModal.events
   'click button[data-action=submit]': (e, tpl) ->
+    Session.set 'submitting', true
     #Probably need a record of 'true' submitter for on behalf of submissions.
     
     #Parsing for tags.
@@ -67,6 +69,7 @@ Template.ticketModal.events
             method: "Web"
         }, (err, res) ->
           if err
+            Session.set 'submitting', false
             Session.set 'errorText', "Error: #{err.message}."
             tpl.$('.has-error').removeClass('has-error')
             for key in err.invalidKeys
@@ -76,6 +79,7 @@ Template.ticketModal.events
             $('#ticketModal').modal('hide')
             
       else
+        Session.set 'submitting', false
         tpl.$('input[name=onBehalfOf]').closest('div .form-group').removeClass('has-success').addClass('has-error')
         tpl.$('button[data-action=checkUsername]').removeClass('btn-success').removeClass('btn-primary').addClass('btn-danger')
         tpl.$('button[data-action=checkUsername]').html('<span class="glyphicon glyphicon-remove"></span>')
@@ -114,6 +118,7 @@ Template.ticketModal.rendered = () ->
   })
 
 clearFields = (tpl) ->
+  Session.set 'submitting', false
   Session.set 'errorText', null
   tpl.$('input, textarea').val('')
   tpl.$('.has-error').removeClass('has-error')
