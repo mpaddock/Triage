@@ -66,6 +66,17 @@
           {{/if}}
         </td>
         <td>
+          <div class="btn-group">
+            <button type="button" class="add-attachment-btn btn dropdown-toggle" data-toggle="dropdown" aria-expanded="False">
+              <span class="icon glyphicon glyphicon-plus"></span>
+            </button>
+
+            <ul class="dropdown-menu" data-toggle="dropdown">
+              <li><a data-action="uploadFile">Upload File</a></li>
+              {{#if isCordova}}<li><a href="#">Take Picture</a></li>{{/if}}
+            </ul>
+          </div>
+
           {{#each attachmentIds}}
           {{#if file.thumbnail}}
           <img style="max-width: 64px; max-height:24px;" src="/file/{{file.thumbnail}}" />

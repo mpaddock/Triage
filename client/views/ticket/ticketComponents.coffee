@@ -49,6 +49,12 @@ Template.ticketInfoTable.events
           $(e.target).val('')
         else
           tpl.$('[data-toggle="tooltip"]').tooltip('show')
+  ### Uploading files. ###
+  'click a[data-action=uploadFile]': (e, tpl) ->
+    Media.pickLocalFile (fileId) ->
+      console.log "Uploaded a file, got _id: ", fileId
+      Tickets.update tpl.data._id, {$addToSet: {attachmentIds: fileId}}
+      Meteor.call 'setFlag', Meteor.userId(), tpl.data._id, 'attachment', true
 
 Template.ticketNoteInput.helpers
   settings: ->
