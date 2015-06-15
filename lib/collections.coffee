@@ -184,5 +184,6 @@ Meteor.users.attachSchema new SimpleSchema
     optional: true
     blackbox: true
   title:
+    optional: true
     type: String
     label: "Title"
