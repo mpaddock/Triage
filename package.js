@@ -36,5 +36,10 @@ Package.onTest(function (api) {
     'lib/facets.coffee',
     'tests/facets-test.coffee'
   ], ['client', 'server']);
+
+  api.addFiles([
+    'server/emailIngestion.coffee',
+    'tests/email-test.coffee'
+  ], 'server');
 });
 
