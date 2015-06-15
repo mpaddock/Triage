@@ -1,3 +1,7 @@
+fs = Npm.require('fs')
+
+emaildir = process.env.PWD+'/packages/hive:email-ingestion/emails/'
+
 testFiles = [
   {
     file: 'uky_forwarded_to_gmail.mail'
@@ -18,13 +22,13 @@ testFiles = [
 
 Tinytest.add 'Email - ingest reply parsing', (test) ->
   _.each testFiles, (t) ->
-    parsed = EmailIngestion.parse(t.message)
+    parsed = EmailIngestion.parse fs.readFileSync("#{emaildir}/#{t.file}")
+    EmailIngestion.extractReplyFromBody parsed.body
     check parsed.subject, String
     check parsed.body, String
     check parsed.attachments, Array
-    check parsed.ticketNumber, Number
+    check parsed.headers, Object
     check parsed.fromEmail, String #SimpleSchema.RegEx.Email
-    check parsed.inReplyTo, String #SimpleSchema.RegEx.Email
 
     test.equal t.expected, EmailIngestion.parse(t.file).body
 
