@@ -52,7 +52,8 @@ EmailIngestion.parse = (message) ->
       
 EmailIngestion.extractReplyFromBody = (body, toAddress) ->
   regex = ///
-    (^________________________________\n)?^From:|^[0-9\/]+\s<#{toAddress}>$ #Outlook/OWA response - line of underscores followed by From:
+    (^________________________________\n)?^From: #Outlook/OWA response - line of underscores followed by From:
+    | ^[0-9\/]+\s<#{toAddress}>$ # Number or slash followed by to address in brackets.
     | ^[0-9]{4}-[0-9]{2}-[0-9]{2}.*<#{toAddress}>:$  #Gmail-style response - address preceded by date.
     | ^On.+?,\s<#{toAddress}>wrote: #Other gmail-style response.
     ///m
