@@ -28,5 +28,5 @@ Handlebars.registerHelper 'arrayify', (obj) ->
     x.replace('@', '')
 
 (exports ? this).getStatuses = (text) ->
-  _.uniq(text.match(/status:(\w+|"[^"]*"+|'[^']*')/g)).map (x) ->
+  _.uniq(text.match(/status:(\w+-\w+|\w+|"[^"]*"+|'[^']*')/g)).map (x) ->
     x.replace('status:', '').replace(/"/g, '').replace(/'/g, '') #strip status: and all quotes.
