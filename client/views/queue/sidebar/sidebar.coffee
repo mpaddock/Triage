@@ -7,13 +7,13 @@ Template.sidebar.helpers
     }
   tags: ->
     active = Iron.query.get('tag')?.split(',') || []
-    _.map _.sortBy(Facets.findOne()?.counts.tags, (f) -> -f.count), (l) ->
+    _.map _.sortBy(Facets.findOne()?.facets.tags, (f) -> -f.count), (l) ->
       _.extend l,
         checked: if l.name in active then 'checked'
         type: 'tag'
   zeroCountTags: ->
     active = Iron.query.get('tag')?.split(',') || []
-    tags = _.pluck Facets.findOne()?.counts.tags, 'name'
+    tags = _.pluck Facets.findOne()?.facets.tags, 'name'
     return _.map _.difference(active, tags), (l) ->
       name: l
       count: 0
@@ -21,13 +21,13 @@ Template.sidebar.helpers
       type: 'tag'
   status: ->
     active = Iron.query.get('status')?.split(',') || []
-    _.map _.sortBy(Facets.findOne()?.counts.status, (f) -> -f.count), (l) ->
+    _.map _.sortBy(Facets.findOne()?.facets.status, (f) -> -f.count), (l) ->
       _.extend l,
         checked: if l.name in active then 'checked'
         type: 'status'
   zeroCountStatus: ->
     active = Iron.query.get('status')?.split(',') || []
-    status = _.pluck Facets.findOne()?.counts.status, 'name'
+    status = _.pluck Facets.findOne()?.facets.status, 'name'
     return _.map _.difference(active, status), (l) ->
       name: l
       count: 0

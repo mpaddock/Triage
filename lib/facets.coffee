@@ -1,22 +1,3 @@
-@Facets = new Mongo.Collection 'facets'
-@Facets.attachSchema new SimpleSchema
-  facet:
-    type: String
-    unique: true
-    index: 1
-  'counts.status':
-    type: [Object]
-  'counts.status.$.name':
-    type: String
-  'counts.status.$.count':
-    type: Number
-  'counts.tags':
-    type: [Object]
-  'counts.tags.$.name':
-    type: String
-  'counts.tags.$.count':
-    type: Number
-
 @Filter =
   toMongoSelector: (filter) ->
     mongoFilter = {}
@@ -110,37 +91,8 @@
     return true
 
 if Meteor.isServer
-  Meteor.startup ->
-    if Npm.require('cluster').isMaster
-      ready = false
-      refreshFacetQueues = (queues) ->
-        if ready
-          Facets.remove facet: $in: _.map queues, (q) ->
-            new RegExp "^queueName:#{q}"
-          console.log 'forcing recreation of facets for', queues
-      Tickets.find({},{fields:{queueName:1,status:1,tags:1}}).observe
-        added: (doc) ->
-          refreshFacetQueues doc.queueName
-        changed: (newDoc, oldDoc) ->
-          refreshFacetQueues _.union newDoc.queueName, oldDoc.queueName
-        removed: (oldDoc) ->
-          refreshFacetQueues oldDoc.queueName
-      ready = true
-  @Facets.compute = (filter) ->
-    check filter, Object
-
-    facets = {}
-    match = Filter.toMongoSelector filter
-    facets.status = _.map Tickets.aggregate([
-      {$match: match},
-      {$group: {_id: "$status", count: {$sum: 1}}}
-    ]), (s) -> {name: s._id, count: s.count}
-
-    facets.tags = _.map Tickets.aggregate([
-      {$match: match},
-      {$unwind: "$tags"},
-      {$group: {_id: "$tags", count: {$sum: 1}}}
-    ]), (s) -> {name: s._id, count: s.count}
-
-    return facets
+  Facets.configure Tickets,
+    tags: [String]
+    status: String
+    associatedUserIds: [String]
 
