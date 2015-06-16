@@ -6,29 +6,36 @@ testFiles = [
   {
     file: 'uky_forwarded_to_gmail.mail'
     expected: "I use gmail--my uk email is forwarded to a gmail account.\n\nWaggle User"
-    storyid: 719679
   },
   {
     file: 'outlook_web_app.mail'
-    expected: 'This sholud definitely become a comment.'
-    storyid: 720971
+    expected: "This sholud definitely become a comment."
   },
   {
     file: 'base64_plaintext.mail'
     expected: 'This is a reply.'
-    storyid: 720997
+  },
+  {
+    file: 'reply_with_attachment.mail'
+    expected: 'An attachment'
+  },
+  {
+    file: 'reply_with_attachment2.mail',
+    expected: "Sorry for the slow response.\n\n"+
+    "I was away when you sent the first request adn then it got lost in the"+
+    "\nflood.\n\n"+
+    "This message has a pdf file attached."
   }
 ]
 
 Tinytest.add 'Email - ingest reply parsing', (test) ->
   _.each testFiles, (t) ->
     parsed = EmailIngestion.parse fs.readFileSync("#{emaildir}/#{t.file}")
-    EmailIngestion.extractReplyFromBody parsed.body
     check parsed.subject, String
     check parsed.body, String
     check parsed.attachments, Array
     check parsed.headers, Object
     check parsed.fromEmail, String #SimpleSchema.RegEx.Email
+    check parsed.toEmail, String
 
-    test.equal t.expected, EmailIngestion.parse(t.file).body
-
+    test.equal JSON.stringify(EmailIngestion.extractReplyFromBody(parsed.body, parsed.toEmail)), JSON.stringify(t.expected)
