@@ -23,6 +23,7 @@
     "pageLimitIncrement": 20
   },
   "email": {
+    "smtpPipe": "/path/to/namedPipe",
     "fromEmail": "triage@university.edu"
   }
 }
