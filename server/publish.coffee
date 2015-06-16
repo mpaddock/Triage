@@ -2,12 +2,13 @@ Meteor.publishComposite 'tickets', (filter, offset, limit) ->
   if offset < 0 then offset = 0
   if Filter.verifyFilterObject filter, _.pluck(Queues.find({memberIds: @userId}).fetch(), 'name'), @userId
     mongoFilter = Filter.toMongoSelector filter
-    facetPath = Filter.toFacetString filter
+    [ticketSet, facets] = Tickets.findWithFacets(mongoFilter, {sort: {submittedTimestamp: -1}, limit: limit, skip: offset})
+    ticketSet = _.pluck ticketSet.fetch(), '_id'
   {
     find: () ->
       Counts.publish(this, 'ticketCount', Tickets.find(mongoFilter), { noReady: true })
-      ticketSet = _.pluck Tickets.find(mongoFilter, {sort: {submittedTimestamp: -1}, limit: limit, skip: offset}).fetch(), '_id'
-      Tickets.find {_id: {$in: ticketSet}}, {sort: {submittedTimestamp: -1}}
+
+      Tickets.find({_id: {$in: ticketSet}}, {sort: {submittedTimestamp: -1}})
     children: [
       {
         find: (ticket) ->
@@ -21,17 +22,10 @@ Meteor.publishComposite 'tickets', (filter, offset, limit) ->
         find: (ticket) ->
           if ticket.attachmentIds?.length > 0
             FileRegistry.find {_id: {$in: ticket.attachmentIds}}
-      }
+      },
       {
-        find: () ->
-          Facets.upsert {facet: facetPath},
-            {$set: {counts: Facets.compute(filter)}}
-          cursor = Facets.find({facet: facetPath})
-          cursor.observe
-            removed: (oldDoc) ->
-              Facets.upsert {facet: oldDoc.facet},
-                {$set: {counts: Facets.compute(filter)}}
-          return cursor
+        find: ->
+          facets
       }
     ]
   }
