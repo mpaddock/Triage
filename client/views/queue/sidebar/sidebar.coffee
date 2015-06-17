@@ -33,6 +33,26 @@ Template.sidebar.helpers
       count: 0
       checked: if l in active then 'checked'
       type: 'status'
+  associatedUsers: ->
+    active = Iron.query.get('associatedUser')?.split(',') || []
+    _.map _.sortBy(Facets.findOne()?.facets.associatedUserIds, (f) -> -f.count), (l) ->
+      username = Meteor.users.findOne(l.name)?.username
+      _.extend l,
+        username: username
+        checked: if username in active then 'checked'
+        type: 'associatedUser'
+  zeroCountUsers: ->
+    active = Iron.query.get('associatedUser')?.split(',') || []
+    users = _.pluck Facets.findOne()?.facets.associatedUserIds, 'name'
+    usernames = _.map users, (u) ->
+      Meteor.users.findOne(u)?.username
+    console.log usernames
+    return _.map _.difference(active, usernames), (l) ->
+      username: l
+      count: 0
+      checked: if l in active then 'checked'
+      type: 'associatedUser'
+    
   textFilter: ->
     Iron.Location.get().queryObject?.search?.split(',')
   userFilter: ->
@@ -95,14 +115,15 @@ Template.sidebar.events
     filter = _.without filter, value
     Iron.query.set type, filter.join()
     Iron.query.set 'start', 0
-
+  
   'change input:checkbox': (e, tpl) ->
     filter = Iron.query.get(@type)?.split(',') || []
+    if @type is 'associatedUser' then name = @username else name = @name
     if $(e.target).is(':checked')
-      filter.push @name
+      filter.push name
       filter = _.uniq filter #Just in case something got in there twice.
     else
-      filter = _.without filter, @name
+      filter = _.without filter, name
     Iron.query.set @type, filter.join()
     Iron.query.set 'start', 0
 

@@ -4,6 +4,8 @@ Meteor.publishComposite 'tickets', (filter, offset, limit) ->
     mongoFilter = Filter.toMongoSelector filter
     [ticketSet, facets] = Tickets.findWithFacets(mongoFilter, {sort: {submittedTimestamp: -1}, limit: limit, skip: offset})
     ticketSet = _.pluck ticketSet.fetch(), '_id'
+  else
+    ticketSet = []
   {
     find: () ->
       Counts.publish(this, 'ticketCount', Tickets.find(mongoFilter), { noReady: true })
