@@ -59,6 +59,7 @@ body {
 }
 
 .in-row img  {
+  max-width: 36px;
   max-height: 24px;
 }
 
