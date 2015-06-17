@@ -1,4 +1,9 @@
 Template.sidebar.helpers
+  closed: ->
+    {
+      name: "Closed"
+      type: "status"
+    }
   tags: ->
     active = Iron.query.get('tag')?.split(',') || []
     _.map _.sortBy(Facets.findOne()?.counts.tags, (f) -> -f.count), (l) ->
@@ -31,6 +36,9 @@ Template.sidebar.helpers
     Iron.Location.get().queryObject?.search?.split(',')
   userFilter: ->
     Iron.Location.get().queryObject?.user?.split(',')
+  filtering: ->
+    if Iron.query.get('status') or Iron.query.get('tag') or (Session.get('ready') is false)
+      return true
   settings: ->
     {
       position: "bottom"

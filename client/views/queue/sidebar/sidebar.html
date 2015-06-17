@@ -40,6 +40,15 @@
         </label>
       </div>
       {{/each}}
+      {{#unless filtering}}
+      {{#with closed}}
+      <div class="checkbox">
+        <label>
+          <input type="checkbox" data-field="status">{{name}}
+        </label>
+      </div>
+      {{/with}}
+      {{/unless}}
       {{#each zeroCountStatus}}
       <div class="checkbox">
         <label>
