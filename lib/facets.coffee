@@ -38,6 +38,11 @@
       tags = filter.tag.split(',')
       sorted = _.sortBy(tags).join(',')
       mongoFilter.tags = {$all: tags}
+    if filter.associatedUser?
+      users = filter.associatedUser.split(',')
+      userIds = _.map users, (u) ->
+        Meteor.users.findOne({username: u})?._id
+      mongoFilter.associatedUserIds = {$all: userIds}
     return mongoFilter
 
   toFacetString: (filter) ->

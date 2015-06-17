@@ -130,13 +130,13 @@ Template.queue.rendered = () ->
       status: Iron.query.get 'status'
       tag: Iron.query.get 'tag'
       user: Iron.query.get 'user'
+      associatedUser: Iron.query.get 'associatedUser'
     }
     if Session.get('pseudoQueue') is 'userQueue'
       filter.userId = Meteor.userId()
-
+    
     mongoFilter = Filter.toMongoSelector filter
     _.extend mongoFilter, {submittedTimestamp: {$gt: renderedTime}}
-
     Tickets.find(mongoFilter).observe
       added: (ticket) ->
         if Session.get('offset') < 1

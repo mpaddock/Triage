@@ -35,6 +35,7 @@ Router.map ->
           status: @params.query.status || '!Closed'
           tag: @params.query.tag
           user: @params.query.user
+          associatedUser: @params.query.associatedUser
         
         if Session.get('offset') < 1
           renderedTime = new Date()
@@ -70,6 +71,7 @@ Router.map ->
           status: @params.query.status || '!Closed'
           tag: @params.query.tag
           user: @params.query.user
+          associatedUser: @params.query.associatedUser
           userId: Meteor.userId()
         if Session.get('offset') < 1
           renderedTime = new Date()
@@ -98,6 +100,7 @@ Router.map ->
           status: @params.query.status || '!Closed'
           tag: @params.query.tag
           user: @params.query.user
+          associatedUser: @params.query.associatedUser
 
         if Session.get('offset') < 1
           renderedTime = new Date()
