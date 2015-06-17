@@ -40,7 +40,6 @@ Template.sidebar.helpers
     users = _.pluck Facets.findOne()?.facets.associatedUserIds, 'name'
     usernames = _.map users, (u) ->
       Meteor.users.findOne(u)?.username
-    console.log usernames
     return _.map _.difference(active, usernames), (l) ->
       username: l
       count: 0
