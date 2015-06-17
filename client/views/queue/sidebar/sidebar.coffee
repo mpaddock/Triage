@@ -57,7 +57,7 @@ Template.sidebar.events
   'click a[data-action=showHelp]': ->
     Session.set 'helpText', !Session.get('helpText')
   'keyup input[name=textSearch]': (e, tpl) ->
-    if e.keyCode is 13
+    if e.keyCode is 13 and $(e.target).val().trim() isnt ""
       text = $(e.target).val()
       filter = Iron.query.get('search')?.split(',') || []
       tags = Iron.query.get('tags')?.split(',') || []
@@ -75,7 +75,6 @@ Template.sidebar.events
       Iron.query.set 'tag', newTags.join()
       Iron.query.set 'status', newStatus.join()
       Iron.query.set 'user', newUsers.join()
-      Iron.query.set 'start', 0
       $(e.target).val('')
 
   'click a[data-action="removeFilter"]': (e, tpl) ->
