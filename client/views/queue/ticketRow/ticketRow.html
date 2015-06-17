@@ -62,9 +62,16 @@
         </div>
 
         <div class="hidden-xs col-md-12">
-          {{#each arrayify formFields}}
-          {{>tableFormGroup name=name value=value disabled="disabled"}}
-          {{/each}}
+          <table class="table table-default">
+            <tbody>
+            {{#each arrayify formFields}}
+              <tr>
+                <td class="col-xs-2 col-md-2"><strong>{{name}}</strong></td>
+                <td class="col-xs-10 col-md-10">{{value}}</td>
+              </tr>
+            {{/each}}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
