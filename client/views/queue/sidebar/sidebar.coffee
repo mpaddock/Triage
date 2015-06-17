@@ -75,6 +75,7 @@ Template.sidebar.events
       Iron.query.set 'tag', newTags.join()
       Iron.query.set 'status', newStatus.join()
       Iron.query.set 'user', newUsers.join()
+      Iron.query.set 'start', 0
       $(e.target).val('')
 
   'click a[data-action="removeFilter"]': (e, tpl) ->
