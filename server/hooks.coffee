@@ -1,4 +1,5 @@
 if Npm.require('cluster').isMaster
+
   Changelog.before.insert (userId, doc) ->
     #Server-side note timestamping.
     if doc.type is "note"
@@ -8,8 +9,11 @@ if Npm.require('cluster').isMaster
     #Ticket numbering and server-side ticket timestamping.
     if userId then doc.submittedByUserId = userId
     max = Tickets.findOne({}, {sort:{ticketNumber:-1}})?.ticketNumber || 0
+    now = new Date()
     doc.ticketNumber = max + 1
-    doc.submittedTimestamp = new Date()
+    doc.submittedTimestamp = now
+    doc.tags?.forEach (x) ->
+      Tags.upsert {name: x}, {$set: {lastUse: now}}
 
   Tickets.before.update (userId, doc, fieldNames, modifier, options) ->
     #Changelog events on ticket updates.
@@ -22,6 +26,9 @@ if Npm.require('cluster').isMaster
             tags = _.difference modifier.$addToSet.tags.$each, doc.tags
             unless tags.length is 0
               message = "added tag(s) #{tags}"
+              #Adding tags - modify the tags collection.
+              _.each tags, (x) ->
+                Tags.upsert {name: x}, {$set: {lastUse: new Date()}}
           if modifier.$pull?.tags?
             message = "removed tag(s) #{modifier.$pull.tags}"
         when 'status'
@@ -57,3 +64,4 @@ if Npm.require('cluster').isMaster
           field: fn
           message: message
           otherId: otherId
+
