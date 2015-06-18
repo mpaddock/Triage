@@ -21,6 +21,19 @@ No ticket found.
       {{/each}}
     </blockquote>
 
+    <div class="hidden-xs col-md-12">
+      <table class="table table-default">
+        <tbody>
+        {{#each arrayify formFields}}
+          <tr>
+            <td class="col-xs-2 col-md-2"><strong>{{name}}</strong></td>
+            <td class="col-xs-10 col-md-10">{{value}}</td>
+          </tr>
+        {{/each}}
+        </tbody>
+      </table>
+    </div>
+
     {{> ticketInfoTable}}
 
     {{#each changelog}}
