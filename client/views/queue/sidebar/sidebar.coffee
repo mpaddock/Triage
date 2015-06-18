@@ -3,6 +3,7 @@ Template.sidebar.helpers
     {
       name: "Closed"
       type: "status"
+      count: Tickets.find({status: "Closed"}).count()
     }
   tags: ->
     active = Iron.query.get('tag')?.split(',') || []
