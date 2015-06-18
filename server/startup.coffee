@@ -2,24 +2,22 @@ Meteor.startup ->
   Meteor.settings.queues.forEach (x) ->
     Queues.upsert {name: x.name}, {$set: {securityGroups: x.securityGroups}}
 
-Meteor.startup ->
-  if Npm.require('cluster').isMaster
-    if Meteor.settings.email?.smtpPipe?
-      ingestEmailFromSmtpPipe = ->
-        fs = Npm.require 'fs'
-        console.log 'reading from pipe... waiting for email...'
-        fs.readFile Meteor.settings.email.smtpPipe, Meteor.bindEnvironment (err, data) ->
-          if (err)
-            console.log 'error reading from fifo!'
-            return
-          else
-            console.log 'read data from fifo'
-            message = EmailIngestion.parse(data)
-            console.log 'message is:', message
+if Meteor.settings?.email?.smtpPipe?
+  EmailIngestion.monitorNamedPipe Meteor.settings.email.smtpPipe, (message) ->
+    console.log 'incoming email via SMTP', message
 
-            # TODO: Find ticket this is a reply to and attach
+    ticketId = message.headers['in-reply-to'].split('@').shift().split('.').pop()
+    user = Meteor.users.find({mail: message.fromEmail})
 
-            Meteor.setTimeout ingestEmailFromSmtpPipe, 0
+    # TODO: what if user is not found? automatically create account for email address?
 
-      ingestEmailFromSmtpPipe()
+    Changelog.insert
+      ticketId: ticketId
+      timestamp: new Date()
+      authorId: user._id
+      authorName: user.username
+      type: "note"
+      message: message.body
+
+    Meteor.call 'setFlag', user._id, ticketId, 'replied', true
 

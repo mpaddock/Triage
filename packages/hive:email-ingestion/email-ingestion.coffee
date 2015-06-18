@@ -3,6 +3,29 @@ MailParser = Npm.require("mailparser").MailParser
 Future = Npm.require('fibers/future')
 fs = Npm.require 'fs'
 
+EmailIngestion.monitorNamedPipe = (pipePath, cb) ->
+  Meteor.startup ->
+    if Npm.require('cluster').isMaster
+      if pipePath? #Meteor.settings.email?.smtpPipe?
+        # TODO: is this sound enough, or will an exception terminate the listening?
+        ingestEmailFromSmtpPipe = ->
+          fs = Npm.require 'fs'
+          console.log 'reading from pipe... waiting for email...'
+          fs.readFile pipePath, Meteor.bindEnvironment (err, data) ->
+            if (err)
+              console.log 'error reading from fifo!'
+            else
+              console.log 'read data from fifo'
+              message = EmailIngestion.parse(data)
+              console.log 'message is:', message
+
+              cb.apply null, message
+
+              Meteor.setTimeout ingestEmailFromSmtpPipe, 0
+
+        ingestEmailFromSmtpPipe()
+
+
 # Input:
 #   message - a String or Buffer representing an unparsed SMTP mail message
 #
