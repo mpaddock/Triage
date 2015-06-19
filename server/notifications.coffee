@@ -11,7 +11,7 @@ class @NotificationJob extends Job
   handleJob: ->
     Email.send
       from: @params.fromEmail
-      to: @params.email
+      to: @params.toEmail
       subject: @params.subject
       html: @params.html
       headers:
