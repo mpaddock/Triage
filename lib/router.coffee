@@ -29,6 +29,7 @@ Router.map ->
       Session.set 'offset', (Number(Iron.query.get('start')) || 0)
       @next()
       if Meteor.userId()
+        Meteor.call 'clearQueueBadge', @params.queueName
         filter =
           queueName: @params.queueName
           search: @params.query.search

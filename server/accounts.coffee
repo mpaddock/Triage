@@ -7,3 +7,8 @@ Accounts.onLogin (info) ->
       if sg.toLowerCase() in usersgs
         queue = Queues.findOne {name: queue.name}
         Queues.update queue._id, {$addToSet: {memberIds:info.user._id}}
+
+    #Make sure there's an entry for badge counts for each queue the user has access to.
+    _.each _.pluck(Queues.find({memberIds: info.user._id}).fetch(), 'name'), (q) ->
+      if not QueueBadgeCounts.findOne({userId: info.user._id, queueName: q})
+        QueueBadgeCounts.insert {userId: info.user._id, queueName: q, count: 0}

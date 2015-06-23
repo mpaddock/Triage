@@ -439,3 +439,6 @@ blockquote {
   margin-right: 10px;
 }
 
+.label-as-badge {
+  border-radius: 1em;
+}

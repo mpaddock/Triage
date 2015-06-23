@@ -9,7 +9,11 @@
   <div class="collapse navbar-collapse" id="queueBar">
     <ul class="nav navbar-nav">
       {{#each queue}}
-      <li class="{{active}}"><a href="/queue/{{name}}">{{name}}</a></li>
+        <li class="{{active}}">
+          <a href="/queue/{{name}}">{{name}} 
+            {{#if count}} <span class="label label-danger label-as-badge">{{count}} new</span>{{/if}}
+          </a>
+        </li>
       {{/each}}
     </ul>
     <ul class="nav navbar-nav navbar-right">
