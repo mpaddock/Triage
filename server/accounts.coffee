@@ -9,6 +9,6 @@ Accounts.onLogin (info) ->
         Queues.update queue._id, {$addToSet: {memberIds:info.user._id}}
 
     #Make sure there's an entry for badge counts for each queue the user has access to.
-    _.each _.pluck(Queues.find({memberIds: info.user._id}).fetch(), 'name'), (q) ->
-      if not QueueBadgeCounts.findOne({userId: info.user._id, queueName: q})
-        QueueBadgeCounts.insert {userId: info.user._id, queueName: q, count: 0}
+    _.each Queues.find({memberIds: info.user._id}, {fields: {'name': 1}}).fetch(), (q) ->
+      if not QueueBadgeCounts.findOne({userId: info.user._id, queueName: q.name})
+        QueueBadgeCounts.insert {userId: info.user._id, queueName: q.name, count: 0}
