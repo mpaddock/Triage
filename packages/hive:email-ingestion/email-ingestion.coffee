@@ -12,15 +12,18 @@ EmailIngestion.monitorNamedPipe = (pipePath, cb) ->
           fs = Npm.require 'fs'
           console.log 'reading from pipe... waiting for email...'
           fs.readFile pipePath, Meteor.bindEnvironment (err, data) ->
-            if (err)
-              console.log 'error reading from fifo!'
-            else
-              console.log 'read data from fifo'
-              message = EmailIngestion.parse(data)
-              console.log 'message is:', message
+            try
+              if (err)
+                console.log 'error reading from fifo!'
+              else
+                console.log 'read data from fifo'
+                message = EmailIngestion.parse(data)
+                console.log 'message is:', message
 
-              cb.apply null, message
-
+                cb.call null, message
+            catch e
+              console.log 'Exception ingesting email: ', e
+            finally
               Meteor.setTimeout ingestEmailFromSmtpPipe, 0
 
         ingestEmailFromSmtpPipe()
