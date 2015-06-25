@@ -416,6 +416,30 @@ blockquote {
   visibility: visible; 
 } 
 
+.attachment { 
+  display: block;
+  position: relative; 
+} 
+ 
+.attachment .remove-attachment { 
+  position: absolute; 
+  display: block; 
+  border: 1px solid; 
+  top: 17px;
+  left: 20%; 
+  z-index: 9999; 
+  min-width: 4.4em;
+  background: rgba(255, 255, 255, 0.9); 
+  padding: 2px 4px 2px 4px; 
+  visibility: hidden; 
+  -moz-border-radius: 3px; 
+  -webkit-border-radius: 3px; 
+} 
+ 
+.attachment:hover .remove-attachment { 
+  visibility: visible; 
+} 
+
 .note-well {
   margin-bottom: 0px;
 }

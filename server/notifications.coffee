@@ -50,22 +50,23 @@ Tickets.after.update (userId, doc, fieldNames, modifier) ->
           Job.push new NotificationJob fromEmail: fromEmail, toEmail: aUser.mail, subject: subject, html: message
 
   if _.contains fieldNames, "attachmentIds"
-    file = FileRegistry.findOne(modifier.$addToSet.attachmentIds)
-    subject = "User #{user.username} added an attachment to Triage ticket ##{doc.ticketNumber}: #{title}"
-    message = "Attachment #{file.filename} added to ticket #{doc.ticketNumber}.
-      <a href='#{rootUrl}/file/#{file.filenameOnDisk}'>View the attachment here.<br><br>
-      The original ticket body was:<br>#{body}<br><br>
-      <a href='#{rootUrl}/ticket/#{doc.ticketNumber}'>View the ticket here.</a>"
+    if modifier.$addToSet?.attachmentIds
+      file = FileRegistry.findOne(modifier.$addToSet.attachmentIds)
+      subject = "User #{user.username} added an attachment to Triage ticket ##{doc.ticketNumber}: #{title}"
+      message = "Attachment #{file.filename} added to ticket #{doc.ticketNumber}.
+        <a href='#{rootUrl}/file/#{file.filenameOnDisk}'>View the attachment here.<br><br>
+        The original ticket body was:<br>#{body}<br><br>
+        <a href='#{rootUrl}/ticket/#{doc.ticketNumber}'>View the ticket here.</a>"
     
-    authorSent = false
-    if author.notificationSettings?.authorAttachment
-      Job.push new NotificationJob fromEmail: fromEmail, toEmail: author.mail, subject: subject, html: message
-      authorSent = true
-    _.each doc.associatedUserIds, (a) ->
-      unless (a is doc.authorId) and (authorSent = true)
-        aUser = Meteor.users.findOne(a)
-        if aUser.notificationSettings?.associatedAttachment
-          Job.push new NotificationJob fromEmail: fromEmail, toEmail: aUser.mail, subject: subject, html: message
+      authorSent = false
+      if author.notificationSettings?.authorAttachment
+        Job.push new NotificationJob fromEmail: fromEmail, toEmail: author.mail, subject: subject, html: message
+        authorSent = true
+      _.each doc.associatedUserIds, (a) ->
+        unless (a is doc.authorId) and (authorSent = true)
+          aUser = Meteor.users.findOne(a)
+          if aUser.notificationSettings?.associatedAttachment
+            Job.push new NotificationJob fromEmail: fromEmail, toEmail: aUser.mail, subject: subject, html: message
 
 Changelog.after.insert (userId, doc) ->
   if doc.type is "note"
