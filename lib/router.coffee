@@ -29,7 +29,6 @@ Router.map ->
       Session.set 'offset', (Number(Iron.query.get('start')) || 0)
       @next()
       if Meteor.userId()
-        Meteor.call 'clearQueueBadge', @params.queueName
         filter =
           queueName: @params.queueName
           search: @params.query.search
@@ -40,7 +39,9 @@ Router.map ->
         if Session.get('offset') < 1
           renderedTime = new Date()
           Meteor.subscribe 'newTickets', filter, renderedTime
+        queueName = @params.queueName
         Meteor.subscribe 'tickets', filter, Session.get('offset'), limit, onReady: () ->
+          Meteor.call 'clearQueueBadge', queueName
           Session.set('ready', true)
         
 
