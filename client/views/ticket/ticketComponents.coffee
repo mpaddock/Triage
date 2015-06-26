@@ -77,8 +77,24 @@ Template.ticketInfoTable.helpers
         noMatchTemplate: Template.noMatchTagPill
       ]
     }
- 
+
+Template.removeAttachmentModal.helpers
+  attachment: -> FileRegistry.findOne(@attachmentId)
+  ticket: -> Tickets.findOne(@ticketId)
+
+Template.removeAttachmentModal.events
+  'click button[data-action=removeAttachment]': (e, tpl) ->
+    Tickets.update @ticketId, {$pull: {attachmentIds: @attachmentId}}
+    $('#removeAttachmentModal').modal('hide')
+  'hidden.bs.modal': (e, tpl) ->
+    Blaze.remove tpl.view
+
 Template.ticketInfoTable.events
+  'click a[data-action=removeAttachment]': (e, tpl) ->
+    data = { attachmentId: this.valueOf(), ticketId: tpl.data._id }
+    Blaze.renderWithData(Template['removeAttachmentModal'], data, $('body').get(0))
+    $('#removeAttachmentModal').modal('show')
+
   'keyup input[name=addTag]': (e, tpl) ->
     if e.which is 13
       val = $(e.target).val()?.split(' ')

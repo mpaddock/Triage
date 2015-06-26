@@ -54,10 +54,15 @@ if Npm.require('cluster').isMaster
             user = Meteor.users.findOne({_id: modifier.$pull.associatedUserIds}).username
             message = "disassociated user #{user}"
         when 'attachmentIds'
-          file = FileRegistry.findOne modifier.$addToSet.attachmentIds
           type = "attachment"
-          otherId = file._id
-          message = "attached file #{file.filename}"
+          if modifier.$addToSet?.attachmentIds
+            file = FileRegistry.findOne modifier.$addToSet.attachmentIds
+            otherId = file._id
+            message = "attached file #{file.filename}"
+          else if modifier.$pull?.attachmentIds
+            file = FileRegistry.findOne modifier.$pull.attachmentIds
+            otherId = file._id
+            message = "removed attached file #{file.filename}"
 
       if message
         Changelog.direct.insert
