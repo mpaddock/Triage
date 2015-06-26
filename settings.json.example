@@ -8,7 +8,8 @@
     {"name": "Finance", "securityGroups": ["SGFinanceTeam"]},
     {"name": "Design", "securityGroups": ["SGDesignTeam"]},
     {"name": "Web", "securityGroups": ["SGWebTeam"]},
-    {"name": "App Dev", "securityGroups": ["SGAppDevTeam"]}
+    {"name": "App Dev", "securityGroups": ["SGAppDevTeam"]},
+    {"name": "Help Desk", "securityGroups": ["SGHelpDeskTeam"]}
   ],
   "ldapDummy": {
     "username": "ldaptestaccount",
