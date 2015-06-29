@@ -17,7 +17,7 @@ if Meteor.settings?.email?.smtpPipe?
       authorId: user._id
       authorName: user.username
       type: "note"
-      message: message.body
+      message: EmailIngestion.extractReplyFromBody message.body
 
     Meteor.call 'setFlag', user._id, ticketId, 'replied', true
 
