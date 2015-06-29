@@ -40,10 +40,6 @@ Tinytest.add 'Filter - toMongoSelector', (test) ->
   _.each shouldNotMatch, (d) ->
     test.equal false, new Minimongo.Matcher(selector).documentMatches(d).result
 
-Tinytest.add 'Filter - toFacetString', (test) ->
-  test.equal Filter.toFacetString(filter),
-    "queueName:Q|search:phrase|status:!Closed"
-
 Tinytest.add 'Filter - verifyFilterObject', (test) ->
   test.equal Filter.verifyFilterObject(filter, ['Q', 'C', 'D'], 1), true
   test.equal Filter.verifyFilterObject(filter, ['C', 'D']), false
