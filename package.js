@@ -9,7 +9,8 @@ Package.onUse(function (api) {
   api.use([
     'mongo',
     'coffeescript',
-    'aldeed:collection2'
+    'aldeed:collection2',
+    'hive:facets@0.0.1',
   ]);
   api.addFiles([
     'lib/facets.coffee'
@@ -26,7 +27,8 @@ Package.onTest(function (api) {
     'aldeed:simple-schema@1.3.2',
     'matb33:collection-hooks@0.7.13',
     'tinytest',
-    'test-helpers'
+    'test-helpers',
+    'hive:facets@0.0.1'
   ]);
 
   api.addFiles([
