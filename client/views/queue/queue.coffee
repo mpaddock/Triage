@@ -116,6 +116,8 @@ submitQuickAddTicket = (tpl) ->
       authorName: Meteor.user().username
       status: status
       submittedTimestamp: new Date()
+      submissionData:
+        method: "Web"
 
     tpl.$('input[name=newTicket]').val('')
 

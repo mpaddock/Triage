@@ -148,7 +148,7 @@ Router.map ->
         authorName: @request.body.username
         authorId: Meteor.users.findOne({username: @request.body.username})._id
         submissionData:
-          method: 'Web'
+          method: 'Form'
           ipAddress: @request.body.ip_address
           hostname: @request.body.hostname? @request.body.ip_address
         submittedTimestamp: Date.now()

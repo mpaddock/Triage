@@ -26,13 +26,13 @@ Tickets.after.insert (userId, doc) ->
     subject = "Triage ticket ##{doc.ticketNumber} submitted: #{title}"
     message = "You submitted ticket #{doc.ticketNumber} with body:<br>#{body}<br><br>
       <a href='#{rootUrl}/ticket/#{doc.ticketNumber}'>View the ticket here.</a>"
-    
-    Job.push new NotificationJob
-      ticketId: doc._id
-      fromEmail: fromEmail
-      toEmail: author.mail
-      subject: subject
-      html: message
+    if (doc.submissionData?.method is "Form" and Meteor.settings.email.sendEmailOnFormSubmit) or !(doc.submissionData?.method is "Form")
+      Job.push new NotificationJob
+        ticketId: doc._id
+        fromEmail: fromEmail
+        toEmail: author.mail
+        subject: subject
+        html: message
 
 Tickets.after.update (userId, doc, fieldNames, modifier) ->
   user = Meteor.users.findOne(userId)
