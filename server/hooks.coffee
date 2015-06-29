@@ -6,14 +6,19 @@ if Npm.require('cluster').isMaster
       doc.timestamp = new Date()
 
   Tickets.before.insert (userId, doc) ->
-    #Ticket numbering and server-side ticket timestamping.
+    #True submitter record
     if userId then doc.submittedByUserId = userId
+    #Ticket numbering
     max = Tickets.findOne({}, {sort:{ticketNumber:-1}})?.ticketNumber || 0
-    now = new Date()
     doc.ticketNumber = max + 1
+    #Server-side timestamping
+    now = new Date()
     doc.submittedTimestamp = now
+    #Update tag collection for autocomplete
     doc.tags?.forEach (x) ->
       Tags.upsert {name: x}, {$set: {lastUse: now}}
+    #Update queue new counts.
+    QueueBadgeCounts.update {queueName: doc.queueName}, { $inc: {count: 1} }
 
   Tickets.before.update (userId, doc, fieldNames, modifier, options) ->
     #Changelog events on ticket updates.

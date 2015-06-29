@@ -120,3 +120,6 @@ Meteor.publish 'queueNames', () ->
 
 Meteor.publish 'tags', () ->
   Tags.find {}, {fields: {'name': 1}, sort: {lastUse: -1}, limit: 100}
+
+Meteor.publish 'queueCounts', () ->
+  QueueBadgeCounts.find {userId: @userId}

@@ -1,7 +1,8 @@
 Template.queuebar.helpers
   queue: ->
     #Use fetch so we get a null result if the user has access to no queues.
-    Queues.find({memberIds: Meteor.userId()}).fetch()
+    _.map Queues.find({memberIds: Meteor.userId()}).fetch(), (q) ->
+      _.extend q, {count: QueueBadgeCounts.findOne({queueName: q.name, userId: Meteor.userId()})?.count}
   active: ->
     if this.name is Session.get("queueName")
       return "active"
