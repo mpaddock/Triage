@@ -79,25 +79,25 @@ Tickets.after.update (userId, doc, fieldNames, modifier) ->
         The original ticket body was:<br>#{body}<br><br>
         <a href='#{rootUrl}/ticket/#{doc.ticketNumber}'>View the ticket here.</a>"
     
-    authorSent = false
-    if author.notificationSettings?.authorAttachment
-      Job.push new NotificationJob
-        fromEmail: fromEmail
-        toEmail: author.mail
-        ticketId: doc._id
-        subject: subject
-        html: message
-      authorSent = true
-    _.each doc.associatedUserIds, (a) ->
-      unless (a is doc.authorId) and (authorSent = true)
-        aUser = Meteor.users.findOne(a)
-        if aUser.notificationSettings?.associatedAttachment
-          Job.push new NotificationJob
-            fromEmail: fromEmail
-            toEmail: aUser.mail
-            ticketId: doc._id
-            subject: subject
-            html: message
+      authorSent = false
+      if author.notificationSettings?.authorAttachment
+        Job.push new NotificationJob
+          fromEmail: fromEmail
+          toEmail: author.mail
+          ticketId: doc._id
+          subject: subject
+          html: message
+        authorSent = true
+      _.each doc.associatedUserIds, (a) ->
+        unless (a is doc.authorId) and (authorSent = true)
+          aUser = Meteor.users.findOne(a)
+          if aUser.notificationSettings?.associatedAttachment
+            Job.push new NotificationJob
+              fromEmail: fromEmail
+              toEmail: aUser.mail
+              ticketId: doc._id
+              subject: subject
+              html: message
 
 Changelog.after.insert (userId, doc) ->
   if doc.type is "note"
