@@ -18,7 +18,7 @@ if Npm.require('cluster').isMaster
     doc.tags?.forEach (x) ->
       Tags.upsert {name: x}, {$set: {lastUse: now}}
     #Update queue new counts.
-    QueueBadgeCounts.update {queueName: doc.queueName}, { $inc: {count: 1} }
+    QueueBadgeCounts.update {queueName: doc.queueName}, { $inc: {count: 1} }, {multi: true}
 
   Tickets.before.update (userId, doc, fieldNames, modifier, options) ->
     #Changelog events on ticket updates.
