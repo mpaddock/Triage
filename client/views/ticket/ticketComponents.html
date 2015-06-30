@@ -17,7 +17,7 @@
     {{#if changeIsType 'attachment'}}
       {{#with otherId}}
         {{#if file.thumbnail}}
-          <img style="max-width: 100%; max-height: 128px" src="/file/{{file.thumbnail}}"/><br/>
+          <img class="img-thumbnail" style="max-width: 100%; max-height: 128px" src="/file/{{file.thumbnail}}"/><br/>
         {{/if}}
       {{/with}}
       <small style="font-size: 0.7em;">User {{authorName}} {{message}} @ {{timestamp}}</small>
@@ -31,7 +31,7 @@
 
 <template name="ticketInfoTable">
 <div class="row">
-  <table class="table table-bordered">
+  <table class="table table-img-thumbnail">
     <thead>
       <tr>
         <th width="33%">Assigned Users</th>
@@ -83,7 +83,7 @@
             <div class="attachment">
               <div class="attachment-link">
               {{#if file.thumbnail}}
-                <img style="max-width: 64px; max-height:24px;" src="/file/{{file.thumbnail}}" />
+                <img class="img-thumbnail" style="max-width: 64px; max-height:24px;" src="/file/{{file.thumbnail}}" />
               {{/if}}
                 <a data-action="downloadAttachment" href="/file/{{file.filenameOnDisk}}" target="_blank">{{file.filename}}</a><br />
               </div>
