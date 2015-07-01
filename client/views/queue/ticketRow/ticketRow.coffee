@@ -52,4 +52,4 @@ Template.ticketRow.helpers
   repliedTo: ->
     TicketFlags.findOne({userId: Meteor.userId(), ticketId: @_id, k: 'replied'})
   hasAttachment: ->
-    TicketFlags.findOne({ticketId: @_id, k: 'attachment'})
+    @attachmentIds?.length > 0

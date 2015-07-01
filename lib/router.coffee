@@ -155,6 +155,7 @@ Router.map ->
         queueName: @request.body.queueName || 'Triage'
         tags: @request.body.tags?.split(';\n') || []
         formFields: formFields
+        attachmentIds: _.pluck(@request.files, '_id')
 
       @response.end 'Submission successful.'
 

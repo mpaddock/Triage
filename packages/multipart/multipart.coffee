@@ -11,17 +11,23 @@ Router.onBeforeAction (req, res, next) ->
     req.files = []
     req.body = req.body || {}
     req.busboy.on 'file', Meteor.bindEnvironment (fieldname, file, filename, encoding, mimetype) ->
-      # TODO: save in FileRegistry
+      fs = Npm.require 'fs'
+
+      size = 0
+      now = Date.now()
+      filenameOnDisk = "#{filename}-#{now}"
+      file.pipe fs.createWriteStream (FileRegistry.getFileRoot() + filenameOnDisk)
       file.on 'data', (data) ->
-        console.log 'file data'
-      file.on 'end', ->
-        console.log 'file end'
-      req.files.push
-        file: file
-        fieldname: fieldname
-        filename: filename
-        encoding: encoding
-        mimetype: mimetype
+        size += data.length
+      file.on 'end', Meteor.bindEnvironment ->
+        f = _id: FileRegistry.insert
+          filename: filename
+          filenameOnDisk: filenameOnDisk
+          size: size
+          timestamp: now
+        FileRegistry.scheduleJobsForFile filenameOnDisk
+        req.files.push f
+
     req.busboy.on 'field', Meteor.bindEnvironment (fieldname, val, fieldnameTruncated, valTruncated) ->
       req.body[fieldname] = val
     req.busboy.on 'finish', Meteor.bindEnvironment ->

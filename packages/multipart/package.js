@@ -9,7 +9,8 @@ Npm.depends({
 });
 
 Package.onUse(function (api) {
-  api.use('iron:router')
-  api.use('coffeescript')
+  api.use('iron:router');
+  api.use('hive:file-registry');
+  api.use('coffeescript');
   api.addFiles('multipart.coffee', 'server');
 });
