@@ -9,7 +9,7 @@ makeMessageID = (ticketId) ->
 
 class @NotificationJob extends Job
   handleJob: ->
-    ticketNumber = Tickets.findOne(@params.ticketId)
+    ticketNumber = Tickets.findOne(@params.ticketId).ticketNumber
     html = @params.html + "<br><br><a href='#{rootUrl}/ticket/#{ticketNumber}'>View the ticket here.</a>"
     Email.send
       from: @params.fromEmail || fromEmail
