@@ -63,7 +63,7 @@ if Npm.require('cluster').isMaster
 
   Tickets.before.update (userId, doc, fieldNames, modifier, options) ->
     _.each fieldNames, (fn) ->
-      getEventMessagesFromUpdate doc, fn, modifier, user, author
+      getEventMessagesFromUpdate userId, doc, fn, modifier
 
   Changelog.after.insert (userId, doc) ->
     if doc.type is "note"
