@@ -92,7 +92,6 @@
 
   if emailBody
     Job.push new NotificationJob
-      fromEmail: fromEmail
       bcc: _.uniq(recipients)
       ticketId: doc._id
       subject: subject

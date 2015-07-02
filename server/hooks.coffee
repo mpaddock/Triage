@@ -1,6 +1,6 @@
-rootUrl = Meteor.absoluteUrl()
-if rootUrl[rootUrl.length-1] == '/'
-  rootUrl = rootUrl.substr(0, rootUrl.length-1)
+@rootUrl = Meteor.absoluteUrl()
+if @rootUrl[@rootUrl.length-1] == '/'
+  @rootUrl = @rootUrl.substr(0, @rootUrl.length-1)
 fromEmail = Meteor.settings.email?.fromEmail || "triagebot@as.uky.edu"
 fromDomain = fromEmail.split('@').pop()
 
@@ -10,7 +10,7 @@ makeMessageID = (ticketId) ->
 class @NotificationJob extends Job
   handleJob: ->
     Email.send
-      from: @params.fromEmail
+      from: @params.fromEmail || fromEmail
       to: @params.toEmail
       bcc: @params.bcc
       subject: @params.subject
@@ -55,7 +55,6 @@ if Npm.require('cluster').isMaster
       if (doc.submissionData?.method is "Form" and Meteor.settings.email.sendEmailOnFormSubmit) or !(doc.submissionData?.method is "Form")
         Job.push new NotificationJob
           ticketId: doc._id
-          fromEmail: fromEmail
           bcc: author.mail
           subject: subject
           html: message
@@ -95,7 +94,6 @@ if Npm.require('cluster').isMaster
           recipients.push(aUser.mail)
 
       Job.push new NotificationJob
-        fromEmail: fromEmail
         bcc: _.uniq(recipients)
         ticketId: ticket._id
         subject: subject
