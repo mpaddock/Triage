@@ -133,7 +133,7 @@ Router.map ->
           'Access denied.  Submit from a whitelisted IP address or use an API token.'
 
       console.log @request.body
-      requiredParams = ['username', 'email', 'description', 'ip_address', 'queueName']
+      requiredParams = ['username', 'email', 'description', 'queueName']
       for k in requiredParams
         if not @request.body[k]? then throw new Meteor.Error 412, "Missing required parameter #{k} in request."
 
