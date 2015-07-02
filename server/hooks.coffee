@@ -52,8 +52,7 @@ if Npm.require('cluster').isMaster
       title = validator.escape(doc.title)
       body = validator.escape(doc.body)
       subject = "Triage ticket ##{doc.ticketNumber} submitted: #{title}"
-      message = "You submitted ticket #{doc.ticketNumber} with body:<br>#{body}<br><br>
-        <a href='#{rootUrl}/ticket/#{doc.ticketNumber}'>View the ticket here.</a>"
+      message = "You submitted ticket #{doc.ticketNumber} with body:<br>#{body}"
       if (doc.submissionData?.method is "Form" and Meteor.settings.email.sendEmailOnFormSubmit) or !(doc.submissionData?.method is "Form")
         Job.push new NotificationJob
           ticketId: doc._id
@@ -80,8 +79,7 @@ if Npm.require('cluster').isMaster
       emailBody = "<strong>User #{doc.authorName} added a note to ticket ##{ticket.ticketNumber}:</strong><br>
         #{note}<br><br>
         <strong>#{ticket.authorName}'s original ticket body was:</strong><br>
-        #{body}<br><br>
-        <a href='#{rootUrl}/ticket/#{ticket.ticketNumber}'>View the ticket here.</a>"
+        #{body}"
 
       if (user._id is author._id) and (user.notificationSettings?.authorSelfNote)
         recipients.push(author.mail)
