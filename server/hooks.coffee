@@ -42,7 +42,7 @@ if Npm.require('cluster').isMaster
       Tags.upsert {name: x}, {$set: {lastUse: now}}
 
     #Update queue new counts.
-    QueueBadgeCounts.update {queueName: doc.queueName}, { $inc: {count: 1} }, {multi: true}
+    QueueBadgeCounts.update {queueName: doc.queueName, userId: {$ne: userId}}, { $inc: {count: 1} }, {multi: true}
 
     #Email the author.
     author = Meteor.users.findOne(doc.authorId)
