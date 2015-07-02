@@ -1,8 +1,8 @@
 @getEventMessagesFromUpdate = (userId, doc, fn, modifier) ->
-   user = Meteor.users.findOne(userId)
-   author = Meteor.users.findOne(doc.authorId)
-   title = validator.escape(doc.title)
-   body = validator.escape(doc.body)
+  user = Meteor.users.findOne(userId)
+  author = Meteor.users.findOne(doc.authorId)
+  title = validator.escape(doc.title)
+  body = validator.escape(doc.body)
   switch fn
     when 'tags'
       type = "field"
