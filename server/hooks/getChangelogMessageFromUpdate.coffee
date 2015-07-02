@@ -26,8 +26,7 @@
         emailBody ="<strong>User #{user.username} changed status for ticket ##{doc.ticketNumber} from
           #{oldStatus} to #{newStatus}.</strong><br>
           The original ticket body was:<br>
-          #{body}<br><br>
-          <a href='#{rootUrl}/ticket/#{doc.ticketNumber}'>View the ticket here.</a>"
+          #{body}"
 
         recipients = []
         if author.notificationSettings?.authorStatusChanged
@@ -61,9 +60,7 @@
         changelog = "attached file #{file.filename}"
         subject = "User #{user.username} added an attachment to Triage ticket ##{doc.ticketNumber}: #{title}"
         emailBody = "Attachment #{file.filename} added to ticket #{doc.ticketNumber}.
-          <a href='#{rootUrl}/file/#{file.filenameOnDisk}'>View the attachment here.<br><br>
-          The original ticket body was:<br>#{body}<br><br>
-          <a href='#{rootUrl}/ticket/#{doc.ticketNumber}'>View the ticket here.</a>"
+          The original ticket body was:<br>#{body}"
 
         recipients = []
         if author.notificationSettings?.authorAttachment
