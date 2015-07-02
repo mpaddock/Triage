@@ -1,6 +1,6 @@
 Package.describe({
   name: 'multipart',
-  summary: 'Add multipart parsing to router using busboy',
+  summary: 'Parse multipart/form-data in iron:router using busboy',
   version: '1.0.0'
 });
 

@@ -15,7 +15,9 @@ Router.onBeforeAction (req, res, next) ->
 
       size = 0
       now = Date.now()
-      filenameOnDisk = "#{filename}-#{now}"
+      extension = filename.substr(filename.lastIndexOf('.'))
+      basename = filename.substr(0, filename.lastIndexOf('.'))
+      filenameOnDisk = "#{basename}-#{now}#{extension}"
       file.pipe fs.createWriteStream (FileRegistry.getFileRoot() + filenameOnDisk)
       file.on 'data', (data) ->
         size += data.length
