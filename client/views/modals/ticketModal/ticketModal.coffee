@@ -2,6 +2,9 @@ Template.ticketModal.helpers
   queues: -> Queues.find()
   errorText: -> Session.get 'errorText'
   submitting: -> Session.get 'submitting'
+  files: ->
+    if Session.get('newTicketAttachedFiles')
+      FileRegistry.find {_id: {$in: Session.get('newTicketAttachedFiles')}}
   settings: ->
     {
       position: "bottom"
@@ -23,7 +26,24 @@ Template.ticketModal.helpers
       ]
     }
 
+Tracker.autorun ->
+  if Session.get('newTicketAttachedFiles')
+    Meteor.subscribe 'unattachedFiles', Session.get('newTicketAttachedFiles')
+
 Template.ticketModal.events
+  'click button[data-action=uploadFile]': (e, tpl) ->
+    Media.pickLocalFile (fileId) ->
+      console.log "Uploaded a file, got _id: ", fileId
+      files = Session.get('newTicketAttachedFiles') || []
+      files.push(fileId)
+      Session.set 'newTicketAttachedFiles', files
+
+  'click a[data-action=removeAttachment]': (e, tpl) ->
+    id = $(e.target).data('file')
+    files = _.without Session.get('newTicketAttachedFiles'), id
+    Session.set 'newTicketAttachedFiles', files
+
+
   'click button[data-action=submit]': (e, tpl) ->
     Session.set 'submitting', true
     #Probably need a record of 'true' submitter for on behalf of submissions.
@@ -54,7 +74,6 @@ Template.ticketModal.events
           tpl.$('input[name=onBehalfOf]').closest('div .form-group').removeClass('has-error').addClass('has-success')
           tpl.$('button[data-action=checkUsername]').html('<span class="glyphicon glyphicon-ok"></span>')
           tpl.$('button[data-action=checkUsername]').removeClass('btn-danger').removeClass('btn-primary').addClass('btn-success')
-
         Tickets.insert {
           title: title
           body: body
@@ -65,6 +84,7 @@ Template.ticketModal.events
           authorName: submitter
           status: "Open"
           submittedTimestamp: new Date()
+          attachmentIds: Session.get('newTicketAttachedFiles')
           submissionData:
             method: "Web"
         }, (err, res) ->
@@ -112,6 +132,8 @@ Template.ticketModal.events
 
 Template.ticketModal.rendered = () ->
   tags = _.pluck Tags.find().fetch(), 'name'
+  if not Session.get('newTicketAttachedFiles')
+    Session.set 'newTicketAttachedFiles', []
   $('input[name=tags]').select2({
     tags: tags
     tokenSeparators: [' ', ',']
@@ -120,6 +142,7 @@ Template.ticketModal.rendered = () ->
 clearFields = (tpl) ->
   Session.set 'submitting', false
   Session.set 'errorText', null
+  Session.set 'newTicketAttachedFiles', []
   tpl.$('input, textarea').val('')
   tpl.$('.has-error').removeClass('has-error')
   tpl.$('.has-success').removeClass('has-success')

@@ -119,3 +119,8 @@ Meteor.publish 'tags', () ->
 
 Meteor.publish 'queueCounts', () ->
   QueueBadgeCounts.find {userId: @userId}
+
+Meteor.publish 'unattachedFiles', (fileIds) ->
+  #Only return the files if they're not associated with a ticket yet for some security.
+  unless Tickets.findOne {attachmentIds: {$in: fileIds}}
+    return FileRegistry.find {_id: {$in: fileIds}}
