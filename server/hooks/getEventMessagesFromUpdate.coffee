@@ -46,8 +46,9 @@
         unless users.length is 0
           changelog = "associated user(s) #{users}"
       else if modifier.$addToSet?.associatedUserIds?
-        user = Meteor.users.findOne(modifier.$addToSet.associatedUserIds).username
-        changelog = "associated user #{user}"
+        unless modifier.$addToSet.associatedUserIds in doc.associatedUserIds
+          user = Meteor.users.findOne(modifier.$addToSet.associatedUserIds).username
+          changelog = "associated user #{user}"
       else if modifier.$pull?.associatedUserIds?
         user = Meteor.users.findOne({_id: modifier.$pull.associatedUserIds}).username
         changelog = "disassociated user #{user}"
