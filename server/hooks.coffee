@@ -8,7 +8,7 @@ if Npm.require('cluster').isMaster
     #Update queue new counts.
     QueueBadgeCounts.update {queueName: doc.queueName, userId: {$ne: userId}}, { $inc: {count: 1} }, {multi: true}
     
-    prepareTicket userId, doc
+    doc = prepareTicket userId, doc
     notifyTicketAuthor userId, doc
 
 
