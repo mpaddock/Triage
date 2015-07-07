@@ -33,9 +33,9 @@
           recipients.push(author.mail)
 
         _.each doc.associatedUserIds, (a) ->
-            aUser = Meteor.users.findOne(a)
-            if aUser.notificationSettings?.associatedStatusChanged
-              recipients.push(aUser.mail)
+          aUser = Meteor.users.findOne(a)
+          if aUser.notificationSettings?.associatedStatusChanged
+            recipients.push(aUser.mail)
 
 
     when 'associatedUserIds'
