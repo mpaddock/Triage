@@ -7,7 +7,7 @@ if Meteor.settings?.email?.smtpPipe?
     console.log 'incoming email via SMTP', message
 
     ticketId = message.headers['in-reply-to'].split('@').shift().split('.').pop()
-    user = Meteor.users.findOne({mail: message.fromEmail})
+    user = Meteor.users.findOne {$or: [ { mail: message.fromEmail }, { emails: message.fromEmail } ]}
 
     # TODO: what if user is not found? automatically create account for email address?
 

@@ -144,6 +144,10 @@ Meteor.users.attachSchema new SimpleSchema
   mail:
     type: String
     label: "Email Address"
+  emails:
+    type: [String]
+    optional: true
+    label: "Additional Email Addresses"
   memberOf:
     type: [String]
     label: "Member Of"

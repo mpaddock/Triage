@@ -30,3 +30,6 @@ Handlebars.registerHelper 'arrayify', (obj) ->
 (exports ? this).getStatuses = (text) ->
   _.uniq(text.match(/status:(\w+-\w+|\w+|"[^"]*"+|'[^']*')/g)).map (x) ->
     x.replace('status:', '').replace(/"/g, '').replace(/'/g, '') #strip status: and all quotes.
+
+(exports ? this).validateEmail = (email) ->
+  /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)
