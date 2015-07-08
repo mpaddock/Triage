@@ -82,9 +82,15 @@
   authorId:
     type: String
     label: "Author ID"
+    optional: true
   authorName:
     type: String
     label: "Author Name"
+    optional: true
+  authorEmail:
+    type: String
+    label: "Author Email address"
+    optional: true
   type:
     type: String
     allowedValues: ['note', 'field', 'attachment']

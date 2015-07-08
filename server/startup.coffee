@@ -14,8 +14,9 @@ if Meteor.settings?.email?.smtpPipe?
     Changelog.insert
       ticketId: ticketId
       timestamp: new Date()
-      authorId: user._id
-      authorName: user.username
+      authorId: user?._id
+      authorName: user?.username
+      authorEmail: message.fromEmail
       type: "note"
       message: EmailIngestion.extractReplyFromBody message.body
 
