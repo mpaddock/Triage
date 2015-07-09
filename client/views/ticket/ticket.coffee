@@ -9,3 +9,7 @@ Template.ticket.helpers
     @body.split('\n')
   changelog: ->
     Changelog.find {ticketId: this._id}, {sort: timestamp: 1}
+
+Template.ticket.rendered = () ->
+  if Tickets.findOne()
+    Meteor.call 'removeFlag', Meteor.userId(), Tickets.findOne()._id, 'unread'
