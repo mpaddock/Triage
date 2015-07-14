@@ -2,6 +2,7 @@ if Npm.require('cluster').isMaster
 
   Tickets.before.insert (userId, doc) ->
     #Update tag collection for autocomplete.
+    now = new Date()
     doc.tags?.forEach (x) ->
       Tags.upsert {name: x}, {$set: {lastUse: now}}
 
