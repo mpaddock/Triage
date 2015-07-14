@@ -123,8 +123,8 @@ submitQuickAddTicket = (tpl) ->
 
 
 Template.queue.rendered = () ->
-  Tracker.autorun () ->
-    renderedTime = new Date()
+  renderedTime = new Date()
+  this.autorun () ->
     queueName = Session.get('queueName') || _.pluck Queues.find().fetch(), 'name'
     filter = {
       queueName: queueName
