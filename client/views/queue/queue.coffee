@@ -142,6 +142,6 @@ Template.queue.rendered = () ->
     Tickets.find(mongoFilter).observe
       added: (ticket) ->
         if Session.get('offset') < 1
-          Session.set 'newTicketSet', Session.get('newTicketSet')?.concat(ticket._id) || [ticket._id]
+          Session.set 'newTicketSet', _.uniq(Session.get('newTicketSet')?.concat(ticket._id) || [ticket._id])
 
     Meteor.subscribe 'ticketSet', Session.get('newTicketSet')
