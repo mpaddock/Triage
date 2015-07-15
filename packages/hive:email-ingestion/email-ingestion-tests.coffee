@@ -25,6 +25,10 @@ testFiles = [
     "I was away when you sent the first request adn then it got lost in the"+
     "\nflood.\n\n"+
     "This message has a pdf file attached."
+  },
+  {
+    file: 'uky_forwarded_to_gmail2.mail'
+    expected: 'test'
   }
 ]
 
