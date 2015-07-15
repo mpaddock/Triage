@@ -41,17 +41,17 @@
     when 'associatedUserIds'
       type = "field"
       if modifier.$addToSet?.associatedUserIds?.$each?
-        users = _.map _.difference(modifier.$addToSet.associatedUserIds.$each, doc.associatedUserIds), (x) ->
+        associatedUsers = _.map _.difference(modifier.$addToSet.associatedUserIds.$each, doc.associatedUserIds), (x) ->
           Meteor.users.findOne({_id: x}).username
         unless users.length is 0
-          changelog = "associated user(s) #{users}"
+          changelog = "associated user(s) #{associatedUsers}"
       else if modifier.$addToSet?.associatedUserIds?
         unless modifier.$addToSet.associatedUserIds in doc.associatedUserIds
-          user = Meteor.users.findOne(modifier.$addToSet.associatedUserIds).username
-          changelog = "associated user #{user}"
+          associatedUser = Meteor.users.findOne(modifier.$addToSet.associatedUserIds).username
+          changelog = "associated user #{associatedUser}"
       else if modifier.$pull?.associatedUserIds?
-        user = Meteor.users.findOne({_id: modifier.$pull.associatedUserIds}).username
-        changelog = "disassociated user #{user}"
+        associatedUser = Meteor.users.findOne({_id: modifier.$pull.associatedUserIds}).username
+        changelog = "disassociated user #{associatedUser}"
 
     when 'attachmentIds'
       type = "attachment"
