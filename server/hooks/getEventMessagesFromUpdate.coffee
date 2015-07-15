@@ -81,8 +81,8 @@
     Changelog.direct.insert
       ticketId: doc._id
       timestamp: new Date()
-      authorId: author._id
-      authorName: author.username
+      authorId: user._id
+      authorName: user.username
       type: type
       field: fn
       message: changelog
