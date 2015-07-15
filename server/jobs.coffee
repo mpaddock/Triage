@@ -5,7 +5,7 @@ fromEmail = Meteor.settings.email?.fromEmail || "triagebot@as.uky.edu"
 fromDomain = fromEmail.split('@').pop()
 
 makeMessageID = (ticketId) ->
-  Date.now()+'.'+ticketId+'@'+fromDomain
+  '<'+Date.now()+'.'+ticketId+'@'+fromDomain+'>'
 
 class @NotificationJob extends Job
   handleJob: ->
