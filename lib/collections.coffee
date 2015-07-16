@@ -56,6 +56,9 @@
     #A record of the 'true' submitter for on behalf of submissions.
     type: String
     optional: true
+  additionalText:
+    type: [String]
+    optional: true
 
 @TicketFlags = new Mongo.Collection 'ticketFlags'
 # TODO: SimpleSchema doesnt handle v very well, so skip for now

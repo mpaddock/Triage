@@ -11,10 +11,25 @@ if Npm.require('cluster').isMaster
     
     doc = prepareTicket userId, doc
     notifyTicketAuthor userId, doc
-
+    
+    if doc.attachmentIds
+      text = []
+      _.each doc.attachmentIds, (id) ->
+        text.push(FileRegistry.findOne(id).filename)
+      Job.push new TextAggregateJob
+        ticketId: doc._id
+        text: text
 
   Tickets.before.update (userId, doc, fieldNames, modifier, options) ->
     _.each fieldNames, (fn) ->
+
+      if fn is 'attachmentIds'
+        id = modifier.$addToSet.attachmentIds
+        console.log FileRegistry.findOne(id).filename
+        Job.push new TextAggregateJob
+          ticketId: doc._id
+          text: [FileRegistry.findOne(id).filename]
+
       getEventMessagesFromUpdate userId, doc, fn, modifier
 
   Changelog.before.insert (userId, doc) ->
@@ -24,4 +39,10 @@ if Npm.require('cluster').isMaster
 
   Changelog.after.insert (userId, doc) ->
     if doc.type is "note"
+      authorName = doc.authorName || doc.authorEmail
+
+      Job.push new TextAggregateJob
+        ticketId: doc.ticketId
+        text: [doc.message, authorName]
+
       sendNotificationForNote userId, doc

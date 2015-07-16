@@ -1,4 +1,11 @@
 Meteor.startup ->
+  Tickets._ensureIndex
+    title: "text"
+    body: "text"
+    additionalText: "text"
+    authorName: "text"
+    ticketNumber: "text"
+
   Meteor.settings.queues.forEach (x) ->
     Queues.upsert {name: x.name}, {$set: {securityGroups: x.securityGroups}}
 

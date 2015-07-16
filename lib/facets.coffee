@@ -20,11 +20,8 @@
           { authorId: filter.userId}
       ]
     if filter.search?.trim().length
-      searchFilter = [
-        { title: new RegExp(filter.search.replace(',','|'), 'i') },
-        { body: new RegExp(filter.search.replace(',','|'), 'i') }
-      ]
-    _.each [userFilter, searchFilter, selfFilter], (x) ->
+      mongoFilter['$text'] = { $search: filter.search }
+    _.each [userFilter, selfFilter], (x) ->
       if x?.length > 0
         unless mongoFilter['$and'] then mongoFilter['$and'] = []
         mongoFilter['$and'].push {$or: x}
