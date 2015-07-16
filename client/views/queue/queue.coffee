@@ -122,9 +122,18 @@ submitQuickAddTicket = (tpl) ->
     tpl.$('input[name=newTicket]').val('')
 
 
-Template.queue.rendered = () ->
+
+Template.queue.rendered = ->
   renderedTime = new Date()
-  this.autorun () ->
+  this.autorun ->
+    # Highlighting of search terms.
+    if Iron.query.get('search') and Session.get('ready')
+      Meteor.setTimeout ->
+        $('td').unhighlight()
+        $('td').highlight(Iron.query.get('search').split(','))
+      , 500
+
+  this.autorun ->
     queueName = Session.get('queueName') || _.pluck Queues.find().fetch(), 'name'
     filter = {
       queueName: queueName

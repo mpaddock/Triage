@@ -469,3 +469,7 @@ blockquote {
 .label-as-badge {
   border-radius: 1em;
 }
+
+.highlight {
+  background-color: #FFFF88;
+}

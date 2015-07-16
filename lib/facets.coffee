@@ -19,8 +19,10 @@
           { associatedUserIds: filter.userId},
           { authorId: filter.userId}
       ]
-    if filter.search?.trim().length
-      mongoFilter['$text'] = { $search: filter.search }
+    if Meteor.isServer
+      # $text operator doesn't work on the client.
+      if filter.search?.trim().length
+        mongoFilter['$text'] = { $search: filter.search }
     _.each [userFilter, selfFilter], (x) ->
       if x?.length > 0
         unless mongoFilter['$and'] then mongoFilter['$and'] = []
