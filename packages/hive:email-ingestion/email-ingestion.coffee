@@ -83,5 +83,4 @@ EmailIngestion.extractReplyFromBody = (body, toAddress) ->
     | ^[0-9]{4}-[0-9]{2}-[0-9]{2}.*<#{toAddress}>:$  #Gmail-style response - address preceded by date.
     | On(.*?)wrote:(.*?) #Other gmail-style response.
     ///m
-  console.log body.split(regex)
   return body.split(regex)[0].trim()
