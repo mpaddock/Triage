@@ -5,6 +5,7 @@ Meteor.startup ->
     additionalText: "text"
     authorName: "text"
     ticketNumber: "text"
+    formFields: "text"
 
   Meteor.settings.queues.forEach (x) ->
     Queues.upsert {name: x.name}, {$set: {securityGroups: x.securityGroups}}
