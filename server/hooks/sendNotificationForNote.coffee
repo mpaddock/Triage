@@ -4,9 +4,9 @@
   noteAuthor = Meteor.users.findOne(userId) || Meteor.users.findOne(doc.authorId)
   noteAuthorName = doc.authorName || doc.authorEmail || noteAuthor.username
 
-  title = validator.escape(ticket.title)
-  body = validator.escape(ticket.body)
-  note = validator.escape(doc.message)
+  title = escape(ticket.title)
+  body = escape(ticket.body)
+  note = escape(doc.message)
 
   recipients = []
 

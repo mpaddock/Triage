@@ -1,8 +1,8 @@
 @getEventMessagesFromUpdate = (userId, doc, fn, modifier) ->
   user = Meteor.users.findOne(userId)
   author = Meteor.users.findOne(doc.authorId)
-  title = validator.escape(doc.title)
-  body = validator.escape(doc.body)
+  title = escape(doc.title)
+  body = escape(doc.body)
   switch fn
     when 'tags'
       type = "field"
@@ -17,8 +17,8 @@
         changelog = "removed tag(s) #{modifier.$pull.tags}"
 
     when 'status'
-      oldStatus = validator.escape(doc.status)
-      newStatus = validator.escape(modifier.$set.status)
+      oldStatus = escape(doc.status)
+      newStatus = escape(modifier.$set.status)
       unless oldStatus is newStatus
         type = "field"
         changelog = "changed status from #{oldStatus} to #{newStatus}"

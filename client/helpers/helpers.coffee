@@ -1,4 +1,4 @@
-Handlebars.registerHelper 'arrayify', (obj) ->
+UI.registerHelper 'arrayify', (obj) ->
   #Transforms objects with k/v pairs into arrays of objects so Handlebars can iterate over them properly.
   result = []
   for k,v of obj
@@ -7,6 +7,22 @@ Handlebars.registerHelper 'arrayify', (obj) ->
       value: v
     }
   return result
+
+UI.registerHelper 'linkify', (text) ->
+  # URLs starting with http://, https://, or ftp://
+  
+  text = escape(text)
+
+  urlPattern = /\b(?:https?|ftp):\/\/[a-z0-9-+&@#\/%?=~_|!:,.;]*[a-z0-9-+&@#\/%=~_|]/gim
+  pseudoUrlPattern = /(^|[^\/])(www\.[\S]+(\b|$))/gim
+  emailAddressPattern = /[\w.]+@[a-zA-Z_-]+?(?:\.[a-zA-Z]{2,6})+/gim
+
+  replacedText = text
+            .replace(urlPattern, '<a href="$&">$&</a>')
+            .replace(pseudoUrlPattern, '$1<a href="http://$2">$2</a>')
+            .replace(emailAddressPattern, '<a href="mailto:$&">$&</a>')
+ 
+  return Spacebars.SafeString replacedText
 
 #Scans a body of text for hashtags (#hashtag), returns an array of unique results.
 (exports ? this).getTags = (text) ->
@@ -33,3 +49,4 @@ Handlebars.registerHelper 'arrayify', (obj) ->
 
 (exports ? this).validateEmail = (email) ->
   /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)
+
