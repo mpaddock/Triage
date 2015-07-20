@@ -14,13 +14,19 @@ filter3 =
 
 Tinytest.add 'Filter - toMongoSelector', (test) ->
   selector = Filter.toMongoSelector(filter)
-  test.equal selector,
-    queueName: 'Q'
-    '$and': [
-      '$or': [{title: {}}, {body: {}}]
-    ],
-    status: { '$ne': 'Closed' },
+  if Meteor.isServer
+    test.equal selector,
+      queueName: 'Q'
+      $text: { '$search': 'phrase' }
+      status: { '$ne': 'Closed' }
 
+  if Meteor.isClient
+    test.equal selector,
+      queueName: 'Q'
+      status: { '$ne': 'Closed' }
+
+# Have to tenatively drop these since $text isn't supported in Minimongo.
+###
   shouldMatch = [
     {queueName: 'Q', title: 'phrase can be in the title'},
     {queueName: 'Q', body: 'phrase can be in the body'},
@@ -39,7 +45,8 @@ Tinytest.add 'Filter - toMongoSelector', (test) ->
 
   _.each shouldNotMatch, (d) ->
     test.equal false, new Minimongo.Matcher(selector).documentMatches(d).result
-
+###
+#
 Tinytest.add 'Filter - verifyFilterObject', (test) ->
   test.equal Filter.verifyFilterObject(filter, ['Q', 'C', 'D'], 1), true
   test.equal Filter.verifyFilterObject(filter, ['C', 'D']), false
