@@ -1,6 +1,6 @@
 @notifyTicketAuthor = (userId, doc) ->
   author = Meteor.users.findOne(doc.authorId)
-  if author.notificationSettings?.submitted
+  if author?.notificationSettings?.submitted
     title = validator.escape(doc.title)
     body = validator.escape(doc.body)
     subject = "Triage ticket ##{doc.ticketNumber} submitted: #{title}"

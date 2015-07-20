@@ -88,7 +88,7 @@
       message: changelog
       otherId: otherId
 
-  if emailBody
+  if emailBody and (recipients.length > 0)
     Job.push new NotificationJob
       bcc: _.uniq(recipients)
       ticketId: doc._id
