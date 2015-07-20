@@ -43,7 +43,7 @@
       if modifier.$addToSet?.associatedUserIds?.$each?
         associatedUsers = _.map _.difference(modifier.$addToSet.associatedUserIds.$each, doc.associatedUserIds), (x) ->
           Meteor.users.findOne({_id: x}).username
-        unless users.length is 0
+        unless associatedUsers.length is 0
           changelog = "associated user(s) #{associatedUsers}"
       else if modifier.$addToSet?.associatedUserIds?
         unless modifier.$addToSet.associatedUserIds in doc.associatedUserIds
