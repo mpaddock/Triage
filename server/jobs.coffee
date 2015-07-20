@@ -7,7 +7,7 @@ fromDomain = fromEmail.split('@').pop()
 makeMessageID = (ticketId) ->
   '<'+Date.now()+'.'+ticketId+'@'+fromDomain+'>'
 
-# Sends notifications to users about ticket updates. 
+# Sends notifications to users about ticket updates.
 class @NotificationJob extends Job
   handleJob: ->
     ticketNumber = Tickets.findOne(@params.ticketId).ticketNumber
