@@ -16,7 +16,10 @@ Router.map ->
     waitOn: -> Meteor.subscribe 'userData'
     action: ->
       queue = Meteor.user()?.defaultQueue || Queues.findOne({memberIds: Meteor.userId()}).name
-      @redirect '/queue/'+queue
+      if queue
+        @redirect '/queue/'+queue
+      else
+        @redirect '/my/tickets'
 
   @route 'queue',
     path: '/queue/:queueName',

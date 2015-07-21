@@ -84,6 +84,7 @@ Template.sidebar.helpers
 Template.sidebar.events
   'click a[data-action=showHelp]': ->
     Session.set 'helpText', !Session.get('helpText')
+
   'keyup input[name=textSearch]': (e, tpl) ->
     if e.keyCode is 13 and $(e.target).val().trim() isnt ""
       text = $(e.target).val()
@@ -92,8 +93,8 @@ Template.sidebar.events
       statuses = Iron.query.get('status')?.split(',') || []
       users = Iron.query.get('user')?.split(',') || []
 
-      terms = _.without text.split(' '), "" #Remove trailing spaces.
-      terms = _.difference terms, text.match(/status:(\w+|"[^"]*"+|'[^']*')|#\S+|\@\S+/g) #Not the best way of doing this.
+      terms = text.match /"[^"]*"|status:(\w+-\w+|\w+|"[^"]*"+|'[^']*')|#\S+|\@\S|[^\s"]+/g
+      terms = _.difference terms, text.match(/status:(\w+-\w+|\w+|"[^"]*"+|'[^']*')|#\S+|\@\S+/g) #Not the best way of doing this.
       newFilter = _.union terms, filter
       newTags = _.union tags, getTags(text)
       newStatus = _.union statuses, getStatuses(text)

@@ -130,7 +130,7 @@ Template.queue.rendered = ->
     if Iron.query.get('search') and Session.get('ready')
       Meteor.setTimeout ->
         $('td').unhighlight()
-        $('td').highlight(Iron.query.get('search').split(','))
+        $('td').highlight(Iron.query.get('search')?.split(','))
       , 500
 
   this.autorun ->
