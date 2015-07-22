@@ -95,6 +95,8 @@ Template.sidebar.events
 
       terms = text.match /"[^"]*"|status:(\w+-\w+|\w+|"[^"]*"+|'[^']*')|#\S+|\@\S|[^\s"]+/g
       terms = _.difference terms, text.match(/status:(\w+-\w+|\w+|"[^"]*"+|'[^']*')|#\S+|\@\S+/g) #Not the best way of doing this.
+      _.map terms, (t) ->
+        t.replace('"', '\"')
       newFilter = _.union terms, filter
       newTags = _.union tags, getTags(text)
       newStatus = _.union statuses, getStatuses(text)
