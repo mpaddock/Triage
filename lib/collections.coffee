@@ -40,6 +40,14 @@
   closedTimestamp:
     optional: true
     type: new Date()
+  closedByUserId:
+    optional: true
+    type: String
+    label: "Closed By - ID"
+  closedByUsername:
+    optional: true
+    type: String
+    label: "Closed By - Username"
   queueName:
     type: String
   associatedUserIds:

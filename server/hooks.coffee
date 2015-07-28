@@ -30,6 +30,13 @@ if Npm.require('cluster').isMaster
           ticketId: doc._id
           text: [FileRegistry.findOne(id).filename]
 
+      if fn is 'status' and modifier.$set.status is 'Closed'
+        Tickets.direct.update doc._id, { $set: {
+          closedTimestamp: new Date()
+          closedByUserId:  userId
+          closedByUsername: Meteor.users.findOne(userId).username
+        } }
+
       getEventMessagesFromUpdate userId, doc, fn, modifier
 
   Changelog.before.insert (userId, doc) ->
