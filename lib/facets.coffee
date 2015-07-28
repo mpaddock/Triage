@@ -16,8 +16,9 @@
       ]
     if filter.userId?
       selfFilter = [
-          { associatedUserIds: filter.userId},
-          { authorId: filter.userId}
+          { associatedUserIds: filter.userId },
+          { authorId: filter.userId },
+          { submittedByUserId: filter.userId }
       ]
     if Meteor.isServer
       # $text operator doesn't work on the client.
@@ -26,7 +27,7 @@
     _.each [userFilter, selfFilter], (x) ->
       if x?.length > 0
         unless mongoFilter['$and'] then mongoFilter['$and'] = []
-        mongoFilter['$and'].push {$or: x}
+        mongoFilter['$and'].push { $or: x }
     if filter.status?
       if filter.status.charAt(0) is '!'
         status = filter.status.substr(1)
