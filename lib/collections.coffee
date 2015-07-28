@@ -37,7 +37,7 @@
   submittedTimestamp:
     type: new Date()
     defaultValue: Date.now
-  closedTimestamp:
+  closedTime:
     optional: true
     type: new Date()
   closedByUserId:
