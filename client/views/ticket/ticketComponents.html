@@ -65,73 +65,67 @@
 </template>
 
 <template name="ticketInfoTable">
-<div class="row">
-  <table class="table table-bordered">
-    <thead>
-      <tr>
-        <th width="33%">Assigned Users</th>
-        <th width="33%">Tags</th>
-        <th width="33%">Attachments</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>
-          {{#if admin}}
-          <div class="assign-user-field">
-            <span class="icon glyphicon glyphicon-plus"></span>
-            {{>inputAutocomplete settings=userSettings name="assignUser" placeholder="Assign User" data-toggle="tooltip" data-trigger="manual" title="User not found."}}
-          </div>
-          {{/if}}
-          {{#each associatedUserIds}}
-          {{> userPortrait userId=this associated=true class="user-image"}}
-          {{/each}}
-        </td>
-        <td>
-          {{#if admin}}
-          <div class="add-tag-field">
-            <span class="icon glyphicon glyphicon-plus"></span>
-            {{>inputAutocomplete settings=tagSettings name="addTag" placeholder="Add a tag"}}
-          </div> 
-            {{#each tags}}
-              {{> ticketTag}}
-            {{/each}}
-          {{else}}
-            {{#each tags}}
-              {{this}}
-            {{/each}}
-          {{/if}}
-        </td>
-        <td>
-          <div class="btn-group">
-            <button type="button" class="add-attachment-btn btn dropdown-toggle" data-toggle="dropdown" aria-expanded="False">
-              <span class="icon glyphicon glyphicon-plus"></span>
-            </button>
+  <div class="panel panel-default">
+    <div class="panel-heading">Assigned Users</div>
+    <div class="panel-body">
+      {{#if admin}}
+        <div class="assign-user-field">
+          <span class="icon glyphicon glyphicon-plus"></span>
+          {{>inputAutocomplete settings=userSettings name="assignUser" placeholder="Assign User" data-toggle="tooltip" data-trigger="manual" title="User not found."}}
+        </div>
+      {{/if}}
+      {{#each associatedUserIds}}
+        {{> userPortrait userId=this associated=true class="user-image"}}
+      {{/each}}
+    </div>
+  </div>
+  <div class="panel panel-default">
+    <div class="panel-heading">Tags</div>
+    <div class="panel-body">
+      {{#if admin}}
+        <div class="add-tag-field">
+          <span class="icon glyphicon glyphicon-plus"></span>
+          {{>inputAutocomplete settings=tagSettings name="addTag" placeholder="Add a tag"}}
+        </div> 
+        {{#each tags}}
+          {{> ticketTag}}
+        {{/each}}
+        {{else}}
+        {{#each tags}}
+          {{this}}
+        {{/each}}
+      {{/if}}
+    </div>
+  </div>
+  <div class="panel panel-default">
+    <div class="panel-heading">Attachments</div>
+    <div class="panel-body">
+      <div class="btn-group">
+        <button type="button" class="add-attachment-btn btn dropdown-toggle" data-toggle="dropdown" aria-expanded="False">
+          <span class="icon glyphicon glyphicon-plus"></span>
+        </button>
 
-            <ul class="dropdown-menu" data-toggle="dropdown">
-              <li><a data-action="uploadFile">Upload File</a></li>
-              {{#if isCordova}}<li><a href="#">Take Picture</a></li>{{/if}}
-            </ul>
-          </div>
+        <ul class="dropdown-menu" data-toggle="dropdown">
+          <li><a data-action="uploadFile">Upload File</a></li>
+          {{#if isCordova}}<li><a href="#">Take Picture</a></li>{{/if}}
+        </ul>
+      </div>
 
-          {{#each attachmentIds}}
-            <div class="attachment">
-              <div class="attachment-link">
-              {{#if file.thumbnail}}
-                <img class="img-thumbnail" style="max-width: 64px; max-height:24px;" src="/file/{{file.thumbnail}}" />
-              {{/if}}
-                <a data-action="downloadAttachment" href="/file/{{file.filenameOnDisk}}" target="_blank">{{file.filename}}</a><br />
-              </div>
-              <div class="remove-attachment">
-                <a href="#" data-action="removeAttachment">Remove</a>
-              </div>
-            </div>
-          {{/each}}
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+      {{#each attachmentIds}}
+        <div class="attachment">
+          <div class="attachment-link">
+            {{#if file.thumbnail}}
+              <img class="img-thumbnail" style="max-width: 64px; max-height:24px;" src="/file/{{file.thumbnail}}" />
+            {{/if}}
+            <a data-action="downloadAttachment" href="/file/{{file.filenameOnDisk}}" target="_blank">{{file.filename}}</a><br />
+          </div>
+          <div class="remove-attachment">
+            <a href="#" data-action="removeAttachment">Remove</a>
+          </div>
+        </div>
+      {{/each}}
+    </div>
+  </div>
 </template>
 
 <template name="ticketNoteInput">
@@ -167,24 +161,25 @@
 </template>
 
 <template name="ticketHeading">
-<div class="col-md-4 col-xs-8">
-  <div class="col-xs-4 col-md-4">
-    {{>userPortrait userId=this.authorId class="user-image"}}
+  <div class="panel panel-default">
+    <div class="panel-body">
+      <small>
+      <a href="/ticket/{{ticketNumber}}">Ticket #{{ticketNumber}}</a><br>
+      <strong>{{queueName}}</strong><br>
+      {{>timestampFormatter date=submittedTimestamp}}<br>
+      ({{>timeFromNow date=submittedTimestamp}})
+    </small>
+    </div>
   </div>
-  <div class="col-xs-8 col-md-8">
-    <strong>
-      {{author.displayName}}<br>
-      {{author.department}}<br>
-      {{author.physicalDeliveryOfficeName}}<br>
-    </strong>
+  <div class="panel panel-default">
+    <div class="panel-body">
+      <strong><small>
+        {{author.displayName}}<br>
+        {{author.department}}<br>
+        {{author.physicalDeliveryOfficeName}}<br>
+    </small></strong>
+    </div>
   </div>
-</div>
-<div class="col-md-4 col-md-offset-4 col-xs-4" style="text-align: right; float: right;">
-  <a href="/ticket/{{ticketNumber}}">#{{ticketNumber}}</a><br>
-  <strong>{{queueName}}</strong><br>
-  {{>timestampFormatter date=submittedTimestamp}}<br>
-  {{>timeFromNow date=submittedTimestamp}}
-</div>
 </template>
 
 <template name="removeAttachmentModal">

@@ -378,7 +378,8 @@ body {
   padding-right: 5px;
 }
 
-blockquote { 
+blockquote {
+  width: 100%;
   background: #ffffff;
   border: 2px solid #ccc;
 }
