@@ -23,7 +23,7 @@ if Npm.require('cluster').isMaster
   Tickets.before.update (userId, doc, fieldNames, modifier, options) ->
     _.each fieldNames, (fn) ->
 
-      if fn is 'attachmentIds'
+      if fn is 'attachmentIds' and modifier.$addToSet?.attachmentIds
         id = modifier.$addToSet.attachmentIds
         console.log FileRegistry.findOne(id).filename
         Job.push new TextAggregateJob
@@ -32,7 +32,7 @@ if Npm.require('cluster').isMaster
 
       if fn is 'status' and modifier.$set.status is 'Closed'
         Tickets.direct.update doc._id, { $set: {
-          closedTimestamp: new Date()
+          closedTime: (new Date() - doc.submittedTimestamp) / 1000 # Amount of time to ticket close, in seconds.
           closedByUserId:  userId
           closedByUsername: Meteor.users.findOne(userId).username
         } }

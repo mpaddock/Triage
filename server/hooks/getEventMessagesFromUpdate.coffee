@@ -9,19 +9,20 @@
       if modifier.$addToSet?.tags?
         tags = _.difference modifier.$addToSet.tags.$each, doc.tags
         unless tags.length is 0
-          changelog = "added tag(s) #{tags}"
+          newValue = "#{tags}"
           _.each tags, (x) ->
             Tags.upsert {name: x}, {$set: {lastUse: new Date()}}
 
       if modifier.$pull?.tags?
-        changelog = "removed tag(s) #{modifier.$pull.tags}"
+        oldValue = "#{modifier.$pull.tags}" #in case its an array.
 
     when 'status'
       oldStatus = escape(doc.status)
       newStatus = escape(modifier.$set.status)
       unless oldStatus is newStatus
         type = "field"
-        changelog = "changed status from #{oldStatus} to #{newStatus}"
+        oldValue = oldStatus
+        newValue = newStatus
         subject = "User #{user.username} changed status for Triage ticket ##{doc.ticketNumber}: #{title}"
         emailBody ="<strong>User #{user.username} changed status for ticket ##{doc.ticketNumber} from
           #{oldStatus} to #{newStatus}.</strong><br>
@@ -44,21 +45,21 @@
         associatedUsers = _.map _.difference(modifier.$addToSet.associatedUserIds.$each, doc.associatedUserIds), (x) ->
           Meteor.users.findOne({_id: x}).username
         unless associatedUsers.length is 0
-          changelog = "associated user(s) #{associatedUsers}"
+          newValue = "#{associatedUsers}"
       else if modifier.$addToSet?.associatedUserIds?
         unless modifier.$addToSet.associatedUserIds in doc.associatedUserIds
           associatedUser = Meteor.users.findOne(modifier.$addToSet.associatedUserIds).username
-          changelog = "associated user #{associatedUser}"
+          newValue = "#{associatedUser}"
       else if modifier.$pull?.associatedUserIds?
         associatedUser = Meteor.users.findOne({_id: modifier.$pull.associatedUserIds}).username
-        changelog = "disassociated user #{associatedUser}"
+        oldValue = "#{associatedUser}"
 
     when 'attachmentIds'
       type = "attachment"
       if modifier.$addToSet?.attachmentIds
         file = FileRegistry.findOne modifier.$addToSet.attachmentIds
         otherId = file._id
-        changelog = "attached file #{file.filename}"
+        newValue = file.filename
         subject = "User #{user.username} added an attachment to Triage ticket ##{doc.ticketNumber}: #{title}"
         emailBody = "Attachment #{file.filename} added to ticket #{doc.ticketNumber}.
           The original ticket body was:<br>#{body}"
@@ -75,9 +76,10 @@
       else if modifier.$pull?.attachmentIds
         file = FileRegistry.findOne modifier.$pull.attachmentIds
         otherId = file._id
+        oldValue = file.filename
         changelog = "removed attached file #{file.filename}"
 
-  if changelog
+  if (oldValue or newValue)
     Changelog.direct.insert
       ticketId: doc._id
       timestamp: new Date()
@@ -85,7 +87,8 @@
       authorName: user.username
       type: type
       field: fn
-      message: changelog
+      oldValue: oldValue
+      newValue: newValue
       otherId: otherId
 
   if emailBody and (recipients.length > 0)

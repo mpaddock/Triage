@@ -114,6 +114,14 @@
     type: String
     label: "Message"
     optional: true
+  oldValue:
+    type: String
+    label: "Old Value"
+    optional: true
+  newValue:
+    type: String
+    label: "New Value"
+    optional: true
   otherId:
     type: String
     optional: true

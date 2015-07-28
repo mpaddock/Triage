@@ -1,6 +1,8 @@
 Template.ticketChangelogItem.helpers
   changeIsType: (type) ->
     @type is type
+  fieldIs: (field) ->
+    @field is field
   note: ->
     if this.type is "note" then return true else return false
   file: ->

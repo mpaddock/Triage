@@ -24,10 +24,41 @@
           <img class="img-thumbnail" style="max-width: 100%; max-height: 128px" src="/file/{{file.thumbnail}}"/><br/>
         {{/if}}
       {{/with}}
-      <small style="font-size: 0.7em;">User {{authorName}} {{message}} @ {{timestamp}}</small>
-      {{else}}
-      <small style="font-size: 0.7em;">User {{authorName}} {{message}} @ {{timestamp}}</small>
     {{/if}}
+    <small style="font-size: 0.7em;">
+      {{#if changeIsType 'attachment'}}
+        {{#if oldValue}}
+          User {{authorName}} removed attached file {{oldValue}}
+        {{/if}}
+        {{#if newValue}}
+          User {{authorName}} attached file {{newValue}}
+        {{/if}}
+      {{/if}}
+      {{#if changeIsType 'field'}}
+        {{#if fieldIs 'status'}}
+          User {{authorName}} changed status from {{oldValue}} to {{newValue}}
+        {{/if}}
+
+        {{#if fieldIs 'tags'}}
+          {{#if oldValue}}
+            User {{authorName}} removed tag(s) {{oldValue}}
+          {{/if}}
+          {{#if newValue}}
+            User {{authorName}} added tag(s) {{newValue}}
+          {{/if}}
+        {{/if}}
+
+        {{#if fieldIs 'associatedUserIds'}}
+          {{#if oldValue}}
+            User {{authorName}} removed associated user(s) {{oldValue}}
+          {{/if}}
+          {{#if newValue}}
+            User {{authorName}} associated user(s) {{newValue}}
+          {{/if}}
+        {{/if}}
+      {{/if}}
+       @ {{timestamp}}
+    </small>
   </div>
 </div>
 {{/if}}
