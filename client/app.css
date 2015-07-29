@@ -502,3 +502,7 @@ blockquote {
   background: #FFF6D9;
   border: 1px solid #EFDAA3;
 }
+
+.ticket-note-area {
+  margin-bottom: 10px;
+}

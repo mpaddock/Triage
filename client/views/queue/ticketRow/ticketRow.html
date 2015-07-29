@@ -43,12 +43,12 @@
   <tr>
     <td colspan='6' class="hiddenRow">
       <div class="accordion-body collapse" id="row{{_id}}" data-ticket="{{_id}}">
-        <div class="col-md-3" style="border-right: 2px solid #eee;">
+        <div class="col-md-3">
           {{> ticketHeading}}
 
           {{> ticketInfoTable}}
         </div>
-        <div class="col-md-9" style="border-left: 2px solid #eee;">
+        <div class="col-md-9 ticket-note-area">
 
           {{#if blackbox}}
             <div class="hidden-xs col-md-12 panel panel-default">
