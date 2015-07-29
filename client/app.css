@@ -475,10 +475,6 @@ blockquote {
   background-color: #FFFF88;
 }
 
-blockquote {
-  margin-top: 10px;
-}
-
 .user-panel-portrait {
   float: right;
   position: relative;
@@ -504,5 +500,10 @@ blockquote {
 }
 
 .ticket-note-area {
+  margin-top: 10px;
   margin-bottom: 10px;
+}
+
+.ticket-sidebar {
+  margin-top: 10px;
 }

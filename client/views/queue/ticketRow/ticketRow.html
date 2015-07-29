@@ -43,45 +43,46 @@
   <tr>
     <td colspan='6' class="hiddenRow">
       <div class="accordion-body collapse" id="row{{_id}}" data-ticket="{{_id}}">
-        <div class="col-md-3">
-          {{> ticketHeading}}
+        <div class="row">
+          <div class="col-md-3 ticket-sidebar">
+            {{> ticketHeading}}
+            {{> ticketInfoTable}}
+          </div>
 
-          {{> ticketInfoTable}}
-        </div>
-        <div class="col-md-9 ticket-note-area">
-
-          {{#if blackbox}}
-            <div class="hidden-xs col-md-12 panel panel-default">
-              <div class="panel-heading">
-                <span name="moreInfoCollapse" class="glyphicon glyphicon-chevron-down"></span><a data-toggle="collapse" href="#info-panel-{{_id}}">More Info</a>
-              </div>
-              <div id="info-panel-{{_id}}" class="panel-collapse collapse in">
-                <div id="panel-body">
-                  <table class="table table-default">
-                    <tbody>
-                      {{#each arrayify formFields}}
-                        <tr>
-                          <td class="col-xs-2 col-md-2"><strong>{{name}}</strong></td>
-                          <td class="col-xs-10 col-md-10">{{value}}</td>
-                        </tr>
-                      {{/each}}
-                    </tbody>
-                  </table>
+          <div class="col-md-9 ticket-note-area">
+            {{#if blackbox}}
+              <div class="hidden-xs col-md-12 panel panel-default">
+                <div class="panel-heading">
+                  <span name="moreInfoCollapse" class="glyphicon glyphicon-chevron-down"></span><a data-toggle="collapse" href="#info-panel-{{_id}}">More Info</a>
+                </div>
+                <div id="info-panel-{{_id}}" class="panel-collapse collapse in">
+                  <div id="panel-body">
+                    <table class="table table-default">
+                      <tbody>
+                        {{#each arrayify formFields}}
+                          <tr>
+                            <td class="col-xs-2 col-md-2"><strong>{{name}}</strong></td>
+                            <td class="col-xs-10 col-md-10">{{value}}</td>
+                          </tr>
+                        {{/each}}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
-            </div>
-          {{/if}}
+            {{/if}}
 
-          <blockquote>
-            {{#each bodyParagraph}}
-              <p>{{this}}</p>
+            <blockquote>
+              {{#each bodyParagraph}}
+                <p>{{this}}</p>
+              {{/each}}
+            </blockquote>
+            {{> changelogButtons}}
+            {{#each changelog}}
+              {{> ticketChangelogItem}}
             {{/each}}
-          </blockquote>
-          {{> changelogButtons}}
-          {{#each changelog}}
-            {{> ticketChangelogItem}}
-          {{/each}}
-          {{> ticketNoteInput queueMember=queueMember ticket=_id}}
+            {{> ticketNoteInput queueMember=queueMember ticket=_id}}
+          </div>
         </div>
       </div>
     </td>
