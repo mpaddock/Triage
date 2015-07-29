@@ -474,3 +474,21 @@ blockquote {
 .highlight {
   background-color: #FFFF88;
 }
+
+blockquote {
+  margin-top: 10px;
+}
+
+.user-panel-portrait {
+  float: right;
+  position: relative;
+}
+
+.changelog-buttons {
+  float: right;
+  padding: 10px 15px 10px 0px;
+}
+
+.faded {
+  opacity: 0.5 !important;
+}

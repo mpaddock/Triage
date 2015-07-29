@@ -1,4 +1,13 @@
+Template.changelogButtons.helpers
+  allEventsClass: -> if !(Session.get 'allEvents') then 'faded'
+  notesOnlyClass: -> if Session.get 'allEvents' then 'faded'
+Template.changelogButtons.events
+  'click button[name=allEvents]': (e, tpl) -> Session.set 'allEvents', true
+  'click button[name=notesOnly]': (e, tpl) -> Session.set 'allEvents', false
+
 Template.ticketChangelogItem.helpers
+  allEvents: ->
+    Session.get 'allEvents'
   changeIsType: (type) ->
     @type is type
   fieldIs: (field) ->
@@ -9,7 +18,7 @@ Template.ticketChangelogItem.helpers
     FileRegistry.findOne {_id: this.valueOf()}
 
 Template.ticketInfoTable.onRendered ->
-  doc = @find 'tr:last td:last'
+  doc = @find 'div[name=attachments]'
   doc.ondragover = (e) ->
     @className = 'hover'
     e.preventDefault()

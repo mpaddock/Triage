@@ -1,48 +1,44 @@
 <template name="ticket">
-{{#unless ticket}}
-No ticket found.
-{{/unless}}
-{{#with ticket}}
-<div class="panel panel-default" data-ticketId="{{_id}}">
-  <div class="panel-heading clearfix">
-    {{> ticketHeading}}
-  </div>
-  <div class="panel-body">
-    <label for="title">Title:</label>
-    <blockquote>
-      <strong>
-        {{title}}
-      </strong>
-    </blockquote>
-    <label for="body">Body:</label>
-    <blockquote>
-      {{#each bodyParagraph}}
-        <p>{{this}}</p>
-      {{/each}}
-    </blockquote>
-
-    <div class="hidden-xs col-md-12">
-      <table class="table table-default">
-        <tbody>
-        {{#each arrayify formFields}}
-          <tr>
-            <td class="col-xs-2 col-md-2"><strong>{{name}}</strong></td>
-            <td class="col-xs-10 col-md-10">{{value}}</td>
-          </tr>
-        {{/each}}
-        </tbody>
-      </table>
+  {{#unless ticket}}
+    No ticket found.
+  {{/unless}}
+  {{#with ticket}}
+    <div class="col-md-3" data-ticketId="{{_id}}">
+      {{> ticketHeading}}
+      {{> ticketInfoTable}}
     </div>
+    <div class="col-md-9">
+      <label for="title">Title:</label>
+      <blockquote>
+        <strong>
+          {{title}}
+        </strong>
+      </blockquote>
+      <label for="body">Body:</label>
+      <blockquote>
+        {{#each bodyParagraph}}
+          <p>{{this}}</p>
+        {{/each}}
+      </blockquote>
 
-    {{> ticketInfoTable}}
+      <div class="hidden-xs col-md-12">
+        <table class="table table-default">
+          <tbody>
+            {{#each arrayify formFields}}
+              <tr>
+                <td class="col-xs-2 col-md-2"><strong>{{name}}</strong></td>
+                <td class="col-xs-10 col-md-10">{{value}}</td>
+              </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      </div>
+      {{> changelogButtons}}
+      {{#each changelog}}
+        {{> ticketChangelogItem}}
+      {{/each}}
 
-    {{#each changelog}}
-      {{> ticketChangelogItem}}
-    {{/each}}
-
-    {{> ticketNoteInput admin=admin ticket=_id}}
-
-  </div>
-</div>
-{{/with}}
+      {{> ticketNoteInput admin=admin ticket=_id}}
+    </div>
+  {{/with}}
 </template>

@@ -1,3 +1,12 @@
+<template name="changelogButtons">
+  <div class="row">
+    <div class="changelog-buttons">
+      <button name="allEvents" class="btn btn-xs btn-primary {{allEventsClass}}">Show all events</button>
+      <button name="notesOnly" class="btn btn-xs btn-primary {{notesOnlyClass}}">Show notes only</button>
+    </div>
+  </div>
+</template>
+
 <template name="ticketChangelogItem">
 {{#if note}}
 <div class="row">
@@ -16,56 +25,59 @@
   </div>
 </div>
 {{else}}
-<div class="row">
-  <div class="col-xs-8 col-xs-offset-4 col-md-10 col-md-offset-2">
-    {{#if changeIsType 'attachment'}}
-      {{#with otherId}}
-        {{#if file.thumbnail}}
-          <img class="img-thumbnail" style="max-width: 100%; max-height: 128px" src="/file/{{file.thumbnail}}"/><br/>
+  {{#if allEvents}}
+    <div class="row">
+      <div class="col-xs-8 col-xs-offset-4 col-md-10 col-md-offset-2">
+        {{#if changeIsType 'attachment'}}
+          {{#with otherId}}
+            {{#if file.thumbnail}}
+              <img class="img-thumbnail" style="max-width: 100%; max-height: 128px" src="/file/{{file.thumbnail}}"/><br/>
+            {{/if}}
+          {{/with}}
         {{/if}}
-      {{/with}}
-    {{/if}}
-    <small style="font-size: 0.7em;">
-      {{#if changeIsType 'attachment'}}
-        {{#if oldValue}}
-          User {{authorName}} removed attached file {{oldValue}}
-        {{/if}}
-        {{#if newValue}}
-          User {{authorName}} attached file {{newValue}}
-        {{/if}}
-      {{/if}}
-      {{#if changeIsType 'field'}}
-        {{#if fieldIs 'status'}}
-          User {{authorName}} changed status from {{oldValue}} to {{newValue}}
-        {{/if}}
+        <small style="font-size: 0.7em;">
+          {{#if changeIsType 'attachment'}}
+            {{#if oldValue}}
+              User {{authorName}} removed attached file {{oldValue}}
+            {{/if}}
+            {{#if newValue}}
+              User {{authorName}} attached file {{newValue}}
+            {{/if}}
+          {{/if}}
+          {{#if changeIsType 'field'}}
+            {{#if fieldIs 'status'}}
+              User {{authorName}} changed status from {{oldValue}} to {{newValue}}
+            {{/if}}
 
-        {{#if fieldIs 'tags'}}
-          {{#if oldValue}}
-            User {{authorName}} removed tag(s) {{oldValue}}
-          {{/if}}
-          {{#if newValue}}
-            User {{authorName}} added tag(s) {{newValue}}
-          {{/if}}
-        {{/if}}
+            {{#if fieldIs 'tags'}}
+              {{#if oldValue}}
+                User {{authorName}} removed tag(s) {{oldValue}}
+              {{/if}}
+              {{#if newValue}}
+                User {{authorName}} added tag(s) {{newValue}}
+              {{/if}}
+            {{/if}}
 
-        {{#if fieldIs 'associatedUserIds'}}
-          {{#if oldValue}}
-            User {{authorName}} removed associated user(s) {{oldValue}}
+            {{#if fieldIs 'associatedUserIds'}}
+              {{#if oldValue}}
+                User {{authorName}} removed associated user(s) {{oldValue}}
+              {{/if}}
+              {{#if newValue}}
+                User {{authorName}} associated user(s) {{newValue}}
+              {{/if}}
+            {{/if}}
           {{/if}}
-          {{#if newValue}}
-            User {{authorName}} associated user(s) {{newValue}}
-          {{/if}}
-        {{/if}}
-      {{/if}}
-       @ {{timestamp}}
-    </small>
-  </div>
-</div>
+          @ {{timestamp}}
+        </small>
+      </div>
+    </div>
+  {{/if}}
 {{/if}}
 </template>
 
 <template name="ticketInfoTable">
-  <div class="panel panel-default">
+  <!-- Assigned User Panel --> 
+  <div name="associatedUsers" class="panel panel-default">
     <div class="panel-heading">Assigned Users</div>
     <div class="panel-body">
       {{#if admin}}
@@ -79,7 +91,9 @@
       {{/each}}
     </div>
   </div>
-  <div class="panel panel-default">
+
+  <!-- Tag Panel -->
+  <div name="tags" class="panel panel-default">
     <div class="panel-heading">Tags</div>
     <div class="panel-body">
       {{#if admin}}
@@ -97,7 +111,9 @@
       {{/if}}
     </div>
   </div>
-  <div class="panel panel-default">
+
+  <!-- Attachments Panel -->
+  <div name="attachments" class="panel panel-default">
     <div class="panel-heading">Attachments</div>
     <div class="panel-body">
       <div class="btn-group">
@@ -173,10 +189,12 @@
   </div>
   <div class="panel panel-default">
     <div class="panel-body">
+      <div class="user-panel-portrait">{{> userPortrait userId=author._id}}</div>
       <strong><small>
-        {{author.displayName}}<br>
-        {{author.department}}<br>
-        {{author.physicalDeliveryOfficeName}}<br>
+          {{author.displayName}}<br>
+          {{author.mail}}<br>
+          {{author.department}}<br>
+          {{author.physicalDeliveryOfficeName}}<br>
     </small></strong>
     </div>
   </div>
