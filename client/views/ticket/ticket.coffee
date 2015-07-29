@@ -1,5 +1,5 @@
 Template.ticket.helpers
-  admin: ->
+  queueMember: ->
     _.contains Queues.findOne({name: @queueName})?.memberIds, Meteor.userId()
   ticket: ->
     ticket = Tickets.findOne {ticketNumber: Session.get('ticketNumber')}

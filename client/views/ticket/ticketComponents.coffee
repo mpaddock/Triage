@@ -6,6 +6,8 @@ Template.changelogButtons.events
   'click button[name=notesOnly]': (e, tpl) -> Session.set 'allEvents', false
 
 Template.ticketChangelogItem.helpers
+  internalNoteClass: ->
+    if @internal then 'internal-note'
   allEvents: ->
     Session.get 'allEvents'
   changeIsType: (type) ->
@@ -62,7 +64,7 @@ Template.ticketInfoTable.onRendered ->
     false
 
 Template.ticketInfoTable.helpers
-  admin: ->
+  queueMember: ->
     _.contains Queues.findOne({name: @queueName})?.memberIds, Meteor.userId()
   file: ->
     FileRegistry.findOne {_id: this.valueOf()}
@@ -149,8 +151,21 @@ Template.ticketNoteInput.helpers
       ]
     }
 
-
+Template.ticketNoteInput.helpers
+  internalNotes: -> Session.get 'internalNotes'
+  internalNoteClass: -> if !(Session.get 'internalNotes') then 'faded'
+  publicNoteClass: -> if Session.get 'internalNotes' then 'faded'
+  newNoteInputClass: ->
+    if Session.get 'internalNotes'
+      'form-control internal-note'
+    else
+      'form-control'
 Template.ticketNoteInput.events
+  'click button[name=internalNotes]': (e, tpl) ->
+    Session.set 'internalNotes', true
+  'click button[name=publicNotes]': (e, tpl) ->
+    Session.set 'internalNotes', false
+
   ### Uploading files. ###
   'click a[data-action=uploadFile]': (e, tpl) ->
     Media.pickLocalFile (fileId) ->
@@ -173,13 +188,13 @@ Template.ticketNoteInput.events
 
       if hashtags?.length > 0
         Tickets.update tpl.data.ticket, {$addToSet: {tags: $each: hashtags}}
-
       Changelog.insert
         ticketId: tpl.data.ticket
         timestamp: new Date()
         authorId: Meteor.userId()
         authorName: Meteor.user().username
         type: "note"
+        internal: Session.get('internalNotes')
         message: e.target.value
 
       Meteor.call 'setFlag', Meteor.userId(), tpl.data.ticket, 'replied', true

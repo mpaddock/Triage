@@ -125,6 +125,11 @@
   otherId:
     type: String
     optional: true
+  internal:
+    type: Boolean
+    optional: true
+    defaultValue: false
+    label: "Internally Visible Only"
 
 @Queues = new Mongo.Collection 'queues'
 @Queues.attachSchema new SimpleSchema

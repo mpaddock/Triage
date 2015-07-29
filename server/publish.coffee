@@ -14,7 +14,9 @@ Meteor.publishComposite 'tickets', (filter, offset, limit) ->
     children: [
       {
         find: (ticket) ->
-          Changelog.find {ticketId: ticket._id}
+          filter = { ticketId: ticket._id}
+          if not _.contains Queues.findOne({name: ticket.queueName})?.memberIds, @userId then _.extend filter, { internal: {$ne: true} }
+          Changelog.find filter
       },
       {
         find: (ticket) ->
@@ -42,7 +44,9 @@ Meteor.publishComposite 'newTickets', (filter, time) ->
     children: [
       {
         find: (ticket) ->
-          Changelog.find {ticketId: ticket._id}
+          filter = { ticketId: ticket._id}
+          if not _.contains Queues.findOne({name: ticket.queueName})?.memberIds, @userId then _.extend filter, { internal: {$ne: true} }
+          Changelog.find filter
       },
       {
         find: (ticket) ->
@@ -65,7 +69,9 @@ Meteor.publishComposite 'ticketSet', (ticketSet) ->
     children: [
       {
         find: (ticket) ->
-          Changelog.find {ticketId: ticket._id}
+          filter = { ticketId: ticket._id}
+          if not _.contains Queues.findOne({name: ticket.queueName})?.memberIds, @userId then _.extend filter, { internal: {$ne: true} }
+          Changelog.find filter
       },
       {
         find: (ticket) ->
@@ -90,7 +96,9 @@ Meteor.publishComposite 'ticket', (ticketNumber) ->
     children: [
       {
         find: (ticket) ->
-          Changelog.find {ticketId: ticket._id}
+          filter = { ticketId: ticket._id}
+          if not _.contains Queues.findOne({name: ticket.queueName})?.memberIds, @userId then _.extend filter, { internal: {$ne: true} }
+          Changelog.find filter
       },
       {
         find: (ticket) ->

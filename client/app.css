@@ -492,3 +492,13 @@ blockquote {
 .faded {
   opacity: 0.5 !important;
 }
+
+.note-input-buttons {
+  float: right;
+  padding: 10px 15px 10px 0px;
+}
+
+.internal-note {
+  background: #FFF6D9;
+  border: 1px solid #EFDAA3;
+}

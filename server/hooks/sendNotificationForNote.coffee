@@ -15,10 +15,10 @@
     #{note}<br><br>
     <strong>#{ticket.authorName}'s original ticket body was:</strong><br>
     #{body}"
-
-  if (noteAuthor?._id is ticketAuthor?._id) and (ticketAuthor?.notificationSettings?.authorSelfNote)
+  
+  if (noteAuthor?._id is ticketAuthor?._id) and (ticketAuthor?.notificationSettings?.authorSelfNote) and not doc.internal
     recipients.push(ticketAuthor.mail)
-  else if ticketAuthor?.notificationSettings?.authorOtherNote
+  else if ticketAuthor?.notificationSettings?.authorOtherNote and not doc.internal
     recipients.push(ticketAuthor.mail)
 
   _.each ticket.associatedUserIds, (id) ->
@@ -28,8 +28,9 @@
     else if u.notificationSettings?.associatedOtherNote
       recipients.push(u.mail)
 
-  Job.push new NotificationJob
-    bcc: _.uniq(recipients)
-    ticketId: ticket._id
-    subject: subject
-    html: emailBody
+  if recipients.length > 0
+    Job.push new NotificationJob
+      bcc: _.uniq(recipients)
+      ticketId: ticket._id
+      subject: subject
+      html: emailBody

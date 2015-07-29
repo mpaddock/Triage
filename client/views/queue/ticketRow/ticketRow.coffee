@@ -43,6 +43,8 @@ Template.ticketRow.rendered = ->
   $('form[name=ticketForm]').submit (e) -> e.preventDefault()
 
 Template.ticketRow.helpers
+  queueMember: ->
+    _.contains Queues.findOne({name: @queueName}).memberIds, Meteor.userId()
   bodyParagraph: ->
     @body.split('\n')
   changelog: ->
