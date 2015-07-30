@@ -1,9 +1,10 @@
-Template.changelogButtons.helpers
-  allEventsClass: -> if !(Session.get 'allEvents') then 'faded'
-  notesOnlyClass: -> if Session.get 'allEvents' then 'faded'
-Template.changelogButtons.events
-  'click button[name=allEvents]': (e, tpl) -> Session.set 'allEvents', true
-  'click button[name=notesOnly]': (e, tpl) -> Session.set 'allEvents', false
+Template.ticketNoteArea.helpers
+  changelog: ->
+    items = Changelog.find {ticketId: @_id}, {sort: timestamp: 1}
+    { items: items, count: items.count() }
+    
+  queueMember: ->
+    _.contains Queues.findOne({name: @queueName})?.memberIds, Meteor.userId()
 
 Template.ticketChangelogItem.helpers
   internalNoteClass: ->
@@ -19,7 +20,7 @@ Template.ticketChangelogItem.helpers
   file: ->
     FileRegistry.findOne {_id: this.valueOf()}
 
-Template.ticketInfoTable.onRendered ->
+Template.ticketInfoPanels.onRendered ->
   doc = @find 'div[name=attachments]'
   doc.ondragover = (e) ->
     @className = 'hover'
@@ -63,7 +64,7 @@ Template.ticketInfoTable.onRendered ->
         traverse entry, ''
     false
 
-Template.ticketInfoTable.helpers
+Template.ticketInfoPanels.helpers
   queueMember: ->
     _.contains Queues.findOne({name: @queueName})?.memberIds, Meteor.userId()
   file: ->
@@ -102,7 +103,7 @@ Template.removeAttachmentModal.events
   'hidden.bs.modal': (e, tpl) ->
     Blaze.remove tpl.view
 
-Template.ticketInfoTable.events
+Template.ticketInfoPanels.events
   'click a[data-action=removeAttachment]': (e, tpl) ->
     data = { attachmentId: this.valueOf(), ticketId: tpl.data._id }
     Blaze.renderWithData(Template['removeAttachmentModal'], data, $('body').get(0))
@@ -130,6 +131,7 @@ Template.ticketInfoTable.events
       Meteor.call 'setFlag', Meteor.userId(), tpl.data._id, 'attachment', true
 
 Template.ticketNoteInput.helpers
+  closed: -> Tickets.findOne(@ticketId).status is "Closed"
   settings: ->
     {
       position: "top"
@@ -151,68 +153,85 @@ Template.ticketNoteInput.helpers
       ]
     }
 
-Template.ticketNoteInput.helpers
-  internalNotes: -> Session.get 'internalNotes'
-  internalNoteClass: -> if !(Session.get 'internalNotes') then 'faded'
-  publicNoteClass: -> if Session.get 'internalNotes' then 'faded'
-  newNoteInputClass: ->
-    if Session.get 'internalNotes'
-      'form-control internal-note'
-    else
-      'form-control'
 Template.ticketNoteInput.events
-  'click button[name=internalNotes]': (e, tpl) ->
-    Session.set 'internalNotes', true
-  'click button[name=publicNotes]': (e, tpl) ->
-    Session.set 'internalNotes', false
+  'click button[name=addNote]': (e, tpl) ->
+    addNote e, tpl, false, false
+
+  'click button[name=addNoteAdmin]': (e, tpl) ->
+    addNote e, tpl, true, false
+
+  'click button[name=addInternalNote]': (e, tpl) ->
+    addNote e, tpl, true, true
+
+  'click button[name=addNoteAndReOpen]': (e, tpl) ->
+    if tpl.$('input[name=newNoteAdmin]').val().length > 0
+      addNote e, tpl, true, false
+    Tickets.update tpl.data.ticketId, { $set: {status: 'Open'} }
+
+  'click button[name=addNoteAndClose]': (e, tpl) ->
+    if tpl.$('input[name=newNoteAdmin]').val().length > 0
+      addNote e, tpl, true, false
+    Tickets.update tpl.data.ticketId, { $set: {status: 'Closed'} }
+
+  'input input[name=newNoteAdmin]': (e, tpl) ->
+    status = Tickets.findOne(tpl.data.ticketId).status
+    if $(e.target).val() is ""
+      tpl.$('button[name=addNoteAndReOpen]').text("Re-Open Ticket")
+      tpl.$('button[name=addNoteAndClose]').text("Close Ticket")
+    else
+      tpl.$('button[name=addNoteAndReOpen]').text('Add Note and Re-Open')
+      tpl.$('button[name=addNoteAndClose]').text('Add Note and Close')
+
 
   ### Uploading files. ###
   'click a[data-action=uploadFile]': (e, tpl) ->
     Media.pickLocalFile (fileId) ->
       console.log "Uploaded a file, got _id: ", fileId
-      Tickets.update tpl.data.ticket, {$addToSet: {attachmentIds: fileId}}
-      Meteor.call 'setFlag', Meteor.userId(), tpl.data.ticket, 'attachment', true
+      Tickets.update @ticketId, {$addToSet: {attachmentIds: fileId}}
+      Meteor.call 'setFlag', Meteor.userId(), @ticketId, 'attachment', true
 
   ### Adding notes to tickets. ###
   'keyup input[name=newNoteAdmin]': (e, tpl) ->
     if (e.which is 13) and (e.target.value isnt "")
-      body = e.target.value
-      hashtags = getTags body
-      users = getUserIds body
-      status = getStatuses body
-      if status?.length > 0
-        Tickets.update tpl.data.ticket, {$set: {status: status[0]}} #If multiple results, just use the first.
-
-      if users?.length > 0
-        Tickets.update tpl.data.ticket, {$addToSet: {associatedUserIds: $each: users}}
-
-      if hashtags?.length > 0
-        Tickets.update tpl.data.ticket, {$addToSet: {tags: $each: hashtags}}
-      Changelog.insert
-        ticketId: tpl.data.ticket
-        timestamp: new Date()
-        authorId: Meteor.userId()
-        authorName: Meteor.user().username
-        type: "note"
-        internal: Session.get('internalNotes')
-        message: e.target.value
-
-      Meteor.call 'setFlag', Meteor.userId(), tpl.data.ticket, 'replied', true
-
-      $(e.target).val("")
+      addNote e, tpl, true, false
 
   'keyup input[name=newNote]': (e, tpl) ->
     if (e.which is 13) and (e.target.value isnt "")
-      Changelog.insert
-        ticketId: tpl.data.ticket
-        timestamp: new Date()
-        authorId: Meteor.userId()
-        authorName: Meteor.user().username
-        type: "note"
-        message: e.target.value
+      addNote e, tpl, false, false
+ 
+addNote = (e, tpl, admin, internal) ->
+  # Adds notes given the event and template.
+  # Admin flag will result in parsing for status, tags, and users. Collection permissions act as security.
+  # Internal flag will add an internal note.
+  unless admin then internal = false
+  body = tpl.$('input[name=newNote]').val()
+  if admin
+    body = tpl.$('input[name=newNoteAdmin]').val()
+    hashtags = getTags body
+    users = getUserIds body
+    status = getStatuses body
+    if status?.length > 0
+      Tickets.update tpl.data.ticketId, {$set: {status: status[0]}} #If multiple results, just use the first.
 
-      Meteor.call 'setFlag', Meteor.userId(), tpl.data.ticket, 'replied', true
-      $(e.target).val("")
+    if users?.length > 0
+      Tickets.update tpl.data.ticketId, {$addToSet: {associatedUserIds: $each: users}}
+
+    if hashtags?.length > 0
+      Tickets.update tpl.data.ticketId, {$addToSet: {tags: $each: hashtags}}
+  if body
+    Changelog.insert
+      ticketId: tpl.data.ticketId
+      timestamp: new Date()
+      authorId: Meteor.userId()
+      authorName: Meteor.user().username
+      internal: internal
+      type: "note"
+      message: body
+
+  Meteor.call 'setFlag', Meteor.userId(), tpl.data.ticketId, 'replied', true
+
+  tpl.$('input[name=newNote]').val('')
+  tpl.$('input[name=newNoteAdmin]').val('')
     
 Template.ticketTag.events
   'click a[data-action=removeTag]': (e, tpl) ->
@@ -228,6 +247,13 @@ Template.ticketTag.events
       filter.push(value)
     Iron.query.set 'tag', filter.join()
 
-Template.ticketHeading.helpers
+Template.ticketHeadingPanels.helpers
   author: ->
     Meteor.users.findOne {_id: @authorId}
+
+Template.formFieldsPanel.events
+  'show.bs.collapse': (e, tpl) ->
+    tpl.$('span[name=moreInfoGlyph]').removeClass('glyphicon-chevron-right').addClass('glyphicon-chevron-down')
+
+  'hide.bs.collapse': (e, tpl) ->
+    tpl.$('span[name=moreInfoGlyph]').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-right')

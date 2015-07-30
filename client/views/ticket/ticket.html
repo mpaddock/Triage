@@ -4,8 +4,7 @@
   {{/unless}}
   {{#with ticket}}
     <div class="col-md-3 ticket-sidebar" data-ticketId="{{_id}}">
-      {{> ticketHeading}}
-      {{> ticketInfoTable}}
+      {{> ticketSidebar}}
     </div>
     <div class="col-md-9 ticket-note-area">
       <label for="title">Title:</label>
@@ -24,21 +23,14 @@
       <div class="hidden-xs col-md-12">
         <table class="table table-default">
           <tbody>
-            {{#each arrayify formFields}}
-              <tr>
-                <td class="col-xs-2 col-md-2"><strong>{{name}}</strong></td>
-                <td class="col-xs-10 col-md-10">{{value}}</td>
-              </tr>
-            {{/each}}
+            {{#if formFields}}
+              {{> formFieldsPanel}}
+            {{/if}}
           </tbody>
         </table>
       </div>
-      {{> changelogButtons}}
-      {{#each changelog}}
-        {{> ticketChangelogItem}}
-      {{/each}}
 
-      {{> ticketNoteInput queueMember=queueMember ticket=_id}}
+      {{> ticketNoteArea}}
     </div>
   {{/with}}
 </template>

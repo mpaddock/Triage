@@ -91,7 +91,7 @@ Template.queue.events
 
   'keyup input[name=newTicketStatus]': (e, tpl) ->
     if e.which is 13
-      sumbitQuickAddTicket tpl
+      submitQuickAddTicket tpl
 
   'click button[name=quickAddTicket]': (e, tpl) ->
     submitQuickAddTicket tpl

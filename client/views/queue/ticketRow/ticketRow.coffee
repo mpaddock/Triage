@@ -24,16 +24,18 @@ Template.ticketRow.events
       $(e.target).val("")
       tpl.$('.dropdown-toggle[name=statusButton]').dropdown('toggle')
     
-  'show.bs.collapse': (e, tpl) ->
-    Meteor.call 'removeFlag', Meteor.userId(), @_id, 'unread'
-    tpl.$('span[name=plusminus]').removeClass('glyphicon-plus').addClass('glyphicon-minus')
+  'show.bs.collapse .ticket-collapse': (e, tpl) ->
+    if _.contains $(e.target)[0].classList, 'ticket-collapse'
+      Meteor.call 'removeFlag', Meteor.userId(), @_id, 'unread'
+      tpl.$('span[name=plusminus]').removeClass('glyphicon-plus').addClass('glyphicon-minus')
 
 
   ### Hide all tooltips on row collapse and focusout of assign user field. ###
-  'hide.bs.collapse': (e, tpl) ->
-    tpl.$('[data-toggle="tooltip"]').tooltip('hide')
-    tpl.$('input[name="assignUser"]').val('')
-    tpl.$('span[name=plusminus]').removeClass('glyphicon-minus').addClass('glyphicon-plus')
+  'hide.bs.collapse .ticket-collapse': (e, tpl) ->
+    if _.contains $(e.target)[0].classList, 'ticket-collapse'
+      tpl.$('[data-toggle="tooltip"]').tooltip('hide')
+      tpl.$('input[name="assignUser"]').val('')
+      tpl.$('span[name=plusminus]').removeClass('glyphicon-minus').addClass('glyphicon-plus')
 
   'focusout input[name="assignUser"]': (e, tpl) ->
     tpl.$('[data-toggle="tooltip"]').tooltip('hide')

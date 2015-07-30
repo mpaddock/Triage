@@ -504,6 +504,11 @@ blockquote {
   margin-bottom: 10px;
 }
 
+.ticket-note-input-area {
+  margin-top: 30px;
+}
+
 .ticket-sidebar {
   margin-top: 10px;
 }
+
