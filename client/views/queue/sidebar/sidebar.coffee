@@ -36,23 +36,16 @@ Template.sidebar.helpers
   associatedUsers: ->
     active = Iron.query.get('associatedUser')?.split(',') || []
     _.map _.sortBy(Facets.findOne()?.facets.associatedUserIds, (f) -> -f.count), (l) ->
-      if l.name is "(none)"
-        _.extend l,
-          username: '(none)'
-          checked: if '(none)' in active then 'checked'
-          type: 'associatedUser'
-      else
-        username = Meteor.users.findOne(l.name)?.username
-        _.extend l,
-          username: username
-          checked: if username in active then 'checked'
-          type: 'associatedUser'
+      username = Meteor.users.findOne(l.name)?.username
+      _.extend l,
+        username: username
+        checked: if username in active then 'checked'
+        type: 'associatedUser'
   zeroCountUsers: ->
     active = Iron.query.get('associatedUser')?.split(',') || []
     users = _.pluck Facets.findOne()?.facets.associatedUserIds, 'name'
     usernames = _.map users, (u) ->
-      unless u is '(none)'
-        Meteor.users.findOne(u)?.username
+      Meteor.users.findOne(u)?.username
     return _.map _.difference(active, usernames), (l) ->
       username: l
       count: 0
