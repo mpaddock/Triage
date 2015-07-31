@@ -47,7 +47,7 @@
         unless associatedUsers.length is 0
           newValue = "#{associatedUsers}"
       else if modifier.$addToSet?.associatedUserIds?
-        unless modifier.$addToSet.associatedUserIds in doc.associatedUserIds
+        unless _.contains doc.associatedUserIds, modifier.$addToSet.associatedUserIds
           associatedUser = Meteor.users.findOne(modifier.$addToSet.associatedUserIds).username
           newValue = "#{associatedUser}"
       else if modifier.$pull?.associatedUserIds?
