@@ -26,6 +26,7 @@ Package.onTest(function (api) {
     'aldeed:collection2@2.3.3',
     'aldeed:simple-schema@1.3.2',
     'matb33:collection-hooks@0.7.13',
+    'blaze',
     'tinytest',
     'test-helpers',
     'hive:facets@0.0.1'
@@ -34,7 +35,9 @@ Package.onTest(function (api) {
   api.addFiles([
     'lib/collections.coffee',
     'lib/facets.coffee',
-    'tests/facets-test.coffee'
+    'client/helpers/helpers.coffee',
+    'tests/facets-test.coffee',
+    'tests/parsers-test.coffee'
   ], ['client', 'server']);
 
 });
