@@ -36,16 +36,23 @@ Template.sidebar.helpers
   associatedUsers: ->
     active = Iron.query.get('associatedUser')?.split(',') || []
     _.map _.sortBy(Facets.findOne()?.facets.associatedUserIds, (f) -> -f.count), (l) ->
-      username = Meteor.users.findOne(l.name)?.username
-      _.extend l,
-        username: username
-        checked: if username in active then 'checked'
-        type: 'associatedUser'
+      if l.name is "(none)"
+        _.extend l,
+          username: '(none)'
+          checked: if '(none)' in active then 'checked'
+          type: 'associatedUser'
+      else
+        username = Meteor.users.findOne(l.name)?.username
+        _.extend l,
+          username: username
+          checked: if username in active then 'checked'
+          type: 'associatedUser'
   zeroCountUsers: ->
     active = Iron.query.get('associatedUser')?.split(',') || []
     users = _.pluck Facets.findOne()?.facets.associatedUserIds, 'name'
     usernames = _.map users, (u) ->
-      Meteor.users.findOne(u)?.username
+      unless u is '(none)'
+        Meteor.users.findOne(u)?.username
     return _.map _.difference(active, usernames), (l) ->
       username: l
       count: 0
@@ -92,15 +99,13 @@ Template.sidebar.events
       tags = Iron.query.get('tags')?.split(',') || []
       statuses = Iron.query.get('status')?.split(',') || []
       users = Iron.query.get('user')?.split(',') || []
-
-      terms = text.match /"[^"]*"|status:(\w+-\w+|\w+|"[^"]*"+|'[^']*')|#\S+|\@\S|[^\s"]+/g
-      terms = _.difference terms, text.match(/status:(\w+-\w+|\w+|"[^"]*"+|'[^']*')|#\S+|\@\S+/g) #Not the best way of doing this.
+      terms = Parsers.getTerms text
       _.map terms, (t) ->
         t.replace('"', '\"')
       newFilter = _.union terms, filter
-      newTags = _.union tags, getTags(text)
-      newStatus = _.union statuses, getStatuses(text)
-      newUsers = _.union users, getUsernames(text)
+      newTags = _.union tags, Parsers.getTags(text)
+      newStatus = _.union statuses, Parsers.getStatuses(text)
+      newUsers = _.union users, Parsers.getUsernames(text)
 
       Iron.query.set 'search', newFilter.join()
       Iron.query.set 'tag', newTags.join()
