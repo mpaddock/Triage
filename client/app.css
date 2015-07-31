@@ -476,8 +476,15 @@ blockquote {
 }
 
 .user-panel-portrait {
-  float: right;
+  float: left;
+  display: inline-block;
   position: relative;
+  padding-right: 15px;
+}
+
+.user-panel-info {
+  display: inline-block;
+  font-weight: bold;
 }
 
 .changelog-buttons {
@@ -500,6 +507,8 @@ blockquote {
 }
 
 .ticket-note-area {
+  padding-right: 15px;
+  padding-left: 15px;
   margin-top: 10px;
   margin-bottom: 10px;
 }
@@ -511,4 +520,28 @@ blockquote {
 .ticket-sidebar {
   margin-top: 10px;
 }
+
+
+.row-no-margin {
+  margin-left: 0px !important;
+  margin-right: 0px !important;
+}
+
+  @media (max-width: 768px) {
+    .btn-responsive {
+      padding: 5px 5px;
+      font-size: 12px;
+      line-height: 1.5;
+      border-radius: 3px;
+    } 
+  }
+
+  @media (min-width: 769px) {
+    btn-responsive {
+      padding: 5px 10px;
+      font-size: 12px;
+      line-height: 1.5;
+      border-radius: 3px;
+    }
+  }
 

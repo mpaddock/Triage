@@ -232,7 +232,10 @@ addNote = (e, tpl, admin, internal) ->
 
   tpl.$('input[name=newNote]').val('')
   tpl.$('input[name=newNoteAdmin]').val('')
-    
+
+  tpl.$('button[name=addNoteAndReOpen]').text("Re-Open Ticket")
+  tpl.$('button[name=addNoteAndClose]').text("Close Ticket")
+  
 Template.ticketTag.events
   'click a[data-action=removeTag]': (e, tpl) ->
     e.preventDefault()
