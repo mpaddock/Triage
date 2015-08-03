@@ -56,12 +56,12 @@ Template.ticketModal.events
     unless tags is ""
       splitTags = tags.split(',').map (x) ->
         x.replace('#', '')
-    hashtags = getTags body
-    hashtags = _.uniq hashtags?.concat(getTags(title)).concat(splitTags) || []
+    hashtags = Parsers.getTags body
+    hashtags = _.uniq hashtags?.concat(Parsers.getTags(title)).concat(splitTags) || []
 
     #User tagging.
-    users = getUserIds body
-    users = _.uniq users?.concat getUserIds(title) || []
+    users = Parsers.getUserIds body
+    users = _.uniq users?.concat Parsers.getUserIds(title) || []
     
     #If no onBehalfOf, submitter is the user.
     submitter = tpl.$('input[name=onBehalfOf]').val() || Meteor.user().username
@@ -82,7 +82,7 @@ Template.ticketModal.events
           queueName: queueName
           authorId: res
           authorName: submitter
-          status: "Open"
+          status: status || 'Open'
           submittedTimestamp: new Date()
           attachmentIds: Session.get('newTicketAttachedFiles')
           submissionData:

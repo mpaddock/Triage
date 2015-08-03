@@ -103,8 +103,8 @@ submitQuickAddTicket = (tpl) ->
   status = tpl.$('input[name=newTicketStatus]').val()
   if status is "" then tpl.$('input[name=newTicketStatus]').closest('div').addClass('has-error')
   queue = tpl.$('select[name=queue]')?.val() || Session.get('queueName')
-  tags = getTags body
-  users = getUserIds body
+  tags = Parsers.getTags body
+  users = Parsers.getUserIds body
   if tpl.$('.has-error').length is 0
     Tickets.insert
       title: body

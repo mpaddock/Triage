@@ -207,9 +207,9 @@ addNote = (e, tpl, admin, internal) ->
   body = tpl.$('input[name=newNote]').val()
   if admin
     body = tpl.$('input[name=newNoteAdmin]').val()
-    hashtags = getTags body
-    users = getUserIds body
-    status = getStatuses body
+    hashtags = Parsers.getTags body
+    users = Parsers.getUserIds body
+    status = Parsers.getStatuses body
     if status?.length > 0
       Tickets.update tpl.data.ticketId, {$set: {status: status[0]}} #If multiple results, just use the first.
 
