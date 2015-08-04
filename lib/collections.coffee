@@ -19,6 +19,7 @@
     type: String
     defaultValue: 'Open'
   tags:
+    defaultValue: []
     optional: true
     type: [String]
   submissionData:
@@ -52,6 +53,7 @@
     type: String
   associatedUserIds:
     optional: true
+    defaultValue: []
     type: [String]
   attachmentIds:
     optional: true
