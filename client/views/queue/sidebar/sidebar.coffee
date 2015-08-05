@@ -15,7 +15,7 @@ Template.sidebar.helpers
   zeroCountTags: ->
     active = Iron.query.get('tag')?.split(',') || []
     tags = _.pluck Facets.findOne()?.facets.tags, 'name'
-    unless '(none)' in active
+    if '(none)' in active and Tickets.findOne()
       tags.push('(none)')
     return _.map _.difference(active, tags), (l) ->
       name: l
@@ -56,7 +56,7 @@ Template.sidebar.helpers
     users = _.pluck Facets.findOne()?.facets.associatedUserIds, 'name'
     usernames = _.map users, (u) ->
       Meteor.users.findOne(u)?.username
-    unless '(none)' in active
+    if '(none)' in active and Tickets.findOne()
       usernames.push('(none)')
     return _.map _.difference(active, usernames), (l) ->
       username: l
