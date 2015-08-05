@@ -60,10 +60,10 @@
       console.log "Error verifying filter: Queue name is required"
       return false
     if not filter.userId and Array.isArray(filter.queueName) and _.difference(filter.queueName, queues).length isnt 0
-      console.log "Error verifying filter: User lacks permission to at least one queue"
+      console.log "Error verifying filter: User lacks permission to at least one queue. User has access to #{queues} and requested access to #{filter.queueName}."
       return false
     if not filter.userId and typeof(filter.queueName) is "string" and not _.contains(queues, filter.queueName)
-      console.log "Error verifying filter: User lacks permission to a queue"
+      console.log "Error verifying filter: User lacks permission to a queue. User has access to #{queues} and requested access to #{filter.queueName}."
       return false
 
     return true
