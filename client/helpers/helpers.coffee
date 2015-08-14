@@ -1,3 +1,6 @@
+UI.registerHelper 'isCordova', ->
+  Meteor.isCordova
+
 UI.registerHelper 'arrayify', (obj) ->
   #Transforms objects with k/v pairs into arrays of objects so Handlebars can iterate over them properly.
   result = []

@@ -129,6 +129,12 @@ Template.ticketInfoPanels.events
       console.log "Uploaded a file, got _id: ", fileId
       Tickets.update tpl.data._id, {$addToSet: {attachmentIds: fileId}}
       Meteor.call 'setFlag', Meteor.userId(), tpl.data._id, 'attachment', true
+  'click a[data-action=takePicture]': (e, tpl) ->
+    Media.capturePhoto (fileId) ->
+      console.log "Uploaded a file, got _id: ", fileId
+      Tickets.update tpl.data._id, {$addToSet: {attachmentIds: fileId}}
+      Meteor.call 'setFlag', Meteor.userId(), tpl.data._id, 'attachment', true
+
 
 Template.ticketNoteInput.helpers
   closed: -> Tickets.findOne(@ticketId).status is "Closed"
