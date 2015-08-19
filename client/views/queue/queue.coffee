@@ -2,7 +2,7 @@ limit = Meteor.settings?.public?.limitDefault || 20
 offsetIncrement = Meteor.settings?.public?.offsetIncrement || 20
 
 Template.queue.helpers
-  alpha: ->
+  beta: ->
     true
   ready: ->
     Session.get 'ready'
