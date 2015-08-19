@@ -18,3 +18,10 @@ Meteor.methods
         else
           userId = Meteor.users.insert(userObj)
         return userId
+
+  refreshSecurityGroups: (username) ->
+    client = LDAP.createClient Meteor.settings.ldap.serverUrl
+    LDAP.bind client, Meteor.settings.ldapDummy.username, Meteor.settings.ldapDummy.password
+    userObj = LDAP.search client, username
+    if userObj
+      Meteor.users.update { username: username.toLowerCase() }, { $set: { memberOf: userObj.memberOf } }
