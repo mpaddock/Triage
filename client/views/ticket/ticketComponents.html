@@ -63,7 +63,9 @@
           {{#if changeIsType 'attachment'}}
             {{#with otherId}}
               {{#if file.thumbnail}}
-                <img class="img-thumbnail" style="max-width: 100%; max-height: 128px" src="/file/{{file.thumbnail}}"/><br/>
+                <a href="/file/{{file.filenameOnDisk}}" target="_blank">
+                  <img class="img-thumbnail" style="max-width: 100%; max-height: 128px" src="/file/{{file.thumbnail}}"/><br/>
+                </a>
               {{/if}}
             {{/with}}
           {{/if}}
