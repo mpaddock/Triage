@@ -144,12 +144,12 @@ Router.map ->
 
       blackboxKeys = _.difference(_.keys(@request.body), requiredParams.concat(['submitter_name', 'subject_line'], Tickets.simpleSchema()._schemaKeys))
       formFields = _.pick(@request.body, blackboxKeys)
-
+      username = new RegExp(@request.body.username, 'i')
       Tickets.insert
         title: @request.body.subject_line
         body: @request.body.description
-        authorName: @request.body.username
-        authorId: Meteor.users.findOne({username: @request.body.username})._id
+        authorName: @request.body.username.toLowerCase()
+        authorId: Meteor.users.findOne({username: username})._id
         submissionData:
           method: 'Form'
           ipAddress: @request.body.ip_address
