@@ -262,7 +262,9 @@ Template.ticketHeadingPanels.helpers
 
 Template.formFieldsPanel.events
   'show.bs.collapse': (e, tpl) ->
-    tpl.$('span[name=moreInfoGlyph]').removeClass('glyphicon-chevron-right').addClass('glyphicon-chevron-down')
+    tpl.$('span[name=details]').html('Hide Details')
+    tpl.$('span[name=details-glyph]').removeClass('glyphicon-chevron-right').addClass('glyphicon-chevron-down')
 
   'hide.bs.collapse': (e, tpl) ->
-    tpl.$('span[name=moreInfoGlyph]').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-right')
+    tpl.$('span[name=details]').html('Show Details')
+    tpl.$('span[name=details-glyph]').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-right')
