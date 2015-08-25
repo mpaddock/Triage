@@ -260,11 +260,16 @@ Template.ticketHeadingPanels.helpers
   author: ->
     Meteor.users.findOne {_id: @authorId}
 
+
+Template.formFieldsPanel.onCreated ->
+  this.panelIsCollapsed = new ReactiveVar(true)
+
+Template.formFieldsPanel.helpers
+  collapsed: -> Template.instance().panelIsCollapsed.get()
+
 Template.formFieldsPanel.events
   'show.bs.collapse': (e, tpl) ->
-    tpl.$('span[name=details]').html('Hide Details')
-    tpl.$('span[name=details-glyph]').removeClass('glyphicon-chevron-right').addClass('glyphicon-chevron-down')
+    tpl.panelIsCollapsed.set false
 
   'hide.bs.collapse': (e, tpl) ->
-    tpl.$('span[name=details]').html('Show Details')
-    tpl.$('span[name=details-glyph]').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-right')
+    tpl.panelIsCollapsed.set true

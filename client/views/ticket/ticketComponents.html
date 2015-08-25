@@ -6,8 +6,13 @@
   <div class="hidden-xs col-md-12">
     <div class="panel panel-success more-info-panel">
       <div class="panel-heading">
-        <span name="details-glyph" class="glyphicon glyphicon-chevron-right"></span>&nbsp;
-        <a data-toggle="collapse" href="#info-panel-{{_id}}"><strong><span name="details">Show Details</span></strong></a>
+        {{#if collapsed}}
+          <span name="details-glyph" class="glyphicon glyphicon-chevron-right"></span>&nbsp;
+          <a data-toggle="collapse" href="#info-panel-{{_id}}"><strong><span name="details">Show Details</span></strong></a>
+          {{else}}
+          <span name="details-glyph" class="glyphicon glyphicon-chevron-down"></span>&nbsp;
+          <a data-toggle="collapse" href="#info-panel-{{_id}}"><strong><span name="details">Hide Details</span></strong></a>
+        {{/if}}
       </div>
       <div id="info-panel-{{_id}}" class="panel-collapse collapse">
         <div id="panel-body">
