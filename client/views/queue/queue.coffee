@@ -124,7 +124,6 @@ submitQuickAddTicket = (tpl) ->
 
 
 Template.queue.rendered = ->
-  renderedTime = new Date()
   this.autorun ->
     # Highlighting of search terms.
     if Iron.query.get('search') and Session.get('ready')
@@ -134,6 +133,7 @@ Template.queue.rendered = ->
       , 500
 
   this.autorun ->
+    renderedTime = new Date()
     queueName = Session.get('queueName') || _.pluck Queues.find().fetch(), 'name'
     filter = {
       queueName: queueName
