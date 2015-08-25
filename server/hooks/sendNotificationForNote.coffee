@@ -18,14 +18,14 @@
   
   if (noteAuthor?._id is ticketAuthor?._id) and (ticketAuthor?.notificationSettings?.authorSelfNote) and not doc.internal
     recipients.push(ticketAuthor.mail)
-  else if ticketAuthor?.notificationSettings?.authorOtherNote and not doc.internal
+  else if (noteAuthor?._id isnt ticketAuthor?._id) and ticketAuthor?.notificationSettings?.authorOtherNote and not doc.internal
     recipients.push(ticketAuthor.mail)
 
   _.each ticket.associatedUserIds, (id) ->
     u = Meteor.users.findOne(id)
     if (u._id is noteAuthor?._id) and (u.notificationSettings?.associatedSelfNote)
       recipients.push(u.mail)
-    else if u.notificationSettings?.associatedOtherNote
+    else if (u._id isnt noteAuthor?._id) and u.notificationSettings?.associatedOtherNote
       recipients.push(u.mail)
 
   if recipients.length > 0
