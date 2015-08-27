@@ -191,6 +191,11 @@ body {
   margin-bottom: 0 !important;
 }
 
+.queues-button {
+  border-color: #ddd;
+  color: #ddd;
+}
+
 /***************************** QUEUE/TICKETROW/SIDEBAR *****************************/
 
 .hiddenRow {
@@ -546,3 +551,5 @@ blockquote {
     }
   }
 
+
+  
