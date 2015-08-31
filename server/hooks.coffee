@@ -4,7 +4,9 @@ if Npm.require('cluster').isMaster
     #Update tag collection for autocomplete.
     now = new Date()
     doc.tags?.forEach (x) ->
-      Tags.upsert {name: x}, {$set: {lastUse: now}}
+      Tags.upsert { name: x }, { $set: { lastUse: now } }
+
+    Statuses.upsert { name: doc.status }, { $set: { lastUse: now } }
 
     #Update queue new counts.
     QueueBadgeCounts.update {queueName: doc.queueName, userId: {$ne: userId}}, { $inc: {count: 1} }, {multi: true}

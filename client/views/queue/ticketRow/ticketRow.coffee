@@ -17,10 +17,15 @@ Template.ticketRow.events
     unless @status is $(e.target).html()
       Tickets.update @_id, {$set: {status: $(e.target).html()}}
     tpl.$('.dropdown-toggle[name=statusButton]').dropdown('toggle')
+  
+  'autocompleteselect input[name=customStatus]': (e, tpl, doc) ->
+    Tickets.update tpl.data._id, { $set: { status: doc.name } }
+    $(e.target).val("")
+    tpl.$('.dropdown-toggle[name=statusButton]').dropdown('toggle')
 
   'keyup input[name=customStatus]': (e, tpl) ->
     if e.which is 13
-      Tickets.update @_id, {$set: {status: $(e.target).val()}}
+      Tickets.update tpl.data._id, { $set: { status: $(e.target).val() } }
       $(e.target).val("")
       tpl.$('.dropdown-toggle[name=statusButton]').dropdown('toggle')
     
@@ -57,3 +62,14 @@ Template.ticketRow.helpers
     TicketFlags.findOne({userId: Meteor.userId(), ticketId: @_id, k: 'replied'})
   hasAttachment: ->
     @attachmentIds?.length > 0
+  statusSettings: ->
+    {
+      position: "bottom"
+      limit: 5
+      rules: [
+        collection: Statuses
+        field: 'name'
+        template: Template.statusPill
+        noMatchTemplate: Template.noMatchStatusPill
+      ]
+    }
