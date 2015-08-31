@@ -29,7 +29,7 @@ UI.registerHelper 'linkify', (text) ->
 
 UI.registerHelper 'tokenSettings', ->
   {
-    position: "top"
+    position: "bottom"
     limit: 5
     rules: [
       {
