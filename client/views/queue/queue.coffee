@@ -42,26 +42,6 @@ Template.queue.helpers
       if this.name is Meteor.user().defaultQueue then "selected"
     else
       if this.name is Session.get('queueName') then "selected"
-  settings: ->
-    {
-      position: "bottom"
-      limit: 5
-      rules: [
-        {
-          token: '@'
-          collection: Meteor.users
-          field: 'username'
-          template: Template.userPill
-        }
-        {
-          token: '#'
-          collection: Tags
-          field: 'name'
-          template: Template.tagPill
-          noMatchTemplate: Template.noMatchTagPill
-        }
-      ]
-    }
 
 Template.queue.events
   'click button[data-action=nextPage]': (e, tpl) ->

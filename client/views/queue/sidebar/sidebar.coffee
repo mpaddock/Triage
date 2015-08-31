@@ -71,25 +71,6 @@ Template.sidebar.helpers
   filtering: ->
     if Iron.query.get('status') or Iron.query.get('tag') or (Session.get('ready') is false)
       return true
-  settings: ->
-    {
-      position: "bottom"
-      limit: 5
-      rules: [
-        {
-          token: '@'
-          collection: Meteor.users
-          field: 'username'
-          template: Template.userPill
-        }
-        {
-          token: '#'
-          collection: Tags
-          field: 'name'
-          template: Template.tagPill
-        }
-      ]
-    }
   helpText: ->
     Session.get 'helpText'
 

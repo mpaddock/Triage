@@ -1,5 +1,13 @@
 <template name="userPill">
-  {{username}}
+  <div class="user-profile">
+    <div class="user-picture">
+      <img src="https://as.uky.edu/profile-picture/{{username}}">
+    </div>
+    <div class="user-profile-info">
+      <div class="username"><strong>{{username}}</strong></div>
+      <div class="name">{{displayName}}</div>
+    </div>
+  </div>
 </template>
 
 <template name="tagPill">

@@ -20,12 +20,12 @@
           </div>
           <div class="form-group">
             <label for="title" class="control-label">Title:</label>
-            {{>inputAutocomplete settings=settings name="title" class="form-control" }}
+            {{>inputAutocomplete settings=tokenSettings name="title" class="form-control" }}
           </div>
           <div class="form-group">
             <label for="body" class="control-label">Body:</label>
             <div>
-              {{#textareaAutocomplete settings=settings name="body" class="form-control" rows="6"}}{{/textareaAutocomplete}}
+              {{#textareaAutocomplete settings=tokenSettings name="body" class="form-control" rows="6"}}{{/textareaAutocomplete}}
             </div>
           </div>
           <div class="form-group">

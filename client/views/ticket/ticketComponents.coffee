@@ -69,28 +69,6 @@ Template.ticketInfoPanels.helpers
     _.contains Queues.findOne({name: @queueName})?.memberIds, Meteor.userId()
   file: ->
     FileRegistry.findOne {_id: this.valueOf()}
-  userSettings: ->
-    {
-      position: "top"
-      limit: 5
-      rules: [
-        collection: Meteor.users
-        field: 'username'
-        template: Template.userPill
-        noMatchTemplate: Template.noMatchUserPill
-      ]
-    }
-  tagSettings: ->
-    {
-      position: "top"
-      limit: 5
-      rules: [
-        collection: Tags
-        field: 'name'
-        template: Template.tagPill
-        noMatchTemplate: Template.noMatchTagPill
-      ]
-    }
 
 Template.removeAttachmentModal.helpers
   attachment: -> FileRegistry.findOne(@attachmentId)
@@ -138,26 +116,6 @@ Template.ticketInfoPanels.events
 
 Template.ticketNoteInput.helpers
   closed: -> Tickets.findOne(@ticketId).status is "Closed"
-  settings: ->
-    {
-      position: "top"
-      limit: 5
-      rules: [
-        {
-          token: '@'
-          collection: Meteor.users
-          field: 'username'
-          template: Template.userPill
-        }
-        {
-          token: '#'
-          collection: Tags
-          field: 'name'
-          template: Template.tagPill
-          noMatchTemplate: Template.noMatchTagPill
-        }
-      ]
-    }
 
 Template.ticketNoteInput.events
   'click button[name=addNote]': (e, tpl) ->

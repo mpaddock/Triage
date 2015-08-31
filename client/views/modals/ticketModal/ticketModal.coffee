@@ -5,26 +5,6 @@ Template.ticketModal.helpers
   files: ->
     if Session.get('newTicketAttachedFiles')
       FileRegistry.find {_id: {$in: Session.get('newTicketAttachedFiles')}}
-  settings: ->
-    {
-      position: "bottom"
-      limit: 5
-      rules: [
-        {
-          token: '@'
-          collection: Meteor.users
-          field: 'username'
-          template: Template.userPill
-        }
-        {
-          token: '#'
-          collection: Tags
-          field: 'name'
-          template: Template.tagPill
-          noMatchTemplate: Template.noMatchTagPill
-        }
-      ]
-    }
 
 Tracker.autorun ->
   if Session.get('newTicketAttachedFiles')

@@ -51,6 +51,7 @@ body {
 .user-profile {
   display: inline-block;
   position: relative;
+  color: #000;
 }
 
 .user-profile img {
@@ -82,6 +83,13 @@ body {
   visibility: hidden;
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
+}
+.user-picture {
+  display: inline-block;
+}
+.user-profile-info {
+  font-size: .85em;
+  display: inline-block;
 }
 
 .in-row .user-info {
