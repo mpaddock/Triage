@@ -128,7 +128,7 @@ Template.ticketNoteInput.events
     addNote e, tpl, true, true
 
   'click button[name=addNoteAndReOpen]': (e, tpl) ->
-    if tpl.$('input[name=newNoteAdmin]').val().length > 0
+    if tpl.$('textarea[name=newNoteAdmin]').val().length > 0
       addNote e, tpl, true, false
     Tickets.update tpl.data.ticketId, { $set: {status: 'Open'} }
 
@@ -154,23 +154,15 @@ Template.ticketNoteInput.events
       Tickets.update @ticketId, {$addToSet: {attachmentIds: fileId}}
       Meteor.call 'setFlag', Meteor.userId(), @ticketId, 'attachment', true
 
-  ### Adding notes to tickets. ###
-  'keyup input[name=newNoteAdmin]': (e, tpl) ->
-    if (e.which is 13) and (e.target.value isnt "")
-      addNote e, tpl, true, false
-
-  'keyup input[name=newNote]': (e, tpl) ->
-    if (e.which is 13) and (e.target.value isnt "")
-      addNote e, tpl, false, false
  
 addNote = (e, tpl, admin, internal) ->
   # Adds notes given the event and template.
   # Admin flag will result in parsing for status, tags, and users. Collection permissions act as security.
   # Internal flag will add an internal note.
   unless admin then internal = false
-  body = tpl.$('input[name=newNote]').val()
+  body = tpl.$('textarea[name=newNote]').val()
   if admin
-    body = tpl.$('input[name=newNoteAdmin]').val()
+    body = tpl.$('textarea[name=newNoteAdmin]').val()
     hashtags = Parsers.getTags body
     users = Parsers.getUserIds body
     status = Parsers.getStatuses body
@@ -194,8 +186,8 @@ addNote = (e, tpl, admin, internal) ->
 
   Meteor.call 'setFlag', Meteor.userId(), tpl.data.ticketId, 'replied', true
 
-  tpl.$('input[name=newNote]').val('')
-  tpl.$('input[name=newNoteAdmin]').val('')
+  tpl.$('textarea[name=newNote]').val('')
+  tpl.$('textarea[name=newNoteAdmin]').val('')
 
   tpl.$('button[name=addNoteAndReOpen]').text("Re-Open Ticket")
   tpl.$('button[name=addNoteAndClose]').text("Close Ticket")

@@ -187,9 +187,9 @@
   <div class="row ticket-note-input-area">
     <div class="col-xs-12 col-md-10 col-md-offset-2">
       {{#if queueMember}}
-        {{> inputAutocomplete name="newNoteAdmin" class='form-control' placeholder="Add a new note..." settings=tokenSettings data-ticket=_id }}
+        {{# textareaAutocomplete name="newNoteAdmin" class='form-control' placeholder="Add a new note..." settings=tokenSettings data-ticket=_id }} {{/textareaAutocomplete}}
         {{else}}
-        <input class="form-control" placeholder="Add a new note..." name="newNote" data-ticket="{{_id}}">
+        <textarea class="form-control" placeholder="Add a new note..." name="newNote" data-ticket="{{_id}}"></textarea>
       {{/if}}
     </div>
   </div>
