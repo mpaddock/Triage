@@ -120,7 +120,7 @@ Meteor.publish 'allUserData', () ->
 
 Meteor.publish 'queueNames', () ->
   #Consider only publishing memberIds for queues that the uesr is a member of. Probably not a huge deal.
-  Queues.find {}, {fields: {'name': 1, 'memberIds': 1}}
+  Queues.find {}, {fields: {'name': 1, 'memberIds': 1, stats: 1}}
 
 Meteor.publish 'tags', () ->
   Tags.find {}, {fields: {'name': 1}, sort: {lastUse: -1}, limit: 100}

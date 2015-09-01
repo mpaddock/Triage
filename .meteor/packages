@@ -31,3 +31,4 @@ hive:email-ingestion
 multipart
 percolate:migrations
 reactive-var
+percolate:synced-cron
