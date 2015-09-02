@@ -133,11 +133,11 @@ Template.ticketNoteInput.events
     Tickets.update tpl.data.ticketId, { $set: {status: 'Open'} }
 
   'click button[name=addNoteAndClose]': (e, tpl) ->
-    if tpl.$('input[name=newNoteAdmin]').val().length > 0
+    if tpl.$('textarea[name=newNoteAdmin]').val().length > 0
       addNote e, tpl, true, false
     Tickets.update tpl.data.ticketId, { $set: {status: 'Closed'} }
 
-  'input input[name=newNoteAdmin]': (e, tpl) ->
+  'input textarea[name=newNoteAdmin]': (e, tpl) ->
     status = Tickets.findOne(tpl.data.ticketId).status
     if $(e.target).val() is ""
       tpl.$('button[name=addNoteAndReOpen]').text("Re-Open Ticket")
