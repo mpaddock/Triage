@@ -398,6 +398,10 @@ blockquote {
   border: 2px solid #ccc;
 }
 
+.ticket-row {
+  cursor: pointer;
+}
+
 .ticket-row-panel-body {
   bottom: 0px;
 }
@@ -560,4 +564,9 @@ blockquote {
   }
 
 
-  
+/***************************** TICKET MODAL STYLES *****************************/
+@media (min-width: 1200px) {
+  .modal-xl {
+    width: 90%;
+  }
+}

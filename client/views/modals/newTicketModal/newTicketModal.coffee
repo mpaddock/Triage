@@ -1,4 +1,4 @@
-Template.ticketModal.helpers
+Template.newTicketModal.helpers
   queues: -> Queues.find()
   errorText: -> Session.get 'errorText'
   submitting: -> Session.get 'submitting'
@@ -10,7 +10,7 @@ Tracker.autorun ->
   if Session.get('newTicketAttachedFiles')
     Meteor.subscribe 'unattachedFiles', Session.get('newTicketAttachedFiles')
 
-Template.ticketModal.events
+Template.newTicketModal.events
   'click button[data-action=uploadFile]': (e, tpl) ->
     Media.pickLocalFile (fileId) ->
       console.log "Uploaded a file, got _id: ", fileId
@@ -110,7 +110,7 @@ Template.ticketModal.events
     clearFields tpl
   
 
-Template.ticketModal.rendered = () ->
+Template.newTicketModal.rendered = () ->
   tags = _.pluck Tags.find().fetch(), 'name'
   if not Session.get('newTicketAttachedFiles')
     Session.set 'newTicketAttachedFiles', []
