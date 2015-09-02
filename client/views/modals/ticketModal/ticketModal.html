@@ -1,0 +1,43 @@
+<template name="ticketModal">
+  <div class="modal fade" id="ticketModal" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">{{title}}</h4>
+        </div>
+        <div class="modal-body">
+          <div class="row row-no-margin">
+            {{> ticketHeadingPanels}}
+          </div>
+
+          <div class="row row-no-margin">
+            <label for="body">Body:</label>
+            <blockquote>
+              {{#each bodyParagraph}}
+                <p>{{this}}</p>
+              {{/each}}
+            </blockquote>
+          </div>
+
+          {{#if formFields}}
+            <div class="row">
+              {{> formFieldsPanel}}
+            </div>
+          {{/if}}
+
+          <div class="row">
+            <div class="col-md-9 ticket-note-area">
+              <div class="row row-no-margin">
+                {{> ticketNoteArea}}
+              </div>
+            </div>
+            <div class="col-md-3 ticket-sidebar">
+              {{> ticketInfoPanels}}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

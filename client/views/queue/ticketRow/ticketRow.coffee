@@ -1,12 +1,8 @@
 Template.ticketRow.events
-  ### Events for ticket status changes. ###
   'click .ticket-row': (e) ->
-    console.log @
     Blaze.renderWithData Template.ticketModal, @, $('body').get(0)
     $('#ticketModal').modal('show')
 
-  'click .dropdown-menu[name=statusMenu]': (e, tpl) ->
-    e.stopPropagation() #Stops table row expanding on dropdown click. Have to trigger dropdown manually below.
   'click .dropdown-menu[name=statusMenu] a': (e, tpl) ->
     unless @status is $(e.target).html()
       Tickets.update @_id, {$set: {status: $(e.target).html()}}
@@ -28,26 +24,12 @@ Template.ticketRow.events
       Meteor.call 'removeFlag', Meteor.userId(), @_id, 'unread'
       tpl.$('span[name=plusminus]').removeClass('glyphicon-plus').addClass('glyphicon-minus')
 
-
-  ### Hide all tooltips on row collapse and focusout of assign user field. ###
-  'hide.bs.collapse .ticket-collapse': (e, tpl) ->
-    if _.contains $(e.target)[0].classList, 'ticket-collapse'
-      tpl.$('[data-toggle="tooltip"]').tooltip('hide')
-      tpl.$('input[name="assignUser"]').val('')
-      tpl.$('span[name=plusminus]').removeClass('glyphicon-minus').addClass('glyphicon-plus')
-
-  'focusout input[name="assignUser"]': (e, tpl) ->
-    tpl.$('[data-toggle="tooltip"]').tooltip('hide')
-
-
 Template.ticketRow.rendered = ->
   $('form[name=ticketForm]').submit (e) -> e.preventDefault()
 
 Template.ticketRow.helpers
   queueMember: ->
     _.contains Queues.findOne({name: @queueName}).memberIds, Meteor.userId()
-  bodyParagraph: ->
-    @body.split('\n')
   changelog: ->
     Changelog.find {ticketId: @_id}, {sort: timestamp: 1}
   unread: ->
