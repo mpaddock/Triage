@@ -48,6 +48,13 @@ UI.registerHelper 'tokenSettings', ->
         template: Template.tagPill
         noMatchTemplate: Template.noMatchTagPill
       }
+      {
+        token: 'status:'
+        collection: Statuses
+        field: 'name'
+        template: Template.statusPill
+        noMatchTemplate: Template.noMatchStatusPill
+      }
     ]
   }
 
