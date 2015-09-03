@@ -3,7 +3,7 @@ offsetIncrement = Meteor.settings?.public?.offsetIncrement || 20
 
 Template.queue.helpers
   beta: ->
-    true
+    Meteor.settings.public.beta
   ready: ->
     Session.get 'ready'
   firstVisibleTicket: ->

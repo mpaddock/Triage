@@ -116,6 +116,7 @@ Template.ticketInfoPanels.events
 
 Template.ticketNoteInput.helpers
   closed: -> Tickets.findOne(@ticketId).status is "Closed"
+  beta: -> Meteor.settings.public.beta
 
 Template.ticketNoteInput.events
   'click button[name=addNote]': (e, tpl) ->
@@ -128,14 +129,17 @@ Template.ticketNoteInput.events
     addNote e, tpl, true, true
 
   'click button[name=addNoteAndReOpen]': (e, tpl) ->
-    if tpl.$('textarea[name=newNoteAdmin]').val().length > 0
+    if tpl.$('textarea[name=newNoteAdmin]').val().trim().length > 0
       addNote e, tpl, true, false
     Tickets.update tpl.data.ticketId, { $set: {status: 'Open'} }
 
   'click button[name=addNoteAndClose]': (e, tpl) ->
-    if tpl.$('textarea[name=newNoteAdmin]').val().length > 0
+    if tpl.$('textarea[name=newNoteAdmin]').val().trim().length > 0
       addNote e, tpl, true, false
     Tickets.update tpl.data.ticketId, { $set: {status: 'Closed'} }
+
+  'click button[name=closeSilently]': (e, tpl) ->
+    Meteor.call 'closeSilently', tpl.data.ticketId
 
   'input textarea[name=newNoteAdmin]': (e, tpl) ->
     status = Tickets.findOne(tpl.data.ticketId).status
