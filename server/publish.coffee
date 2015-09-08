@@ -1,3 +1,17 @@
+Meteor.publish 'ticketSupplement', (ticketId) ->
+  ticket = Tickets.findOne(ticketId)
+  if not ticket.attachmentIds then ticket.attachmentIds = []
+  if Queues.findOne({ name: ticket.queueName, memberIds: @userId })
+    return [
+      Changelog.find { ticketId: ticket._id }
+      FileRegistry.find { _id: { $in: ticket.attachmentIds } }
+    ]
+  else if Tickets.findOne({ _id: ticketId, $or: [ { authorId: @userId }, { associatedUserIds: @userId } ] })
+    return [
+      Changelog.find { ticketId: ticket._id, internal: { $ne: true } }
+      FileRegistry.find { _id: { $in: ticket.attachmentIds } }
+    ]
+
 Meteor.publishComposite 'tickets', (filter, offset, limit) ->
   if offset < 0 then offset = 0
   if Filter.verifyFilterObject filter, _.pluck(Queues.find({memberIds: @userId}).fetch(), 'name'), @userId
@@ -14,18 +28,8 @@ Meteor.publishComposite 'tickets', (filter, offset, limit) ->
     children: [
       {
         find: (ticket) ->
-          filter = { ticketId: ticket._id }
-          if not _.contains Queues.findOne({name: ticket.queueName})?.memberIds, @userId then _.extend filter, { internal: { $ne: true } }
-          Changelog.find filter
-      },
-      {
-        find: (ticket) ->
+          Counts.publish(this, "#{ticket._id}-noteCount", Changelog.find({ticketId: ticket._id}))
           TicketFlags.find { ticketId: ticket._id, userId: @userId }
-      },
-      {
-        find: (ticket) ->
-          if ticket.attachmentIds?.length > 0
-            FileRegistry.find { _id: { $in: ticket.attachmentIds } }
       },
       {
         find: ->
@@ -44,18 +48,7 @@ Meteor.publishComposite 'newTickets', (filter, time) ->
     children: [
       {
         find: (ticket) ->
-          filter = { ticketId: ticket._id }
-          if not _.contains Queues.findOne({name: ticket.queueName})?.memberIds, @userId then _.extend filter, { internal: { $ne: true } }
-          Changelog.find filter
-      },
-      {
-        find: (ticket) ->
           TicketFlags.find { ticketId: ticket._id, userId: @userId }
-      },
-      {
-        find: (ticket) ->
-          if ticket.attachmentIds?.length > 0
-            FileRegistry.find { _id: { $in: ticket.attachmentIds } }
       }
     ]
   }
@@ -76,18 +69,8 @@ Meteor.publishComposite 'ticketSet', (ticketSet) ->
     children: [
       {
         find: (ticket) ->
-          filter = { ticketId: ticket._id}
-          if not _.contains Queues.findOne({name: ticket.queueName})?.memberIds, @userId then _.extend filter, { internal: { $ne: true } }
-          Changelog.find filter
-      },
-      {
-        find: (ticket) ->
+          Counts.publish(this, "#{ticket._id}-noteCount", Changelog.find({ticketId: ticket._id}))
           TicketFlags.find { ticketId: ticket._id, userId: @userId }
-      },
-      {
-        find: (ticket) ->
-          if ticket.attachmentIds?.length > 0
-            FileRegistry.find { _id: { $in: ticket.attachmentIds } }
       }
     ]
   }
@@ -134,7 +117,7 @@ Meteor.publish 'allUserData', () ->
   Meteor.users.find {}, { fields: { '_id': 1, 'username': 1, 'mail': 1, 'displayName': 1, 'department': 1, 'physicalDeliveryOfficeName': 1, 'status.online': 1, 'status.idle': 1 } }
 
 Meteor.publish 'queueNames', () ->
-  #Consider only publishing memberIds for queues that the uesr is a member of. Probably not a huge deal.
+  # Consider only publishing memberIds for queues that the user is a member of. Probably not a huge deal.
   Queues.find {}, { fields: { 'name': 1, 'memberIds': 1 } }
 
 Meteor.publish 'tags', () ->
@@ -144,7 +127,7 @@ Meteor.publish 'queueCounts', () ->
   QueueBadgeCounts.find { userId: @userId }
 
 Meteor.publish 'unattachedFiles', (fileIds) ->
-  #Only return the files if they're not associated with a ticket yet for some security.
+  # Only return the files if they're not associated with a ticket yet for some security.
   unless Tickets.findOne { attachmentIds: {$in: fileIds } }
     return FileRegistry.find { _id: {$in: fileIds } }
 

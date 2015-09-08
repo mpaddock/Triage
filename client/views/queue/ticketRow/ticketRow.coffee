@@ -1,18 +1,8 @@
 Template.ticketRow.events
   'click .ticket-row': (e) ->
+    Meteor.call 'removeFlag', Meteor.userId(), @_id, 'unread'
     Blaze.renderWithData Template.ticketModal, @, $('body').get(0)
     $('#ticketModal').modal('show')
-
-  'keyup input[name=customStatus]': (e, tpl) ->
-    if e.which is 13
-      Tickets.update tpl.data._id, { $set: { status: $(e.target).val() } }
-      $(e.target).val("")
-      tpl.$('.dropdown-toggle[name=statusButton]').dropdown('toggle')
-    
-  'show.bs.collapse .ticket-collapse': (e, tpl) ->
-    if _.contains $(e.target)[0].classList, 'ticket-collapse'
-      Meteor.call 'removeFlag', Meteor.userId(), @_id, 'unread'
-      tpl.$('span[name=plusminus]').removeClass('glyphicon-plus').addClass('glyphicon-minus')
 
 Template.ticketRow.rendered = ->
   $('form[name=ticketForm]').submit (e) -> e.preventDefault()
@@ -29,7 +19,7 @@ Template.ticketRow.helpers
   hasAttachment: ->
     @attachmentIds?.length > 0
   noteCount: ->
-    Changelog.find({ ticketId: @_id, type: "note" }).count() || null # No badge instead of '0' badge
+    Counts.get("#{@_id}-noteCount") || null
   statusSettings: ->
     {
       position: "bottom"

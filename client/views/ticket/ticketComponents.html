@@ -252,13 +252,13 @@
         </div>
       </div>
       <div class="pull-right hidden-xs">
-        <a href="/ticket/{{ticketNumber}}">Ticket #{{ticketNumber}}</a><br>
+        <a href="/ticket/{{ticketNumber}}" name="ticketLink">Ticket #{{ticketNumber}}</a><br>
         <strong>{{queueName}}</strong><br>
         {{>timestampFormatter date=submittedTimestamp}}<br>
         ({{>timeFromNow date=submittedTimestamp}})
       </div>
       <div class="hidden-sm hidden-md hidden-lg">
-        <a href="/ticket/{{ticketNumber}}">Ticket #{{ticketNumber}}</a><br>
+        <a href="/ticket/{{ticketNumber}}" name="ticketLink">Ticket #{{ticketNumber}}</a><br>
         <strong>{{queueName}}</strong><br>
         {{>timestampFormatter date=submittedTimestamp}}<br>
         ({{>timeFromNow date=submittedTimestamp}})
