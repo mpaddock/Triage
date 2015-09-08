@@ -52,7 +52,8 @@ SyncedCron.add
   name: 'Update queue statistics'
   schedule: (parser) -> parser.text 'every 30 seconds'
   job: ->
-    updateQueueStatistics 'App Dev'
+    Queues.find().forEach (q) ->
+      updateQueueStatistics q.name
 
 SyncedCron.start()
 
