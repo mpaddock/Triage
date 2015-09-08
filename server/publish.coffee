@@ -28,7 +28,7 @@ Meteor.publishComposite 'tickets', (filter, offset, limit) ->
     children: [
       {
         find: (ticket) ->
-          Counts.publish(this, "#{ticket._id}-noteCount", Changelog.find({ticketId: ticket._id}))
+          Counts.publish(this, "#{ticket._id}-noteCount", Changelog.find({ticketId: ticket._id, type: "note"}))
           TicketFlags.find { ticketId: ticket._id, userId: @userId }
       },
       {
@@ -48,6 +48,7 @@ Meteor.publishComposite 'newTickets', (filter, time) ->
     children: [
       {
         find: (ticket) ->
+          Counts.publish(this, "#{ticket._id}-noteCount", Changelog.find({ticketId: ticket._id, type: "note"}))
           TicketFlags.find { ticketId: ticket._id, userId: @userId }
       }
     ]
@@ -69,7 +70,7 @@ Meteor.publishComposite 'ticketSet', (ticketSet) ->
     children: [
       {
         find: (ticket) ->
-          Counts.publish(this, "#{ticket._id}-noteCount", Changelog.find({ticketId: ticket._id}))
+          Counts.publish(this, "#{ticket._id}-noteCount", Changelog.find({ticketId: ticket._id, type: "note"}))
           TicketFlags.find { ticketId: ticket._id, userId: @userId }
       }
     ]
