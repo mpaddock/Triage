@@ -545,8 +545,11 @@ blockquote {
 }
 
 .note-input-buttons {
-  float: right;
   padding: 10px 15px 10px 0px;
+}
+
+.status-button { 
+  padding-left: 12px;
 }
 
 .internal-note {

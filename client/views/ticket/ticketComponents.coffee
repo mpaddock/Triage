@@ -117,6 +117,18 @@ Template.ticketInfoPanels.events
 Template.ticketNoteInput.helpers
   closed: -> Tickets.findOne(@ticketId).status is "Closed"
   beta: -> Meteor.settings.public.beta
+  status: -> Tickets.findOne(@ticketId).status
+  statusSettings: ->
+    {
+      position: "bottom"
+      limit: 5
+      rules: [
+        collection: Statuses
+        field: 'name'
+        template: Template.statusPill
+        noMatchTemplate: Template.noMatchStatusPill
+      ]
+    }
 
 Template.ticketNoteInput.events
   'click button[name=addNote]': (e, tpl) ->
@@ -149,6 +161,26 @@ Template.ticketNoteInput.events
     else
       tpl.$('button[name=addNoteAndReOpen]').text('Add Note and Re-Open')
       tpl.$('button[name=addNoteAndClose]').text('Add Note and Close')
+
+  'click .dropdown-menu[name=statusMenu]': (e, tpl) ->
+    e.stopPropagation()
+
+  'click .dropdown-menu[name=statusMenu] a': (e, tpl) ->
+    ticket = Tickets.findOne(@ticketId)
+    unless ticket.status is $(e.target).html()
+      Tickets.update @ticketId, {$set: {status: $(e.target).html()}}
+    tpl.$('.dropdown-toggle[name=statusButton]').dropdown('toggle')
+  
+  'autocompleteselect input[name=customStatus]': (e, tpl, doc) ->
+    Tickets.update tpl.data.ticketId, { $set: { status: doc.name } }
+    $(e.target).val("")
+    tpl.$('.dropdown-toggle[name=statusButton]').dropdown('toggle')
+
+  'keyup input[name=customStatus]': (e, tpl) ->
+    if e.which is 13
+      Tickets.update tpl.data.ticketId, { $set: { status: $(e.target).val() } }
+      $(e.target).val("")
+      tpl.$('.dropdown-toggle[name=statusButton]').dropdown('toggle')
 
 
   ### Uploading files. ###
