@@ -600,7 +600,7 @@ blockquote {
 /***************************** TICKET MODAL STYLES *****************************/
 @media (max-width: 768px) {
   .modal-xl {
-    width: 99vw;
+    width: 96vw;
   }
 }
 

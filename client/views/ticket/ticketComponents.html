@@ -242,7 +242,7 @@
 <template name="ticketHeadingPanels">
   <div class="panel panel-default">
     <div class="panel-body">
-      <div class="pull-left hidden-xs">
+      <div class="pull-left">
         <div class="user-panel-portrait">{{> userPortrait userId=author._id}}</div>
         <div class="user-panel-info">
           {{author.displayName}}<br>
@@ -257,12 +257,14 @@
         {{>timestampFormatter date=submittedTimestamp}}<br>
         ({{>timeFromNow date=submittedTimestamp}})
       </div>
-      <div class="hidden-sm hidden-md hidden-lg">
-        <a href="/ticket/{{ticketNumber}}" name="ticketLink">Ticket #{{ticketNumber}}</a><br>
-        <strong>{{queueName}}</strong><br>
-        {{>timestampFormatter date=submittedTimestamp}}<br>
-        ({{>timeFromNow date=submittedTimestamp}})
-      </div>
+    </div>
+  </div>
+  <div class="panel panel-default hidden-sm hidden-md hidden-lg">
+    <div class="panel-body">
+      <a href="/ticket/{{ticketNumber}}" name="ticketLink">Ticket #{{ticketNumber}}</a><br>
+      <strong>{{queueName}}</strong><br>
+      {{>timestampFormatter date=submittedTimestamp}}<br>
+      ({{>timeFromNow date=submittedTimestamp}})
     </div>
   </div>
 </template>

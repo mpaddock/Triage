@@ -25,7 +25,18 @@
       {{/each}}
     </td>
     <td>
-      {{status}}
+      {{#if queueMember}}
+        <div class="dropdown" data-ticket="{{_id}}">
+          <button class="btn btn-default btn-xs dropdown-toggle" type="button" data-toggle="dropdown" name="statusButton" aria-expanded="false">{{status}}<span class="caret dropdown-toggle"></span></button>
+          <ul class="dropdown-menu" name="statusMenu" role="menu" aria-labelledby="ticketStatusDropdown">
+            <li role="presentation"><a role="menuitem" tabindex="-1">Open</a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1">Closed</a></li>
+            <li role="presentation" class="ticket-status-input">{{> inputAutocomplete name="customStatus" placeholder="Or a custom status" settings=statusSettings}}</li>
+          </ul>
+        </div>
+        {{else}}
+        {{status}}
+      {{/if}}
     </td>
     <td>{{>timeFromNow date=submittedTimestamp}}</td>
   </tr>
