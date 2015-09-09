@@ -69,28 +69,6 @@ Template.ticketInfoPanels.helpers
     _.contains Queues.findOne({name: @queueName})?.memberIds, Meteor.userId()
   file: ->
     FileRegistry.findOne {_id: this.valueOf()}
-  userSettings: ->
-    {
-      position: "top"
-      limit: 5
-      rules: [
-        collection: Meteor.users
-        field: 'username'
-        template: Template.userPill
-        noMatchTemplate: Template.noMatchUserPill
-      ]
-    }
-  tagSettings: ->
-    {
-      position: "top"
-      limit: 5
-      rules: [
-        collection: Tags
-        field: 'name'
-        template: Template.tagPill
-        noMatchTemplate: Template.noMatchTagPill
-      ]
-    }
 
 Template.removeAttachmentModal.helpers
   attachment: -> FileRegistry.findOne(@attachmentId)
@@ -138,26 +116,7 @@ Template.ticketInfoPanels.events
 
 Template.ticketNoteInput.helpers
   closed: -> Tickets.findOne(@ticketId).status is "Closed"
-  settings: ->
-    {
-      position: "top"
-      limit: 5
-      rules: [
-        {
-          token: '@'
-          collection: Meteor.users
-          field: 'username'
-          template: Template.userPill
-        }
-        {
-          token: '#'
-          collection: Tags
-          field: 'name'
-          template: Template.tagPill
-          noMatchTemplate: Template.noMatchTagPill
-        }
-      ]
-    }
+  beta: -> Meteor.settings.public.beta
 
 Template.ticketNoteInput.events
   'click button[name=addNote]': (e, tpl) ->
@@ -170,16 +129,19 @@ Template.ticketNoteInput.events
     addNote e, tpl, true, true
 
   'click button[name=addNoteAndReOpen]': (e, tpl) ->
-    if tpl.$('input[name=newNoteAdmin]').val().length > 0
+    if tpl.$('textarea[name=newNoteAdmin]').val().trim().length > 0
       addNote e, tpl, true, false
     Tickets.update tpl.data.ticketId, { $set: {status: 'Open'} }
 
   'click button[name=addNoteAndClose]': (e, tpl) ->
-    if tpl.$('input[name=newNoteAdmin]').val().length > 0
+    if tpl.$('textarea[name=newNoteAdmin]').val().trim().length > 0
       addNote e, tpl, true, false
     Tickets.update tpl.data.ticketId, { $set: {status: 'Closed'} }
 
-  'input input[name=newNoteAdmin]': (e, tpl) ->
+  'click button[name=closeSilently]': (e, tpl) ->
+    Meteor.call 'closeSilently', tpl.data.ticketId
+
+  'input textarea[name=newNoteAdmin]': (e, tpl) ->
     status = Tickets.findOne(tpl.data.ticketId).status
     if $(e.target).val() is ""
       tpl.$('button[name=addNoteAndReOpen]').text("Re-Open Ticket")
@@ -196,23 +158,15 @@ Template.ticketNoteInput.events
       Tickets.update @ticketId, {$addToSet: {attachmentIds: fileId}}
       Meteor.call 'setFlag', Meteor.userId(), @ticketId, 'attachment', true
 
-  ### Adding notes to tickets. ###
-  'keyup input[name=newNoteAdmin]': (e, tpl) ->
-    if (e.which is 13) and (e.target.value isnt "")
-      addNote e, tpl, true, false
-
-  'keyup input[name=newNote]': (e, tpl) ->
-    if (e.which is 13) and (e.target.value isnt "")
-      addNote e, tpl, false, false
  
 addNote = (e, tpl, admin, internal) ->
   # Adds notes given the event and template.
   # Admin flag will result in parsing for status, tags, and users. Collection permissions act as security.
   # Internal flag will add an internal note.
   unless admin then internal = false
-  body = tpl.$('input[name=newNote]').val()
+  body = tpl.$('textarea[name=newNote]').val()
   if admin
-    body = tpl.$('input[name=newNoteAdmin]').val()
+    body = tpl.$('textarea[name=newNoteAdmin]').val()
     hashtags = Parsers.getTags body
     users = Parsers.getUserIds body
     status = Parsers.getStatuses body
@@ -236,8 +190,8 @@ addNote = (e, tpl, admin, internal) ->
 
   Meteor.call 'setFlag', Meteor.userId(), tpl.data.ticketId, 'replied', true
 
-  tpl.$('input[name=newNote]').val('')
-  tpl.$('input[name=newNoteAdmin]').val('')
+  tpl.$('textarea[name=newNote]').val('')
+  tpl.$('textarea[name=newNoteAdmin]').val('')
 
   tpl.$('button[name=addNoteAndReOpen]').text("Re-Open Ticket")
   tpl.$('button[name=addNoteAndClose]').text("Close Ticket")

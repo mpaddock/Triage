@@ -25,3 +25,17 @@ Meteor.methods
     userObj = LDAP.search client, username
     if userObj
       Meteor.users.update { username: username.toLowerCase() }, { $set: { memberOf: userObj.memberOf } }
+
+  closeSilently: (ticketId) ->
+    ticket = Tickets.findOne(ticketId)
+    if Queues.findOne { name: ticket.queueName, memberIds: @userId }
+      Tickets.direct.update ticketId, { $set: { status: 'Closed' } }
+      Changelog.direct.insert
+        ticketId: ticketId
+        timestamp: new Date()
+        authorId: @userId
+        authorName: Meteor.users.findOne(@userId)?.username
+        type: 'field'
+        field: 'status'
+        oldValue: ticket.status
+        newValue: 'Closed'

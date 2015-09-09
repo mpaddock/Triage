@@ -11,7 +11,7 @@
         unless tags.length is 0
           newValue = "#{tags}"
           _.each tags, (x) ->
-            Tags.upsert {name: x}, {$set: {lastUse: new Date()}}
+            Tags.upsert { name: x }, { $set: { lastUse: new Date() } }
 
       if modifier.$pull?.tags?
         oldValue = "#{modifier.$pull.tags}" #in case its an array.
@@ -20,6 +20,7 @@
       oldStatus = escape(doc.status)
       newStatus = escape(modifier.$set.status)
       unless oldStatus is newStatus
+        Statuses.upsert { name: newStatus }, { $set: { lastUse: new Date() } }
         type = "field"
         oldValue = oldStatus
         newValue = newStatus

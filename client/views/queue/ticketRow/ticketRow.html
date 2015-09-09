@@ -31,7 +31,7 @@
           <ul class="dropdown-menu" name="statusMenu" role="menu" aria-labelledby="ticketStatusDropdown">
             <li role="presentation"><a role="menuitem" tabindex="-1">Open</a></li>
             <li role="presentation"><a role="menuitem" tabindex="-1">Closed</a></li>
-            <li role="presentation" class="ticket-status-input"><input type="text" name="customStatus" placeholder="Or a custom status"></li>
+            <li role="presentation" class="ticket-status-input">{{> inputAutocomplete name="customStatus" placeholder="Or a custom status" settings=statusSettings}}</li>
           </ul>
         </div>
         {{else}}

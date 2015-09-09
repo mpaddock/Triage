@@ -20,11 +20,41 @@ body {
 }
 
 /***************************** SVG SPINNER *****************************/
-
 .loader {
-  text-align: center;
+  height:40px;
+  width:40px;
+  margin:0px auto;
+  position:relative;
+  -webkit-animation: rotation .6s infinite linear;
+  -moz-animation: rotation .6s infinite linear;
+  -o-animation: rotation .6s infinite linear;
+  animation: rotation .6s infinite linear;
+  border-left:4px solid rgba(50,50,50,.8);
+  border-right:4px solid rgba(50,50,50,.8);
+  border-bottom:4px solid rgba(50,50,50,.8);
+  border-top:4px solid rgba(255,255,255,.0);
+  border-radius:100%;
 }
 
+@-webkit-keyframes rotation {
+  from {-webkit-transform: rotate(0deg);}
+  to {-webkit-transform: rotate(359deg);}
+}
+
+@-moz-keyframes rotation {
+  from {-moz-transform: rotate(0deg);}
+  to {-moz-transform: rotate(359deg);}
+}
+
+@-o-keyframes rotation {
+  from {-o-transform: rotate(0deg);}
+  to {-o-transform: rotate(359deg);}
+}
+
+@keyframes rotation {
+  from {transform: rotate(0deg);}
+  to {transform: rotate(359deg);}
+}
 /***************************** TIME HOVER *****************************/
 .time {
   display: inline;
@@ -51,6 +81,7 @@ body {
 .user-profile {
   display: inline-block;
   position: relative;
+  color: #000;
 }
 
 .user-profile img {
@@ -82,6 +113,13 @@ body {
   visibility: hidden;
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
+}
+.user-picture {
+  display: inline-block;
+}
+.user-profile-info {
+  font-size: .85em;
+  display: inline-block;
 }
 
 .in-row .user-info {

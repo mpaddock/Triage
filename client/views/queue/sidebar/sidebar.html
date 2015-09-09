@@ -16,7 +16,7 @@
   </div>
   {{/if}}
 </div>
-  {{>inputAutocomplete name="textSearch" class="form-control" settings=settings}}
+  {{>inputAutocomplete name="textSearch" class="form-control" settings=tokenSettings}}
   <ul class="list-unstyled">
     {{#each textFilter}}
     <li><a data-action="removeFilter" data-type="search" data-value="{{this}}"><span class="glyphicon glyphicon-remove"></span></a>search: {{this}}</li>

@@ -256,6 +256,14 @@ Meteor.users.attachSchema new SimpleSchema
   lastUse:
     type: new Date()
 
+@Statuses = new Mongo.Collection 'statuses'
+@Statuses.attachSchema new SimpleSchema
+  name:
+    type: String
+    unique: true
+  lastUse:
+    type: new Date()
+
 
 @QueueBadgeCounts = new Mongo.Collection 'queueBadgeCounts'
 @QueueBadgeCounts.attachSchema new SimpleSchema

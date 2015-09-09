@@ -10,22 +10,22 @@ Meteor.publishComposite 'tickets', (filter, offset, limit) ->
     find: () ->
       Counts.publish(this, 'ticketCount', Tickets.find(mongoFilter), { noReady: true })
 
-      Tickets.find({_id: {$in: ticketSet}}, {sort: {submittedTimestamp: -1}})
+      Tickets.find { _id: { $in: ticketSet } }, { sort: { submittedTimestamp: -1 } }
     children: [
       {
         find: (ticket) ->
-          filter = { ticketId: ticket._id}
-          if not _.contains Queues.findOne({name: ticket.queueName})?.memberIds, @userId then _.extend filter, { internal: {$ne: true} }
+          filter = { ticketId: ticket._id }
+          if not _.contains Queues.findOne({name: ticket.queueName})?.memberIds, @userId then _.extend filter, { internal: { $ne: true } }
           Changelog.find filter
       },
       {
         find: (ticket) ->
-          TicketFlags.find {ticketId: ticket._id, userId: @userId}
+          TicketFlags.find { ticketId: ticket._id, userId: @userId }
       },
       {
         find: (ticket) ->
           if ticket.attachmentIds?.length > 0
-            FileRegistry.find {_id: {$in: ticket.attachmentIds}}
+            FileRegistry.find { _id: { $in: ticket.attachmentIds } }
       },
       {
         find: ->
@@ -37,25 +37,25 @@ Meteor.publishComposite 'tickets', (filter, offset, limit) ->
 Meteor.publishComposite 'newTickets', (filter, time) ->
   if Filter.verifyFilterObject filter, _.pluck(Queues.find({memberIds: @userId}).fetch(), 'name'), @userId
     mongoFilter = Filter.toMongoSelector filter
-    _.extend mongoFilter, {submittedTimestamp: {$gt: time}}
+    _.extend mongoFilter, { submittedTimestamp: { $gt: time } }
   {
     find: () ->
-      Tickets.find mongoFilter, {sort: {submittedTimestamp: -1}}
+      Tickets.find mongoFilter, { sort: { submittedTimestamp: -1 } }
     children: [
       {
         find: (ticket) ->
-          filter = { ticketId: ticket._id}
-          if not _.contains Queues.findOne({name: ticket.queueName})?.memberIds, @userId then _.extend filter, { internal: {$ne: true} }
+          filter = { ticketId: ticket._id }
+          if not _.contains Queues.findOne({name: ticket.queueName})?.memberIds, @userId then _.extend filter, { internal: { $ne: true } }
           Changelog.find filter
       },
       {
         find: (ticket) ->
-          TicketFlags.find {ticketId: ticket._id, userId: @userId}
+          TicketFlags.find { ticketId: ticket._id, userId: @userId }
       },
       {
         find: (ticket) ->
           if ticket.attachmentIds?.length > 0
-            FileRegistry.find {_id: {$in: ticket.attachmentIds}}
+            FileRegistry.find { _id: { $in: ticket.attachmentIds } }
       }
     ]
   }
@@ -65,22 +65,29 @@ Meteor.publishComposite 'ticketSet', (ticketSet) ->
     find: () ->
       if not ticketSet then return
       queues = _.pluck Queues.find({memberIds: @userId}).fetch(), 'name'
-      Tickets.find {_id: {$in: ticketSet}, $or: [{associatedUserIds: @userId}, {authorId: @userId}, {queueName: {$in: queues}}]}, {sort: {submittedTimestamp: -1}}
+      Tickets.find {
+        _id: { $in: ticketSet },
+        $or: [
+          { associatedUserIds: @userId },
+          { authorId: @userId },
+          { queueName: { $in: queues } }
+        ] },
+        {sort: {submittedTimestamp: -1}}
     children: [
       {
         find: (ticket) ->
           filter = { ticketId: ticket._id}
-          if not _.contains Queues.findOne({name: ticket.queueName})?.memberIds, @userId then _.extend filter, { internal: {$ne: true} }
+          if not _.contains Queues.findOne({name: ticket.queueName})?.memberIds, @userId then _.extend filter, { internal: { $ne: true } }
           Changelog.find filter
       },
       {
         find: (ticket) ->
-          TicketFlags.find {ticketId: ticket._id, userId: @userId}
+          TicketFlags.find { ticketId: ticket._id, userId: @userId }
       },
       {
         find: (ticket) ->
           if ticket.attachmentIds?.length > 0
-            FileRegistry.find {_id: {$in: ticket.attachmentIds}}
+            FileRegistry.find { _id: { $in: ticket.attachmentIds } }
       }
     ]
   }
@@ -92,43 +99,54 @@ Meteor.publishComposite 'ticket', (ticketNumber) ->
     find: () ->
       username = Meteor.users.findOne(@userId).username
       queues = _.pluck Queues.find({memberIds: @userId}).fetch(), 'name'
-      return Tickets.find {ticketNumber: ticketNumber, $or: [{associatedUserIds: @userId}, {authorId: @userId}, {authorName: username}, {queueName: {$in: queues}}]}
+      return Tickets.find
+        ticketNumber: ticketNumber,
+        $or: [
+          { associatedUserIds: @userId },
+          { authorId: @userId },
+          { authorName: username },
+          { queueName: { $in: queues } }
+        ]
+
     children: [
       {
         find: (ticket) ->
-          filter = { ticketId: ticket._id}
-          if not _.contains Queues.findOne({name: ticket.queueName})?.memberIds, @userId then _.extend filter, { internal: {$ne: true} }
+          filter = { ticketId: ticket._id }
+          if not _.contains Queues.findOne({name: ticket.queueName})?.memberIds, @userId then _.extend filter, { internal: { $ne: true } }
           Changelog.find filter
       },
       {
         find: (ticket) ->
-          TicketFlags.find {ticketId: ticket._id, userId: @userId}
+          TicketFlags.find { ticketId: ticket._id, userId: @userId }
       },
       {
         find: (ticket) ->
           if ticket.attachmentIds?.length > 0
-            FileRegistry.find {_id: {$in: ticket.attachmentIds}}
+            FileRegistry.find { _id: { $in: ticket.attachmentIds } }
       }
     ]
   }
 
 Meteor.publish 'userData', () ->
-  Meteor.users.find {_id: @userId}
+  Meteor.users.find { _id: @userId }
 
 Meteor.publish 'allUserData', () ->
-  Meteor.users.find {}, {fields: {'_id': 1, 'username': 1, 'mail': 1, 'displayName': 1, 'department': 1, 'physicalDeliveryOfficeName': 1, 'status.online': 1, 'status.idle': 1}}
+  Meteor.users.find {}, { fields: { '_id': 1, 'username': 1, 'mail': 1, 'displayName': 1, 'department': 1, 'physicalDeliveryOfficeName': 1, 'status.online': 1, 'status.idle': 1 } }
 
 Meteor.publish 'queueNames', () ->
   #Consider only publishing memberIds for queues that the uesr is a member of. Probably not a huge deal.
-  Queues.find {}, {fields: {'name': 1, 'memberIds': 1, stats: 1}}
+  Queues.find {}, { fields: { 'name': 1, 'memberIds': 1, 'stats': 1 } }
 
 Meteor.publish 'tags', () ->
-  Tags.find {}, {fields: {'name': 1}, sort: {lastUse: -1}, limit: 100}
+  Tags.find {}, { fields: { 'name': 1 }, sort: { lastUse: -1 }, limit: 100 }
 
 Meteor.publish 'queueCounts', () ->
-  QueueBadgeCounts.find {userId: @userId}
+  QueueBadgeCounts.find { userId: @userId }
 
 Meteor.publish 'unattachedFiles', (fileIds) ->
   #Only return the files if they're not associated with a ticket yet for some security.
-  unless Tickets.findOne {attachmentIds: {$in: fileIds}}
-    return FileRegistry.find {_id: {$in: fileIds}}
+  unless Tickets.findOne { attachmentIds: {$in: fileIds } }
+    return FileRegistry.find { _id: {$in: fileIds } }
+
+Meteor.publish 'statuses', () ->
+  Statuses.find {}, { fields: { 'name': 1 }, sort: { lastUse: -1 }, limit: 100 }
