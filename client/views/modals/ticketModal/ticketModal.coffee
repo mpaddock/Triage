@@ -13,4 +13,4 @@ Template.ticketModal.helpers
 
 
 Template.ticketModal.onCreated ->
-  Meteor.subscribe 'ticketSupplement', this.data._id
+  @subscribe 'ticketSupplement', @data._id

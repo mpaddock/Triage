@@ -598,8 +598,14 @@ blockquote {
 
 
 /***************************** TICKET MODAL STYLES *****************************/
-@media (min-width: 1200px) {
+@media (max-width: 768px) {
   .modal-xl {
-    width: 90%;
+    width: 99vw;
+  }
+}
+
+@media (min-width: 769px) {
+  .modal-xl {
+    width: 90vw;
   }
 }
