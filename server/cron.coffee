@@ -40,6 +40,7 @@ updateQueueStatistics = (queueName) ->
   weeklyLeader = _.extend {_id: '', numClosed: 0, avgTimeToClose: 0}, Tickets.aggregate([
     $match:
       queueName: queueName
+      status: 'Closed'
       submittedTimestamp: $gt: new Date(weekStart)
   ,
     $group:

@@ -1,14 +1,26 @@
 <template name="queueSummary">
   {{#with data.stats}}
   <div id="queue-summary" class="row">
-    Over the past 4 weeks, there have been
-    {{month.numSubmitted}} tickets submitted, with an average
-    time to close of {{elapsed month.avgTimeToClose}}.  So far this
-    week, there have been {{week.numSubmitted}} tickets
-    submitted, with {{elapsed week.avgTimeToClose}} average close
-    time.  {{weeklyLeader.username}} has closed the most
-    tickets this week at {{weeklyLeader.numClosed}}, with an average time to
-    close of {{elapsed weeklyLeader.avgTimeToClose}}.
+    Over the past 4 weeks, there
+    {{plural month.numSubmitted 'has' 'have'}} been
+    {{month.numSubmitted}}
+    {{plural month.numSubmitted 'ticket' 'tickets'}}
+    submitted, with an average time to close of
+    {{elapsed month.avgTimeToClose}}.
+
+    So far this week, there have been
+    {{week.numSubmitted}}
+    {{plural week.numSubmitted 'ticket' 'tickets'}}
+    submitted, with {{elapsed week.avgTimeToClose}}
+    average close time.
+
+    {{#if weeklyLeader.numClosed}}
+      {{weeklyLeader.username}} has closed the most
+      tickets this week at {{weeklyLeader.numClosed}}, with an average time to
+      close of {{elapsed weeklyLeader.avgTimeToClose}}.
+    {{else}}
+      No one has closed any tickets so far this week.
+    {{/if}}
   </div>
   {{/with}}
 </template>
