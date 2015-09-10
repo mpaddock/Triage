@@ -72,11 +72,12 @@ Template.newTicketModal.events
             Session.set 'submitting', false
             Session.set 'errorText', "Error: #{err.message}."
             tpl.$('.has-error').removeClass('has-error')
+            console.log err
             for key in err.invalidKeys
               tpl.$('[name='+key.name+']').closest('div .form-group').addClass('has-error')
           else
             clearFields tpl
-            $('#ticketModal').modal('hide')
+            $('#newTicketModal').modal('hide')
             
       else
         Session.set 'submitting', false
@@ -98,7 +99,7 @@ Template.newTicketModal.events
           tpl.$('button[data-action=checkUsername]').html('<span class="glyphicon glyphicon-remove"></span>')
   
   #When the modal is shown, we get the set of unique tags and update the modal with them.
-  'show.bs.modal #ticketModal': (e, tpl) ->
+  'show.bs.modal #newTicketModal': (e, tpl) ->
     tpl.$('select[name=queue]').val(Session.get('queueName'))
     tags = _.pluck Tags.find().fetch(), 'name'
     tpl.$('input[name=tags]').select2({
