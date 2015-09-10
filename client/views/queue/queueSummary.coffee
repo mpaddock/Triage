@@ -4,12 +4,10 @@ Template.queueSummary.helpers
     console.log 'queueSummary data', d
     return d
   plural: (count, singular, plural) ->
-    if typeof plural is 'string'
-      if count == 1
-        return singular
-      else
-        return plural
-    pluralize(singular, count)
+    if count == 1
+      return singular
+    else
+      return plural
   elapsed: (s) ->
     #return moment.utc(s*1000).format('HH:mm:ss')
     minutes = (s / 60) | 0
