@@ -69,8 +69,7 @@ Template.sidebar.helpers
   userFilter: ->
     Iron.Location.get().queryObject?.user?.split(',')
   filtering: ->
-    if Iron.query.get('status') or Iron.query.get('tag') or (Session.get('ready') is false)
-      return true
+    ( Iron.query.get('status')? or Iron.query.get('tag')? or (Session.get('ready') is false) ) and ( Session.get('queueName')? or Session.get('pseudoQueue') )
   helpText: ->
     Session.get 'helpText'
 
