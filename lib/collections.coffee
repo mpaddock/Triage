@@ -40,7 +40,8 @@
     defaultValue: Date.now
   timeToClose:
     optional: true
-    type: new Date()
+    type: Number # in seconds
+    decimal: true
   closedByUserId:
     optional: true
     type: String
@@ -145,6 +146,29 @@
   securityGroups:
     type: [String]
     label: "Security Groups"
+  stats:
+    type: Object
+    optional: true
+  'stats.week.numSubmitted':
+    type: Number
+    optional: true
+  'stats.week.avgTimeToClose':
+    type: Number
+    optional: true
+    decimal: true
+  'stats.month.numSubmitted':
+    type: Number
+    optional: true
+  'stats.month.avgTimeToClose':
+    type: Number
+    optional: true
+    decimal: true
+  'stats.weeklyLeader.username':
+    type: String
+    optional: true
+  'stats.weeklyLeader.avgTimeToClose':
+    type: String
+    optional: true
 
 notificationSettingDefaults =
   submitted: true
