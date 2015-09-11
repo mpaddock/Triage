@@ -1,17 +1,3 @@
-Meteor.publish 'ticketSupplement', (ticketId) ->
-  ticket = Tickets.findOne(ticketId)
-  if not ticket.attachmentIds then ticket.attachmentIds = []
-  if Queues.findOne({ name: ticket.queueName, memberIds: @userId })
-    return [
-      Changelog.find { ticketId: ticket._id }
-      FileRegistry.find { _id: { $in: ticket.attachmentIds } }
-    ]
-  else if Tickets.findOne({ _id: ticketId, $or: [ { authorId: @userId }, { associatedUserIds: @userId } ] })
-    return [
-      Changelog.find { ticketId: ticket._id, internal: { $ne: true } }
-      FileRegistry.find { _id: { $in: ticket.attachmentIds } }
-    ]
-
 Meteor.publishComposite 'tickets', (filter, offset, limit) ->
   if offset < 0 then offset = 0
   if Filter.verifyFilterObject filter, _.pluck(Queues.find({memberIds: @userId}).fetch(), 'name'), @userId
@@ -28,7 +14,9 @@ Meteor.publishComposite 'tickets', (filter, offset, limit) ->
     children: [
       {
         find: (ticket) ->
-          Counts.publish(this, "#{ticket._id}-noteCount", Changelog.find({ticketId: ticket._id, type: "note"}))
+          filter = { ticketId: ticket._id, type: "note" }
+          if not Queues.findOne({name: ticket.queueName, memberIds: @userId})? then _.extend filter, { internal: { $ne: true } }
+          Counts.publish(this, "#{ticket._id}-noteCount", Changelog.find(filter))
           TicketFlags.find { ticketId: ticket._id, userId: @userId }
       },
       {
@@ -96,7 +84,7 @@ Meteor.publishComposite 'ticket', (ticketNumber) ->
       {
         find: (ticket) ->
           filter = { ticketId: ticket._id }
-          if not _.contains Queues.findOne({name: ticket.queueName})?.memberIds, @userId then _.extend filter, { internal: { $ne: true } }
+          if not Queues.findOne({name: ticket.queueName, memberIds: @userId})? then _.extend filter, { internal: { $ne: true } }
           Changelog.find filter
       },
       {

@@ -8,9 +8,10 @@ Template.ticketModal.events
     tpl.$('#ticketModal').modal('hide')
 
 Template.ticketModal.helpers
+  ticket: -> Tickets.findOne(@ticketId)
   bodyParagraph: ->
     @body.split('\n')
 
 
 Template.ticketModal.onCreated ->
-  @subscribe 'ticketSupplement', @data._id
+  @subscribe 'ticket', Tickets.findOne(@data.ticketId).ticketNumber
