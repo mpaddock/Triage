@@ -144,7 +144,7 @@ Router.map ->
 
       blackboxKeys = _.difference(_.keys(@request.body), requiredParams.concat(['submitter_name', 'subject_line'], Tickets.simpleSchema()._schemaKeys))
       formFields = _.pick(@request.body, blackboxKeys)
-      username = new RegExp(@request.body.username, 'i')
+      username = /// \b#{@request.body.username}\b ///i
       Tickets.insert
         title: @request.body.subject_line
         body: @request.body.description
