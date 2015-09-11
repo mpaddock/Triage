@@ -1,49 +1,29 @@
 Template.ticketRow.events
-  ### Events for ticket status changes. ###
   'click .ticket-row': (e) ->
-    collapsing = $(e.currentTarget).next().find('.accordion-body').attr('aria-expanded')
-    $('html, body').clearQueue()
     unless _.contains($(e.target)[0].classList, 'dropdown-toggle')
-      if collapsing is 'true'
-        $('html, body').animate({scrollTop: $(e.currentTarget).offset().top - $(window).height()/2}, 600)
-      else
-        target = $(e.currentTarget)
-        Meteor.setTimeout ->
-          $('html, body').animate({scrollTop: target.offset().top}, 375)
-        , 200
+      Meteor.call 'removeFlag', Meteor.userId(), @_id, 'unread'
+      Blaze.renderWithData Template.ticketModal, { ticketId: @_id }, $('body').get(0)
+      $('#ticketModal').modal('show')
+
   'click .dropdown-menu[name=statusMenu]': (e, tpl) ->
-    e.stopPropagation() #Stops table row expanding on dropdown click. Have to trigger dropdown manually below.
+    e.stopPropagation()
+
   'click .dropdown-menu[name=statusMenu] a': (e, tpl) ->
     unless @status is $(e.target).html()
-      Tickets.update @_id, {$set: {status: $(e.target).html()}}
+      Tickets.update @_id, { $set: { status: $(e.target).html() } }
     tpl.$('.dropdown-toggle[name=statusButton]').dropdown('toggle')
-  
+
   'autocompleteselect input[name=customStatus]': (e, tpl, doc) ->
     Tickets.update tpl.data._id, { $set: { status: doc.name } }
     $(e.target).val("")
     tpl.$('.dropdown-toggle[name=statusButton]').dropdown('toggle')
-
+  
   'keyup input[name=customStatus]': (e, tpl) ->
     if e.which is 13
       Tickets.update tpl.data._id, { $set: { status: $(e.target).val() } }
       $(e.target).val("")
       tpl.$('.dropdown-toggle[name=statusButton]').dropdown('toggle')
-    
-  'show.bs.collapse .ticket-collapse': (e, tpl) ->
-    if _.contains $(e.target)[0].classList, 'ticket-collapse'
-      Meteor.call 'removeFlag', Meteor.userId(), @_id, 'unread'
-      tpl.$('span[name=plusminus]').removeClass('glyphicon-plus').addClass('glyphicon-minus')
 
-
-  ### Hide all tooltips on row collapse and focusout of assign user field. ###
-  'hide.bs.collapse .ticket-collapse': (e, tpl) ->
-    if _.contains $(e.target)[0].classList, 'ticket-collapse'
-      tpl.$('[data-toggle="tooltip"]').tooltip('hide')
-      tpl.$('input[name="assignUser"]').val('')
-      tpl.$('span[name=plusminus]').removeClass('glyphicon-minus').addClass('glyphicon-plus')
-
-  'focusout input[name="assignUser"]': (e, tpl) ->
-    tpl.$('[data-toggle="tooltip"]').tooltip('hide')
 
 
 Template.ticketRow.rendered = ->
@@ -52,8 +32,6 @@ Template.ticketRow.rendered = ->
 Template.ticketRow.helpers
   queueMember: ->
     _.contains Queues.findOne({name: @queueName}).memberIds, Meteor.userId()
-  bodyParagraph: ->
-    @body.split('\n')
   changelog: ->
     Changelog.find {ticketId: @_id}, {sort: timestamp: 1}
   unread: ->
@@ -62,6 +40,8 @@ Template.ticketRow.helpers
     TicketFlags.findOne({userId: Meteor.userId(), ticketId: @_id, k: 'replied'})
   hasAttachment: ->
     @attachmentIds?.length > 0
+  noteCount: ->
+    Counts.get("#{@_id}-noteCount") || null
   statusSettings: ->
     {
       position: "bottom"

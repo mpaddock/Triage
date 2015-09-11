@@ -1,7 +1,7 @@
 <template name="ticketRow">
-  <tr data-toggle="collapse" data-target="#row{{_id}}" class="accordion-toggle ticket-row" data-ticket="{{_id}}">
+  <tr data-toggle="collapse" class="accordion-toggle ticket-row" data-ticket="{{_id}}">
     <td class="hidden-xs">
-      <span name="plusminus" class="glyphicon glyphicon-plus"></span>
+      <span class="badge" title="{{noteCount}} notes">{{noteCount}}</span>
       {{#if repliedTo}}
         <span class="glyphicon glyphicon-comment"></span>
       {{/if}}
@@ -40,43 +40,4 @@
     </td>
     <td>{{>timeFromNow date=submittedTimestamp}}</td>
   </tr>
-
-  <!-- Expandable Ticket Area -->
-  <tr>
-    <td colspan='6' class="hiddenRow">
-      <div class="accordion-body collapse ticket-collapse" id="row{{_id}}" style="border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;" data-ticket="{{_id}}">
-
-        <div class="row row-no-margin">
-          {{> ticketHeadingPanels}}
-        </div>
-
-        <div class="row row-no-margin">
-          <blockquote>
-            {{#each bodyParagraph}}
-              <p>{{this}}</p>
-            {{/each}}
-          </blockquote>
-        </div>
-
-        {{#if formFields}}
-          <div class="row">
-            {{> formFieldsPanel}}
-          </div>
-        {{/if}}
-        <div class="row">
-          <div class="col-md-9 ticket-note-area">
-            <div class="row row-no-margin">
-              {{> ticketNoteArea}}
-            </div>
-          </div>
-          <div class="col-md-3 ticket-sidebar">
-            {{> ticketInfoPanels}}
-          </div>
-
-        </div>
-
-      </div>
-    </td>
-  </tr>
-
 </template>

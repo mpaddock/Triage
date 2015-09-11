@@ -428,6 +428,10 @@ blockquote {
   border: 2px solid #ccc;
 }
 
+.ticket-row {
+  cursor: pointer;
+}
+
 .ticket-row-panel-body {
   bottom: 0px;
 }
@@ -541,8 +545,11 @@ blockquote {
 }
 
 .note-input-buttons {
-  float: right;
   padding: 10px 15px 10px 0px;
+}
+
+.status-button { 
+  padding-left: 12px;
 }
 
 .internal-note {
@@ -590,4 +597,15 @@ blockquote {
   }
 
 
-  
+/***************************** TICKET MODAL STYLES *****************************/
+@media (max-width: 768px) {
+  .modal-xl {
+    width: 96vw;
+  }
+}
+
+@media (min-width: 769px) {
+  .modal-xl {
+    width: 90vw;
+  }
+}
