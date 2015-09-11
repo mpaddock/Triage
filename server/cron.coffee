@@ -37,9 +37,24 @@ updateQueueStatistics = (queueName) ->
       avgTimeToClose:
         $avg: "$timeToClose"
   ])[0]
-  weeklyLeader = {}
-  weeklyLeader.username = 'nmad222'
-  weeklyLeader.avgTimeToClose = 0
+  weeklyLeader = _.extend {_id: '', numClosed: 0, avgTimeToClose: 0}, Tickets.aggregate([
+    $match:
+      queueName: queueName
+      status: 'Closed'
+      submittedTimestamp: $gt: new Date(weekStart)
+  ,
+    $group:
+      _id: "$closedByUsername"
+      numClosed:
+        $sum: 1
+      avgTimeToClose:
+        $avg: "$timeToClose"
+  ,
+    $sort:
+      numClosed: -1
+  ])[0]
+  weeklyLeader.username = weeklyLeader._id
+  delete weeklyLeader._id
   Queues.update {name: queueName},
     $set:
       stats:

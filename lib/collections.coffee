@@ -166,9 +166,13 @@
   'stats.weeklyLeader.username':
     type: String
     optional: true
-  'stats.weeklyLeader.avgTimeToClose':
-    type: String
+  'stats.weeklyLeader.numClosed':
+    type: Number
     optional: true
+  'stats.weeklyLeader.avgTimeToClose':
+    type: Number
+    optional: true
+    decimal: true
 
 notificationSettingDefaults =
   submitted: true
