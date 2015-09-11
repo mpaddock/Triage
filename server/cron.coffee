@@ -50,7 +50,7 @@ updateQueueStatistics = (queueName) ->
 
 SyncedCron.add
   name: 'Update queue statistics'
-  schedule: (parser) -> parser.text 'every 30 seconds'
+  schedule: (parser) -> parser.text 'every 15 minutes'
   job: ->
     Queues.find().forEach (q) ->
       updateQueueStatistics q.name
