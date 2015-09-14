@@ -10,3 +10,7 @@ Template.userPortrait.events
     e.stopPropagation()
     ticketId = Template.parentData(2)._id
     Tickets.update {_id: ticketId}, {$pull: {associatedUserIds: this.userId}}
+
+Template.userPortrait.rendered = ->
+  this.$('img').error ->
+    $(this).attr('src', 'http://www.as.uky.edu/sites/all/themes/bartikmod/images/missingpic.png')
