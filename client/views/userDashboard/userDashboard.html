@@ -27,21 +27,27 @@
     </div>
   </div>
   -->
-  <div class="form-group">
-    <label for="authorPreferences" class="control-label">If I am the author of a ticket, notify me when:</label>
-    {{>settingsCheckbox name="submitted" option="I submit the ticket" setting=notificationSettings.submitted}}
-    {{>settingsCheckbox name="authorSelfNote" option="I leave a note on the ticket" setting=notificationSettings.authorSelfNote}}
-    {{>settingsCheckbox name="authorOtherNote" option="Someone else leaves a note on the ticket" setting=notificationSettings.authorOtherNote}}
-    {{>settingsCheckbox name="authorStatusChanged" option="The status of the ticket changes" setting=notificationSettings.authorStatusChanged}}
-    {{>settingsCheckbox name="authorAttachment" option="An attachment is added to the ticket" setting=notificationSettings.authorAttachment}}
-  </div>
-  <div class="form-group">
-    <label for="associatedPreferences" class="control-label">If I am associated with a ticket, notify me when:</label>
-    {{>settingsCheckbox name="associatedSelfNote" option="I leave a note on the ticket" setting=notificationSettings.associatedSelfNote}}
-    {{>settingsCheckbox name="associatedOtherNote" option="Someone else leaves a note on the ticket" setting=notificationSettings.associatedOtherNote}}
-    {{>settingsCheckbox name="associatedStatusChanged" option="The status of the ticket changes" setting=notificationSettings.associatedStatusChanged}}
-    {{>settingsCheckbox name="associatedAttachment" option="An attachment is added to the ticket" setting=notificationSettings.associatedAttachment}}
-  </div>
+  {{#with notificationSettings}}
+    <div class="form-group">
+      <label for="authorPreferences" class="control-label">If I am the author of a ticket, notify me when:</label>
+      {{>settingsCheckbox name="submitted" option="I submit the ticket" setting=submitted}}
+      {{>settingsCheckbox name="authorSelfNote" option="I leave a note on the ticket" setting=authorSelfNote}}
+      {{>settingsCheckbox name="authorOtherNote" option="Someone else leaves a note on the ticket" setting=authorOtherNote}}
+      {{>settingsCheckbox name="authorStatusChanged" option="The status of the ticket changes" setting=authorStatusChanged}}
+      {{>settingsCheckbox name="authorAttachment" option="An attachment is added to the ticket" setting=authorAttachment}}
+    </div>
+    <div class="form-group">
+      <label for="associatedPreferences" class="control-label">If I am associated with a ticket, notify me when:</label>
+      {{>settingsCheckbox name="associatedSelfNote" option="I leave a note on the ticket" setting=associatedSelfNote}}
+      {{>settingsCheckbox name="associatedOtherNote" option="Someone else leaves a note on the ticket" setting=associatedOtherNote}}
+      {{>settingsCheckbox name="associatedStatusChanged" option="The status of the ticket changes" setting=associatedStatusChanged}}
+      {{>settingsCheckbox name="associatedAttachment" option="An attachment is added to the ticket" setting=associatedAttachment}}
+    </div>
+    <div class="form-group">
+      <label for="otherPreferences" class="control-label">Other Settings</label>
+      {{> settingsCheckbox name="associatedWithTicket" option="Notify me when I am associated with a ticket" setting=associatedWithTicket}}
+    </div>
+  {{/with}}
   <div id="saved-message" class="pull-right">
     {{#if saved}}
       <span class="saved-preferences">Preferences saved. </span>

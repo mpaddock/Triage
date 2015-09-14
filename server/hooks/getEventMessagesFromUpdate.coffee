@@ -42,15 +42,24 @@
 
     when 'associatedUserIds'
       type = "field"
+      recipients = []
+      subject = "You have been associated with Triage ticket ##{doc.ticketNumber}: #{title}"
+      emailBody = "You are now associated with ticket ##{doc.ticketNumber}.<br>
+      The original ticket body was:<br>#{body}"
       if modifier.$addToSet?.associatedUserIds?.$each?
         associatedUsers = _.map _.difference(modifier.$addToSet.associatedUserIds.$each, doc.associatedUserIds), (x) ->
-          Meteor.users.findOne({_id: x}).username
+          u = Meteor.users.findOne({_id: x})
+          if u.notificationSettings.associatedWithTicket
+            recipients.push u.mail
+          return u.username
         unless associatedUsers.length is 0
           newValue = "#{associatedUsers}"
       else if modifier.$addToSet?.associatedUserIds?
         unless _.contains doc.associatedUserIds, modifier.$addToSet.associatedUserIds
-          associatedUser = Meteor.users.findOne(modifier.$addToSet.associatedUserIds).username
-          newValue = "#{associatedUser}"
+          u = Meteor.users.findOne(modifier.$addToSet.associatedUserIds)
+          if u.notificationSettings.associatedWithTicket
+            recipients.push u.mail
+          newValue = "#{u.username}"
       else if modifier.$pull?.associatedUserIds?
         associatedUser = Meteor.users.findOne({_id: modifier.$pull.associatedUserIds}).username
         oldValue = "#{associatedUser}"

@@ -184,6 +184,7 @@ notificationSettingDefaults =
   associatedOtherNote: true
   associatedStatusChanged: true
   associatedAttachment: true
+  associatedWithTicket: true
 
 Meteor.users.attachSchema new SimpleSchema
   username:
@@ -234,6 +235,8 @@ Meteor.users.attachSchema new SimpleSchema
   'notificationSettings.associatedStatusChanged':
     type: Boolean
   'notificationSettings.associatedAttachment':
+    type: Boolean
+  'notificationSettings.associatedWithTicket':
     type: Boolean
   physicalDeliveryOfficeName:
     type: String
