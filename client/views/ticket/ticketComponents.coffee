@@ -110,9 +110,9 @@ Template.ticketInfoPanels.events
           tpl.$('[data-toggle="tooltip"]').tooltip('show')
 
   'autocompleteselect input[name=assignUser]': (e, tpl, doc) ->
-      tpl.$('[data-toggle="tooltip"]').tooltip('hide')
-      Tickets.update tpl.data._id, { $addToSet: { associatedUserIds: doc._id } }
-      $(e.target).val('')
+    tpl.$('[data-toggle="tooltip"]').tooltip('hide')
+    Tickets.update tpl.data._id, { $addToSet: { associatedUserIds: doc._id } }
+    $(e.target).val('')
 
   ### Uploading files. ###
   'click a[data-action=uploadFile]': (e, tpl) ->
