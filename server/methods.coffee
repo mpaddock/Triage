@@ -29,7 +29,13 @@ Meteor.methods
   closeSilently: (ticketId) ->
     ticket = Tickets.findOne(ticketId)
     if Queues.findOne { name: ticket.queueName, memberIds: @userId }
-      Tickets.direct.update ticketId, { $set: { status: 'Closed' } }
+      Tickets.direct.update ticketId, { $set: {
+        status: 'Closed'
+        timeToClose: (new Date() - ticket.submittedTimestamp) / 1000 # Amount of time to ticket close, in seconds.
+        closedByUserId: @userId
+        closedByUsername: Meteor.users.findOne(@userId).username
+      } }
+
       Changelog.direct.insert
         ticketId: ticketId
         timestamp: new Date()
