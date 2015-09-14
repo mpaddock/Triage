@@ -19,6 +19,8 @@ Template.ticketChangelogItem.helpers
     if this.type is "note" then return true else return false
   file: ->
     FileRegistry.findOne {_id: this.valueOf()}
+  noteParagraph: ->
+    @message.split('\n')
 
 Template.ticketInfoPanels.onRendered ->
   doc = @find 'div[name=attachments]'

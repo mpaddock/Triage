@@ -54,7 +54,9 @@
       </div>
       <div class="col-xs-8 col-md-10">
         <div class="well well-sm note-well {{internalNoteClass}}" style="text-align: left;">
-          {{linkify message}}
+          {{#each noteParagraph}}
+            <p>{{linkify this}}</p>
+          {{/each}}
           {{#if internal}}<span class="glyphicon glyphicon-lock pull-right" title="This note is only visible to queue members."></span>{{/if}}
         </div>
         </div>
