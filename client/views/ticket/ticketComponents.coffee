@@ -92,17 +92,28 @@ Template.ticketInfoPanels.events
   'keyup input[name=addTag]': (e, tpl) ->
     if e.which is 13
       val = $(e.target).val()?.split(' ')
-      Tickets.update tpl.data._id, {$addToSet: {tags: $each: val}}
+      Tickets.update tpl.data._id, { $addToSet: { tags: $each: val } }
       $(e.target).val('')
+
+  'autocompleteselect input[name=addTag]': (e, tpl, doc) ->
+    Tickets.update tpl.data._id, { $addToSet: { tags: doc.name } }
+    $(e.target).val('')
+
   'keyup input[name=assignUser]': (e, tpl) ->
     if e.which is 13
       id = Meteor.call 'checkUsername', $(e.target).val(), (err, res) ->
         if res
           tpl.$('[data-toggle="tooltip"]').tooltip('hide')
-          Tickets.update tpl.data._id, {$addToSet: {associatedUserIds: res}}
+          Tickets.update tpl.data._id, { $addToSet: { associatedUserIds: res } }
           $(e.target).val('')
         else
           tpl.$('[data-toggle="tooltip"]').tooltip('show')
+
+  'autocompleteselect input[name=assignUser]': (e, tpl, doc) ->
+      tpl.$('[data-toggle="tooltip"]').tooltip('hide')
+      Tickets.update tpl.data._id, { $addToSet: { associatedUserIds: doc._id } }
+      $(e.target).val('')
+
   ### Uploading files. ###
   'click a[data-action=uploadFile]': (e, tpl) ->
     Media.pickLocalFile (fileId) ->
