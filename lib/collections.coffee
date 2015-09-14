@@ -212,6 +212,7 @@ Meteor.users.attachSchema new SimpleSchema
   memberOf:
     type: [String]
     label: "Member Of"
+    defaultValue: []
   notificationSettings:
     type: Object
     defaultValue: notificationSettingDefaults
