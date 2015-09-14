@@ -94,6 +94,11 @@ body {
   max-height: 24px;
 }
 
+.user-image img {
+  max-width: 40px;
+  max-height: 28px;
+}
+
 .offline {
   opacity: 0.3;
 }
