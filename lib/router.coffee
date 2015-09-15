@@ -114,6 +114,29 @@ Router.map ->
         Meteor.subscribe 'tickets', filter, Session.get('offset'), limit, onReady: () ->
           Session.set('ready', true)
         
+  @route 'department',
+    path: '/department/:departmentName'
+    template: 'queue'
+    waitOn: ->
+      Meteor.subscribe 'queueNames'
+    onBeforeAction: ->
+      Session.set 'ready', false
+      Session.set 'loadingMore', false
+      Session.set 'queueName', null
+      Session.set 'pseudoQueue', @params.departmentName
+      Session.set 'newTicketSet', []
+      Session.set 'offset', (Number(Iron.query.get('start')) || 0)
+      @next()
+      if Meteor.userId()
+        filter =
+          search: @params.query.search
+          status: @params.query.status || '!Closed'
+          tag: @params.query.tag
+          user: @params.query.user
+          associatedUser: @params.query.associatedUser
+
+        Meteor.subscribe 'ticketsByDepartment', @params.departmentName, filter, Session.get('offset'), limit, onReady: () ->
+          Session.set('ready', true)
 
   @route 'ticket',
     path: '/ticket/:ticketNumber'

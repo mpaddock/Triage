@@ -1,18 +1,22 @@
 {
   "ldap": {
-    "serverDn": "DC=ad,DC=university,DC=edu",
-    "serverUrl": "ldap://ad.university.edu:3268",
-    "whiteListedFields": [ "displayName", "givenName", "department", "employeeNumber", "mail", "title", "address", "phone", "memberOf", "physicalDeliveryOfficeName"]
+    "serverDn": ["DC=ad,DC=uky,DC=edu", "DC=mc,DC=uky,DC=edu"],
+    "serverUrl": "ldap://gc.ad.uky.edu:3268",
+    "whiteListedFields": [ "displayName", "givenName", "department", "employeeNumber", "mail", "title", "address", "phone", "memberOf", "physicalDeliveryOfficeName"],
+    "autopublishFields": [ "displayName", "givenName", "department", "mail", "title", "address", "phone", "memberOf", "physicalDeliveryOfficeName"]
   },
   "queues": [
-    {"name": "Finance", "securityGroups": ["SGFinanceTeam"]},
-    {"name": "Design", "securityGroups": ["SGDesignTeam"]},
-    {"name": "Web", "securityGroups": ["SGWebTeam"]},
-    {"name": "App Dev", "securityGroups": ["SGAppDevTeam"]},
-    {"name": "Help Desk", "securityGroups": ["SGHelpDeskTeam"]}
+    {"name": "New", "securityGroups": ["SGASHive"]},
+    {"name": "Finance", "securityGroups": ["UKASSomething"]},
+    {"name": "Design", "securityGroups": ["SGASSoftwareDevelopers", "SGASHive"]},
+    {"name": "Web", "securityGroups": ["SGASHive", "SGASSoftwareDevelopers"]},
+    {"name": "Help Desk", "securityGroups": ["SGASHive"]},
+    {"name": "App Dev", "securityGroups": ["SGASHive"]},
+    {"name": "Video", "securityGroups": ["SGASHive"]},
+    {"name": "Triage Meta", "securityGroups": ["SGASHive"]}
   ],
   "ldapDummy": {
-    "username": "ldaptestaccount",
+    "username": "username",
     "password": "password"
   },
   "remoteWhitelist": [
@@ -20,11 +24,14 @@
   ],
   "public": {
     "pageLimitDefault": 20,
-    "pageLimitIncrement": 20
+    "pageLimitIncrement": 20,
+    "beta": true
   },
   "email": {
-    "sendEmailOnFormSubmit": false,
-    "smtpPipe": "/path/to/namedPipe",
-    "fromEmail": "triage@university.edu"
+    "fromEmail": "triage@place.edu"
+  },
+  "departmentManagers": {
+    "Statistics": "mdpadd2",
+    "Sociology": "jlco223"
   }
 }

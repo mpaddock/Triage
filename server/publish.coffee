@@ -99,6 +99,44 @@ Meteor.publishComposite 'ticket', (ticketNumber) ->
     ]
   }
 
+Meteor.publishComposite 'ticketsByDepartment', (department, filter, offset, limit) ->
+  user = Meteor.users.findOne(@userId)
+  if user.username is Meteor.settings.departmentManagers[department]
+    userIds = _.pluck Meteor.users.find({department: department}).fetch(), '_id'
+  else userIds = []
+  mongoFilter = Filter.toMongoSelector(filter)
+  mongoFilter.queueName = /.*/
+  f = { $and: [ mongoFilter, { authorId: { $in: userIds } } ] }
+  [ticketSet, facets] = Tickets.findWithFacets(f, {sort: {submittedTimestamp: -1}, limit: limit, skip: offset})
+  ticketSet = _.pluck ticketSet.fetch(), '_id'
+  {
+    find: ->
+      Counts.publish(this, 'ticketCount', Tickets.find(f), { noReady: true })
+      # ... could we have been doing this for reactivity all along instead of the 3 subs? 
+      Tickets.find { $or: [_id: { $in: ticketSet } , f ] }
+    children: [
+      # Have to sub to all the children here, or use different templates for the ticket, or do a check for the
+      # pseudoqueue before rendering the ticket, or update the other pubs to work with department managers.
+      # Checking for queue access obviously is no good here...
+      {
+        find: (ticket) ->
+          Counts.publish(this, "#{ticket._id}-noteCount", Changelog.find({ticketId: ticket._id, type: "note"}))
+          TicketFlags.find { ticketId: ticket._id, userId: @userId }
+      },
+      {
+        find: (ticket) ->
+          Changelog.find { ticketId: ticket._id }
+      },
+      {
+        find: (ticket) ->
+          FileRegistry.find { _id: { $in: ticket.attachmentIds } }
+      },
+      {
+        find: -> facets
+      }
+    ]
+  }
+
 Meteor.publish 'userData', () ->
   Meteor.users.find { _id: @userId }
 
