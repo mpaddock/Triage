@@ -92,6 +92,7 @@ Template.ticketInfoPanels.events
   'keyup input[name=addTag]': (e, tpl) ->
     if e.which is 13
       val = $(e.target).val()?.split(' ')
+      val = _.filter val, (x) -> x.length > 0
       Tickets.update tpl.data._id, { $addToSet: { tags: $each: val } }
       $(e.target).val('')
 

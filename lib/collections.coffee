@@ -17,11 +17,13 @@
     type: String
   status:
     type: String
+    min: 1
     defaultValue: 'Open'
   tags:
     defaultValue: []
     optional: true
     type: [String]
+    min: 1
   submissionData:
     type: Object
     optional: true

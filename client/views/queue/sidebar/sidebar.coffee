@@ -8,7 +8,7 @@ Template.sidebar.helpers
   tags: ->
     active = Iron.query.get('tag')?.split(',') || []
     _.map _.sortBy(Facets.findOne()?.facets.tags, (f) -> -f.count), (l) ->
-      unless l.name then l.name = '(none)'
+      if _.isNull(l.name) then l.name = '(none)'
       _.extend l,
         checked: if l.name in active then 'checked'
         type: 'tag'
@@ -39,7 +39,7 @@ Template.sidebar.helpers
   associatedUsers: ->
     active = Iron.query.get('associatedUser')?.split(',') || []
     _.map _.sortBy(Facets.findOne()?.facets.associatedUserIds, (f) -> -f.count), (l) ->
-      if l.name
+      unless _.isNull(l.name)
         username = Meteor.users.findOne(l.name)?.username
         _.extend l,
           username: username
