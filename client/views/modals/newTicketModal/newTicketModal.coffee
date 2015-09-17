@@ -87,18 +87,19 @@ Template.newTicketModal.events
 
   #Username checking and DOM manipulation for on behalf of submission field.
   'click button[data-action=checkUsername]': (e, tpl) ->
-    unless tpl.$('input[name="onBehalfOf"]').val() is ""
-      Meteor.call 'checkUsername', tpl.$('input[name=onBehalfOf]').val(), (err, res) ->
-        if res
-          tpl.$('input[name=onBehalfOf]').closest('div .form-group').removeClass('has-error').addClass('has-success')
-          tpl.$('button[data-action=checkUsername]').html('<span class="glyphicon glyphicon-ok"></span>')
-          tpl.$('button[data-action=checkUsername]').removeClass('btn-danger').removeClass('btn-primary').addClass('btn-success')
-        else
-          tpl.$('input[name=onBehalfOf]').closest('div .form-group').removeClass('has-success').addClass('has-error')
-          tpl.$('button[data-action=checkUsername]').removeClass('btn-success').removeClass('btn-primary').addClass('btn-danger')
-          tpl.$('button[data-action=checkUsername]').html('<span class="glyphicon glyphicon-remove"></span>')
-  
-  #When the modal is shown, we get the set of unique tags and update the modal with them.
+    checkUsername e, tpl, tpl.$('input[name="onBehalfOf"]').val()
+
+  'keyup input[name=onBehalfOf]': (e, tpl) ->
+    if e.which is 13
+      checkUsername e, tpl, tpl.$('input[name="onBehalfOf"]').val()
+
+  'autocompleteselect input[name=onBehalfOf]': (e, tpl) ->
+    tpl.$('input[name=onBehalfOf]').closest('div .form-group').removeClass('has-error').addClass('has-success')
+    tpl.$('button[data-action=checkUsername]').html('<span class="glyphicon glyphicon-ok"></span>')
+    tpl.$('button[data-action=checkUsername]').removeClass('btn-danger').removeClass('btn-primary').addClass('btn-success')
+
+  # When the modal is shown, we get the set of unique tags and update the modal with them.
+  # Could do this with mizzao:autocomplete now...
   'show.bs.modal #newTicketModal': (e, tpl) ->
     tpl.$('select[name=queue]').val(Session.get('queueName'))
     tags = _.pluck Tags.find().fetch(), 'name'
@@ -129,4 +130,17 @@ clearFields = (tpl) ->
   tpl.$('.has-success').removeClass('has-success')
   tpl.$('button[data-action=checkUsername]').removeClass('btn-success').removeClass('btn-danger').addClass('btn-primary').html('Check')
   tpl.$('select[name=queue]').select2('val', '')
+
+
+checkUsername = (e, tpl, val) ->
+  unless val.length < 1
+    Meteor.call 'checkUsername', val, (err, res) ->
+      if res
+        tpl.$('input[name=onBehalfOf]').closest('div .form-group').removeClass('has-error').addClass('has-success')
+        tpl.$('button[data-action=checkUsername]').html('<span class="glyphicon glyphicon-ok"></span>')
+        tpl.$('button[data-action=checkUsername]').removeClass('btn-danger').removeClass('btn-primary').addClass('btn-success')
+      else
+        tpl.$('input[name=onBehalfOf]').closest('div .form-group').removeClass('has-success').addClass('has-error')
+        tpl.$('button[data-action=checkUsername]').removeClass('btn-success').removeClass('btn-primary').addClass('btn-danger')
+        tpl.$('button[data-action=checkUsername]').html('<span class="glyphicon glyphicon-remove"></span>')
 

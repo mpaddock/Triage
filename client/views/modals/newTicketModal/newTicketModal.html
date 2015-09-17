@@ -13,7 +13,7 @@
             <label for="onBehalfOf" class="control-label">Submit on Behalf Of:</label>
             <div>
               <div class="input-group">
-                <input type="text" name="onBehalfOf" class="form-control" placeholder="Enter username">
+                {{>inputAutocomplete name="onBehalfOf" class="form-control" placeholder="Enter username" settings=userSettings}}
                 <span class="input-group-btn"><button type="button" class="btn btn-primary" data-action="checkUsername">Check</button></span>
               </div>
             </div>
