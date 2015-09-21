@@ -24,7 +24,6 @@ Router.map ->
   @route 'queue',
     path: '/queue/:queueName',
     onBeforeAction: ->
-      Session.set 'ready', false
       Session.set 'loadingMore', false
       Session.set 'pseudoQueue', null
       Session.set 'queueName', @params.queueName
@@ -43,10 +42,26 @@ Router.map ->
         if Session.get('offset') < 1
           renderedTime = new Date()
           Meteor.subscribe 'newTickets', filter, renderedTime
-        queueName = @params.queueName
-        Meteor.subscribe 'tickets', filter, Session.get('offset'), limit, onReady: () ->
-          Meteor.call 'clearQueueBadge', queueName
-          Session.set('ready', true)
+
+        Meteor.subscribe 'tickets', filter, Session.get('offset'), limit, {
+          onReady: () ->
+            Meteor.call 'clearQueueBadge', @params.queueName
+            Session.set('ready', true)
+          onStop: ->
+            Session.set 'ready', false
+        }
+
+        if @params.query.ticket
+          Meteor.subscribe 'ticket', @params.query.ticket
+          ticket = Tickets.findOne({ ticketNumber: Number(@params.query.ticket) })
+
+        if ticket
+          Blaze.renderWithData Template.ticketModal, { ticketId: ticket._id }, $('body').get(0)
+          $('#ticketModal').modal('show')
+        else
+          # In case we navigate with the back button.
+          $('#ticketModal').modal('hide')
+
         
 
   @route 'userDashboard',
@@ -62,7 +77,6 @@ Router.map ->
     waitOn: ->
       Meteor.subscribe 'queueNames'
     onBeforeAction: ->
-      Session.set 'ready', false
       Session.set 'loadingMore', false
       Session.set 'queueName', null
       Session.set 'pseudoQueue', 'userQueue'
@@ -81,9 +95,23 @@ Router.map ->
         if Session.get('offset') < 1
           renderedTime = new Date()
           Meteor.subscribe 'newTickets', filter, renderedTime
-        Meteor.subscribe 'tickets', filter, Session.get('offset'), limit, onReady: () ->
-          Session.set('ready', true)
+        Meteor.subscribe 'tickets', filter, Session.get('offset'), limit, {
+          onReady: ->
+            Session.set 'ready', true
+          onStop: ->
+            Session.set 'ready', false
+        }
         
+        if @params.query.ticket
+          Meteor.subscribe 'ticket', @params.query.ticket
+          ticket = Tickets.findOne { ticketNumber: Number(@params.query.ticket) }
+
+        if ticket
+          Blaze.renderWithData Template.ticketModal, { ticketId: ticket._id }, $('body').get(0)
+          $('#ticketModal').modal('show')
+        else
+          # In case we navigate with the back button.
+          $('#ticketModal').modal('hide')
 
   @route 'globalQueue',
     path: '/all/tickets'
@@ -91,7 +119,6 @@ Router.map ->
     waitOn: ->
       Meteor.subscribe 'queueNames'
     onBeforeAction: ->
-      Session.set 'ready', false
       Session.set 'loadingMore', false
       Session.set 'queueName', null
       Session.set 'pseudoQueue', 'globalQueue'
@@ -111,9 +138,22 @@ Router.map ->
           renderedTime = new Date()
           Meteor.subscribe 'newTickets', filter, renderedTime
 
-        Meteor.subscribe 'tickets', filter, Session.get('offset'), limit, onReady: () ->
-          Session.set('ready', true)
+        Meteor.subscribe 'tickets', filter, Session.get('offset'), limit, {
+          onReady: ->
+            Session.set 'ready', true
+          onStop: ->
+            Session.set 'ready', false
+        }
         
+        if @params.query.ticket
+          Meteor.subscribe 'ticket', @params.query.ticket
+          ticket = Tickets.findOne { ticketNumber: Number(@params.query.ticket) }
+
+        if ticket
+          Blaze.renderWithData Template.ticketModal, { ticketId: ticket._id }, $('body').get(0)
+          $('#ticketModal').modal('show')
+        else
+          $('#ticketModal').modal('hide')
 
   @route 'ticket',
     path: '/ticket/:ticketNumber'

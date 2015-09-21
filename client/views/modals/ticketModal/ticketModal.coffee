@@ -1,5 +1,6 @@
 Template.ticketModal.events
   'hidden.bs.modal': (e, tpl) ->
+    Iron.query.set 'ticket', null
     Blaze.remove tpl.view
 
   'click a[name=ticketLink]': (e, tpl) ->
@@ -11,7 +12,3 @@ Template.ticketModal.helpers
   ticket: -> Tickets.findOne(@ticketId)
   bodyParagraph: ->
     @body.split('\n')
-
-
-Template.ticketModal.onCreated ->
-  @subscribe 'ticket', Tickets.findOne(@data.ticketId).ticketNumber

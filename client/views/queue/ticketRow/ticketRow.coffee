@@ -2,8 +2,7 @@ Template.ticketRow.events
   'click .ticket-row': (e) ->
     unless _.contains($(e.target)[0].classList, 'dropdown-toggle')
       Meteor.call 'removeFlag', Meteor.userId(), @_id, 'unread'
-      Blaze.renderWithData Template.ticketModal, { ticketId: @_id }, $('body').get(0)
-      $('#ticketModal').modal('show')
+      Iron.query.set 'ticket', @ticketNumber
 
   'click .dropdown-menu[name=statusMenu]': (e, tpl) ->
     e.stopPropagation()
