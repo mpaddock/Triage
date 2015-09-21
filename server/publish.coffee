@@ -103,6 +103,7 @@ Meteor.publishComposite 'ticketsByDepartment', (department, filter, offset, limi
   user = Meteor.users.findOne(@userId)
   if user.username is Meteor.settings.departmentManagers[department]
     userIds = _.pluck Meteor.users.find({department: department}).fetch(), '_id'
+    userIds.push(@userId)
   else userIds = []
   mongoFilter = Filter.toMongoSelector(filter)
   mongoFilter.queueName = /.*/
