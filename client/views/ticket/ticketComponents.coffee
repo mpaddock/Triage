@@ -22,6 +22,11 @@ Template.ticketChangelogItem.helpers
   noteParagraph: ->
     @message.split('\n')
 
+Template.ticketChangelogItem.events
+  'click a[data-action=showAttachmentModal]': (e, tpl) ->
+    Iron.query.set 'ticket', null
+    Iron.query.set 'attachmentId', @valueOf()
+
 Template.ticketInfoPanels.onRendered ->
   doc = @find 'div[name=attachments]'
   doc.ondragover = (e) ->
@@ -84,6 +89,9 @@ Template.removeAttachmentModal.events
     Blaze.remove tpl.view
 
 Template.ticketInfoPanels.events
+  'click a[data-action=showAttachmentModal]': (e, tpl) ->
+    Iron.query.set 'ticket', null
+    Iron.query.set 'attachmentId', @valueOf()
   'click a[data-action=removeAttachment]': (e, tpl) ->
     data = { attachmentId: this.valueOf(), ticketId: tpl.data._id }
     Blaze.renderWithData(Template['removeAttachmentModal'], data, $('body').get(0))

@@ -67,7 +67,7 @@
           {{#if changeIsType 'attachment'}}
             {{#with otherId}}
               {{#if file.thumbnail}}
-                <a href="/file/{{file.filenameOnDisk}}" target="_blank">
+                <a class="cursor-pointer" data-action="showAttachmentModal" data-fileId="{{file._id}}">
                   <img class="img-thumbnail" style="max-width: 100%; max-height: 128px" src="/file/{{file.thumbnail}}"/><br/>
                 </a>
               {{/if}}
@@ -170,7 +170,7 @@
             {{#if file.thumbnail}}
               <img class="img-thumbnail" style="max-width: 64px; max-height:24px;" src="/file/{{file.thumbnail}}" />
             {{/if}}
-            <a data-action="downloadAttachment" href="/file/{{file.filenameOnDisk}}" target="_blank">{{file.filename}}</a><br />
+            <a class="cursor-pointer" data-action="showAttachmentModal" data-fileId="{{file._id}}">{{file.filename}}</a><br />
           </div>
           <div class="remove-attachment">
             <a href="#" data-action="removeAttachment">Remove</a>

@@ -62,6 +62,18 @@ Router.map ->
           # In case we navigate with the back button.
           $('#ticketModal').modal('hide')
 
+        if @params.query.attachmentId
+          Meteor.subscribe 'file', @params.query.attachmentId
+          file = FileRegistry.findOne(@params.query.attachmentId)
+
+        if file
+          Blaze.renderWithData Template.attachmentModal, { attachmentId: @params.query.attachmentId }, $('body').get(0)
+          $('#ticketModal').modal('hide')
+          $('#attachmentModal').modal('show')
+        else
+          $('#attachmentModal').modal('hide')
+
+
         
 
   @route 'userDashboard',
