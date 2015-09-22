@@ -52,7 +52,7 @@ Router.map ->
         }
 
         if @params.query.ticket
-          Meteor.subscribe 'ticket', @params.query.ticket
+          Meteor.subscribe 'ticket', Number(@params.query.ticket)
           ticket = Tickets.findOne({ ticketNumber: Number(@params.query.ticket) })
 
         if ticket
@@ -103,7 +103,7 @@ Router.map ->
         }
         
         if @params.query.ticket
-          Meteor.subscribe 'ticket', @params.query.ticket
+          Meteor.subscribe 'ticket', Number(@params.query.ticket)
           ticket = Tickets.findOne { ticketNumber: Number(@params.query.ticket) }
 
         if ticket
@@ -146,7 +146,7 @@ Router.map ->
         }
         
         if @params.query.ticket
-          Meteor.subscribe 'ticket', @params.query.ticket
+          Meteor.subscribe 'ticket', Number(@params.query.ticket)
           ticket = Tickets.findOne { ticketNumber: Number(@params.query.ticket) }
 
         if ticket
