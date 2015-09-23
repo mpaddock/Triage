@@ -68,7 +68,6 @@ Router.map ->
 
         if file
           Blaze.renderWithData Template.attachmentModal, { attachmentId: @params.query.attachmentId }, $('body').get(0)
-          $('#ticketModal').modal('hide')
           $('#attachmentModal').modal('show')
         else
           $('#attachmentModal').modal('hide')

@@ -623,3 +623,11 @@ blockquote {
 .cursor-pointer {
   cursor: pointer;
 }
+
+#ticketModal {
+  z-index: 1060;
+}
+
+#attachmentModal {
+  z-index: 1070;
+}
