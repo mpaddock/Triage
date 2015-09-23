@@ -131,5 +131,4 @@ Meteor.publish 'file', (fileId) ->
     { authorName: username },
     { queueName: { $in: queues } }
   ] }
-    console.log 'returnin'
     return FileRegistry.find { _id: fileId }

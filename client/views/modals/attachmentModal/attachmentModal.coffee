@@ -7,6 +7,6 @@ Template.attachmentModal.helpers
     @filename.substr(@filename.indexOf('.')+1) is 'pdf'
 
 Template.attachmentModal.events
-  'hide.bs.modal': (e, tpl) ->
+  'hidden.bs.modal': (e, tpl) ->
     Iron.query.set 'attachmentId', null
     Blaze.remove tpl.view
