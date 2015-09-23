@@ -54,11 +54,11 @@ Router.map ->
         if @params.query.ticket
           Meteor.subscribe 'ticket', Number(@params.query.ticket)
           ticket = Tickets.findOne({ ticketNumber: Number(@params.query.ticket) })
-
-        if ticket
+      
+        if ticket and not $('#ticketModal').length
           Blaze.renderWithData Template.ticketModal, { ticketId: ticket._id }, $('body').get(0)
           $('#ticketModal').modal('show')
-        else
+        else if not ticket
           # In case we navigate with the back button.
           $('#ticketModal').modal('hide')
 

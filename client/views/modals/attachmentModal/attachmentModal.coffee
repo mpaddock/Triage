@@ -12,3 +12,10 @@ Template.attachmentModal.events
     Blaze.remove tpl.view
     if $('.modal:visible').length
       $(document.body).addClass('modal-open')
+
+  'show.bs.modal': (e, tpl) ->
+    setTimeout ->
+      $('.modal-backdrop').not('.modal-ticket').css('z-index',  1069)
+    , 10
+
+

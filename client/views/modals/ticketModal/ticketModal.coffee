@@ -1,4 +1,8 @@
 Template.ticketModal.events
+  'show.bs.modal': (e, tpl) ->
+    setTimeout ->
+      $('.modal-backdrop').not('.modal-attachment').addClass('modal-ticket')
+    , 0
   'hidden.bs.modal': (e, tpl) ->
     Iron.query.set 'ticket', null
     Blaze.remove tpl.view
