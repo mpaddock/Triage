@@ -1,7 +1,6 @@
 Template.queueSummary.helpers
   data: ->
     d = Queues.findOne {name: Session.get 'queueName'}
-    console.log 'queueSummary data', d
     return d
   plural: (count, singular, plural) ->
     if count == 1
