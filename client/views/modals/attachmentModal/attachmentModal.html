@@ -9,11 +9,16 @@
           </div>
           <div class="modal-body">
             {{#if fileIsImage}}
-              <img style="max-width: 95%; max-height: 95%;" src="/file/{{filenameOnDisk}}">
+              <img class="attachment-modal-image" src="/file/{{filenameOnDisk}}">
             {{/if}}
             {{#if fileIsPdf}}
-              <embed src="/file/{{filenameOnDisk}}" width="95%" height="600" type="application/pdf">
+              <embed class="attachment-modal-pdf" src="/file/{{filenameOnDisk}}" type="application/pdf">
             {{/if}}
+            <div class="attachment-modal-download-button">
+              <a href="/file/{{filenameOnDisk}}" target="_blank">
+                <button type="button" class="btn btn-lg btn-primary">Download File</button>
+              </a>
+            </div>
           </div>
         </div>
       </div>

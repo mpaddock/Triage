@@ -631,3 +631,18 @@ blockquote {
 #attachmentModal {
   z-index: 1070;
 }
+
+.attachment-modal-image {
+  max-width: 80vw;
+  max-height: 80vh;
+}
+
+.attachment-modal-pdf {
+  /* PDF's can fit here and the embed will hopefully figure it out. */
+  width: 80vw;
+  height: 80vh;
+}
+
+.attachment-modal-download-button {
+  padding-top: 20px;
+}
