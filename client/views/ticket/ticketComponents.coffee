@@ -107,7 +107,7 @@ Template.ticketInfoPanels.events
     $(e.target).val('')
 
   'keyup input[name=assignUser]': (e, tpl) ->
-    if e.which is 13
+    if e.which is 13 and $(e.target).val().length
       id = Meteor.call 'checkUsername', $(e.target).val(), (err, res) ->
         if res
           tpl.$('[data-toggle="tooltip"]').tooltip('hide')
@@ -115,6 +115,9 @@ Template.ticketInfoPanels.events
           $(e.target).val('')
         else
           tpl.$('[data-toggle="tooltip"]').tooltip('show')
+          Meteor.setTimeout ->
+            tpl.$('[data-toggle="tooltip"]').tooltip('hide')
+          , 3000
 
   'autocompleteselect input[name=assignUser]': (e, tpl, doc) ->
     tpl.$('[data-toggle="tooltip"]').tooltip('hide')
