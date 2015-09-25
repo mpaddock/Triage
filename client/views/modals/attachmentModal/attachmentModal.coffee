@@ -2,7 +2,7 @@ Template.attachmentModal.helpers
   attachment: ->
     return FileRegistry.findOne @attachmentId
   fileIsImage: ->
-    _.contains [ 'jpg', 'jpeg', 'gif', 'bmp', 'png', 'tiff', 'tif', 'cr2', 'tga' ], @filename.substr(@filename.indexOf('.')+1).toLowerCase()
+    _.contains [ 'jpg', 'jpeg', 'gif', 'bmp', 'png', 'tiff', 'tif', 'cr2', 'tga' ], @filename.substr(@filename.lastIndexOf('.')+1).toLowerCase()
   fileIsPdf: ->
     @filename.substr(@filename.indexOf('.')+1) is 'pdf'
 
