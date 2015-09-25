@@ -8,9 +8,7 @@ Migrations.add
   up: ->
     _.each Tickets.find().fetch(), (doc) ->
       author = Meteor.users.findOne(doc.authorId)
-      Job.push new TextAggregateJob
-        ticketId: doc._id
-        text: [ author?.displayName, author?.department]
+      Tickets.update doc._id, { $addToSet: { additionalText: { $each: [ author?.displayName, author?.department ] } } }
 
 Meteor.startup ->
   Migrations.migrateTo(2)
