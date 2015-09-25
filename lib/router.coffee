@@ -142,10 +142,12 @@ Router.map ->
 
       Meteor.call 'checkUsername', @request.body.username
 
-      blackboxKeys = _.difference(_.keys(@request.body), requiredParams.concat(['submitter_name', 'subject_line'], Tickets.simpleSchema()._schemaKeys))
+
+      blackboxKeys = _.difference(_.keys(@request.body), requiredParams.concat(['submitter_name', 'subject_line', 'on_behalf_of'], Tickets.simpleSchema()._schemaKeys))
       formFields = _.pick(@request.body, blackboxKeys)
       username = /// \b#{@request.body.username}\b ///i
-      Tickets.insert
+
+      ticket =
         title: @request.body.subject_line
         body: @request.body.description
         authorName: @request.body.username.toLowerCase()
@@ -159,6 +161,17 @@ Router.map ->
         tags: @request.body.tags?.split(';\n') || []
         formFields: formFields
         attachmentIds: _.pluck(@request.files, '_id')
+
+      if @request.body.on_behalf_of?.length
+        ticket.formFields['Submitted by'] = ticket.authorName
+        ticket.formFields['On behalf of'] = @request.body.on_behalf_of
+        behalfOfId = Meteor.call 'checkUsername', @request.body.on_behalf_of
+        if behalfOfId
+          ticket.submittedByUserId = ticket.authorId
+          ticket.authorName = @request.body.on_behalf_of.toLowerCase()
+          ticket.authorId = behalfOfId
+
+      Tickets.insert ticket
 
       @response.end 'Submission successful.'
 
