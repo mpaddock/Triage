@@ -1,16 +1,24 @@
 if Npm.require('cluster').isMaster
 
   Tickets.before.insert (userId, doc) ->
-    #Update tag collection for autocomplete.
+    # Update tag and status collections for autocomplete.
     now = new Date()
     doc.tags?.forEach (x) ->
       Tags.upsert { name: x }, { $set: { lastUse: now } }
 
     Statuses.upsert { name: doc.status }, { $set: { lastUse: now } }
 
-    #Update queue new counts.
-    QueueBadgeCounts.update {queueName: doc.queueName, userId: {$ne: userId}}, { $inc: {count: 1} }, {multi: true}
-    
+    # Update queue new counts.
+    QueueBadgeCounts.update { queueName: doc.queueName, userId: { $ne: userId } }, { $inc: { count: 1 } }, { multi: true }
+
+
+    # Add author's displayName and department to the text index.
+    author = Meteor.users.findOne(doc.authorId)
+    Job.push new TextAggregateJob
+      ticketId: doc._id
+      text: [ author?.displayName, author?.department ]
+
+    # Set the ticket number, store the ticket submitter, server-side timestamp, notify author.
     doc = prepareTicket userId, doc
     notifyTicketAuthor userId, doc
     
