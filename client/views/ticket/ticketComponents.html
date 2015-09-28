@@ -244,7 +244,7 @@
         <div class="user-panel-portrait">{{> userPortrait userId=author._id}}</div>
         <div class="user-panel-info">
           {{author.displayName}}<br>
-          {{author.mail}}<br>
+          <a href="mailto:{{author.mail}}">{{author.mail}}</a><br>
           {{author.department}}<br>
           {{author.physicalDeliveryOfficeName}}<br>
         </div>
