@@ -218,3 +218,9 @@ Router.map ->
     where: 'server'
     action: FileRegistry.serveFile
 
+  @route 'downloadFile',
+    path: '/download/:filename'
+    where: 'server'
+    action: FileRegistry.serveFile
+      disposition: 'attachment'
+
