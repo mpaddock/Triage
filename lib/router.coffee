@@ -42,10 +42,10 @@ Router.map ->
         if Session.get('offset') < 1
           renderedTime = new Date()
           Meteor.subscribe 'newTickets', filter, renderedTime
-
+        queueName = @params.queueName
         Meteor.subscribe 'tickets', filter, Session.get('offset'), limit, {
           onReady: () ->
-            Meteor.call 'clearQueueBadge', @params.queueName
+            Meteor.call 'clearQueueBadge', queueName
             Session.set('ready', true)
           onStop: ->
             Session.set 'ready', false
