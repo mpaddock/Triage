@@ -14,8 +14,10 @@ Template.attachmentModal.events
       $(document.body).addClass('modal-open')
 
   'show.bs.modal': (e, tpl) ->
+    zIndex = 1040 + ( 10 * $('.modal:visible').length)
+    $(e.target).css('z-index', zIndex)
     setTimeout ->
-      $('.modal-backdrop').not('.modal-ticket').css('z-index',  1069)
+      $('.modal-backdrop').not('.modal-stack').css('z-index',  zIndex-1).addClass('.modal-stack')
     , 10
 
 
