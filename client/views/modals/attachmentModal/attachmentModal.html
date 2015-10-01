@@ -1,0 +1,27 @@
+<template name="attachmentModal">
+  {{#with attachment}}
+    <div class="modal fade" id="attachmentModal" role="dialog" aria-hidden="true">
+      <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">{{filename}}</h4>
+          </div>
+          <div class="modal-body">
+            {{#if fileIsImage}}
+              <img class="attachment-modal-image" src="{{encodedURI}}">
+            {{/if}}
+            {{#if fileIsPdf}}
+              <embed class="attachment-modal-pdf" src="{{encodedURI}}" type="application/pdf">
+            {{/if}}
+            <div class="attachment-modal-download-button">
+              <a href="/download/{{filenameOnDisk}}" target="_blank">
+                <button type="button" class="btn btn-lg btn-primary">Download File</button>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  {{/with}}
+</template>

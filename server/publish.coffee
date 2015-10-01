@@ -99,19 +99,19 @@ Meteor.publishComposite 'ticket', (ticketNumber) ->
     ]
   }
 
-Meteor.publish 'userData', () ->
+Meteor.publish 'userData', ->
   Meteor.users.find { _id: @userId }
 
-Meteor.publish 'allUserData', () ->
+Meteor.publish 'allUserData', ->
   Meteor.users.find {}, { fields: { '_id': 1, 'username': 1, 'mail': 1, 'displayName': 1, 'department': 1, 'physicalDeliveryOfficeName': 1, 'status.online': 1, 'status.idle': 1 } }
 
-Meteor.publish 'queueNames', () ->
+Meteor.publish 'queueNames', ->
   Queues.find {}, { fields: { 'name': 1, 'memberIds': 1, 'stats': 1 } }
 
-Meteor.publish 'tags', () ->
+Meteor.publish 'tags', ->
   Tags.find {}, { fields: { 'name': 1 }, sort: { lastUse: -1 }, limit: 100 }
 
-Meteor.publish 'queueCounts', () ->
+Meteor.publish 'queueCounts', ->
   QueueBadgeCounts.find { userId: @userId }
 
 Meteor.publish 'unattachedFiles', (fileIds) ->
@@ -119,5 +119,16 @@ Meteor.publish 'unattachedFiles', (fileIds) ->
   unless Tickets.findOne { attachmentIds: {$in: fileIds } }
     return FileRegistry.find { _id: {$in: fileIds } }
 
-Meteor.publish 'statuses', () ->
+Meteor.publish 'statuses', ->
   Statuses.find {}, { fields: { 'name': 1 }, sort: { lastUse: -1 }, limit: 100 }
+
+Meteor.publish 'file', (fileId) ->
+  queues = _.pluck Queues.find({memberIds: @userId}).fetch(), 'name'
+  username = Meteor.users.findOne(@userId).username
+  if Tickets.findOne { attachmentIds: fileId , $or: [
+    { associatedUserIds: @userId },
+    { authorId: @userId },
+    { authorName: username },
+    { queueName: { $in: queues } }
+  ] }
+    return FileRegistry.find { _id: fileId }
