@@ -20,3 +20,6 @@ Template.ticketModal.helpers
   ticket: -> Tickets.findOne(@ticketId)
   bodyParagraph: ->
     @body.split('\n')
+
+Template.ticketModal.rendered = ->
+  Meteor.call 'removeFlag', Meteor.userId(), @data?.ticketId, 'unread'

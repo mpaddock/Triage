@@ -1,7 +1,6 @@
 Template.ticketRow.events
   'click .ticket-row': (e) ->
     unless _.contains($(e.target)[0].classList, 'dropdown-toggle')
-      Meteor.call 'removeFlag', Meteor.userId(), @_id, 'unread'
       Iron.query.set 'ticket', @ticketNumber
 
   'click .dropdown-menu[name=statusMenu]': (e, tpl) ->
