@@ -208,17 +208,17 @@
       <div class="input-buttons pull-right">
         {{#if queueMember}}
           {{#if closed}}
-            <button class="btn btn-responsive btn-default" name="addNoteAndReOpen">Re-Open Ticket</button>
+            <button type="button" class="btn btn-responsive btn-default" name="addNoteAndReOpen">Re-Open Ticket</button>
             {{else}}
             {{#if beta}}
-              <button class="btn btn-responsive btn-default" name="closeSilently" title="Close ticket without sending any emails.">Close Ticket Silently</button>
+              <button type="button" class="btn btn-responsive btn-default" name="closeSilently" title="Close ticket without sending any emails.">Close Ticket Silently</button>
             {{/if}}
-            <button class="btn btn-responsive btn-default" name="addNoteAndClose">Close Ticket</button>
+            <button type="button" class="btn btn-responsive btn-default" name="addNoteAndClose">Close Ticket</button>
           {{/if}}
-          <button class="btn btn-responsive btn-default" name="addInternalNote">Add Internal Note</button>
-          <button class="btn btn-responsive btn-success" name="addNoteAdmin">Add Note</button>
+          <button type="button" class="btn btn-responsive btn-default" name="addInternalNote">Add Internal Note</button>
+          <button type="button" class="btn btn-responsive btn-success" name="addNoteAdmin">Add Note</button>
           {{else}}
-          <button class="btn btn-responsive btn-success" name="addNote">Add Note</button>
+          <button type="button" class="btn btn-responsive btn-success" name="addNote">Add Note</button>
         {{/if}}
 
       </div>
