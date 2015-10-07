@@ -39,9 +39,9 @@ Template.queue.helpers
     Queues.find()
   selected: ->
     if Session.get('pseudoQueue')
-      if this.name is Meteor.user().defaultQueue then "selected"
+      if @name is Meteor.user().defaultQueue then "selected"
     else
-      if this.name is Session.get('queueName') then "selected"
+      if @name is Session.get('queueName') then "selected"
 
 Template.queue.events
   'click button[data-action=nextPage]': (e, tpl) ->
