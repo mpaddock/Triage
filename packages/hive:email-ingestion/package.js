@@ -1,6 +1,6 @@
 Package.describe({
   name: 'hive:email-ingestion',
-  version: '0.0.1',
+  version: '0.0.2',
   summary: '',
   git: '',
   documentation: 'README.md'
@@ -19,7 +19,7 @@ Package.onUse(function(api) {
 
 Package.onTest(function(api) {
   api.use('tinytest');
-  api.use(['coffeescript', 'underscore']);
+  api.use(['coffeescript', 'underscore', 'check']);
   api.use('hive:email-ingestion');
   api.addFiles('email-ingestion-tests.coffee');
 });
