@@ -9,5 +9,5 @@ Template.layout.onCreated ->
           maxZ = curZ
           $modal = $(this)
       setTimeout ->
-        $modal.modal('hide')
+        $modal?.modal('hide')
       , 10

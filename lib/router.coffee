@@ -24,10 +24,8 @@ Router.map ->
   @route 'queue',
     path: '/queue/:queueName',
     onBeforeAction: ->
-      Session.set 'loadingMore', false
       Session.set 'pseudoQueue', null
       Session.set 'queueName', @params.queueName
-      Session.set 'newTicketSet', []
       Session.set 'offset', (Number(Iron.query.get('start')) || 0)
       @next()
       if Meteor.userId()
@@ -88,10 +86,8 @@ Router.map ->
     waitOn: ->
       Meteor.subscribe 'queueNames'
     onBeforeAction: ->
-      Session.set 'loadingMore', false
       Session.set 'queueName', null
       Session.set 'pseudoQueue', 'userQueue'
-      Session.set 'newTicketSet', []
       Session.set 'offset', (Number(Iron.query.get('start')) || 0)
       @next()
       if Meteor.userId()
@@ -140,10 +136,8 @@ Router.map ->
     waitOn: ->
       Meteor.subscribe 'queueNames'
     onBeforeAction: ->
-      Session.set 'loadingMore', false
       Session.set 'queueName', null
       Session.set 'pseudoQueue', 'globalQueue'
-      Session.set 'newTicketSet', []
       Session.set 'offset', (Number(Iron.query.get('start')) || 0)
       @next()
       if Meteor.userId()
