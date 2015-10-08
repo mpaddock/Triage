@@ -72,7 +72,7 @@ mongo-id@1.0.1
 mongo-livedata@1.0.9
 mrt:moment@2.8.1
 multipart@1.0.0
-natestrauser:select2@4.0.0_1
+natestrauser:select2@3.5.1
 npm-mongo@1.4.39_1
 observe-sequence@1.0.7
 ordered-dict@1.0.4
