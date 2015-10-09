@@ -10,5 +10,13 @@ Migrations.add
       author = Meteor.users.findOne(doc.authorId)
       Tickets.update doc._id, { $addToSet: { additionalText: { $each: [ author?.displayName, author?.department ] } } }
 
+Migrations.add
+  version: 3
+  up: ->
+    _.each Tickets.find({timeToClose: {$exists: true}, closedTimestamp: {$exists: false}}).fetch(), (doc) ->
+      Tickets.update doc._id,
+        $set:
+          closedTimestamp: new Date(doc.submittedTimestamp.getTime() + doc.timeToClose*1000)
+
 Meteor.startup ->
-  Migrations.migrateTo(2)
+  Migrations.migrateTo(3)
