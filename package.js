@@ -10,7 +10,7 @@ Package.onUse(function (api) {
     'mongo',
     'coffeescript',
     'aldeed:collection2',
-    'hive:facets@0.1.4',
+    'hive:facets@0.0.1',
   ]);
   api.addFiles([
     'lib/facets.coffee'
@@ -29,9 +29,7 @@ Package.onTest(function (api) {
     'blaze',
     'tinytest',
     'test-helpers',
-    'hive:facets@0.1.4',
-    'underscore',
-    'check'
+    'hive:facets@0.0.1'
   ]);
 
   api.addFiles([
