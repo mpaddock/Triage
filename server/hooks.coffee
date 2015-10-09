@@ -41,8 +41,10 @@ if Npm.require('cluster').isMaster
           text: [FileRegistry.findOne(id).filename]
 
       if fn is 'status' and modifier.$set.status is 'Closed'
+        d = new Date()
         Tickets.direct.update doc._id, { $set: {
-          timeToClose: (new Date() - doc.submittedTimestamp) / 1000 # Amount of time to ticket close, in seconds.
+          timeToClose: (d - doc.submittedTimestamp) / 1000 # Amount of time to ticket close, in seconds.
+          closedTimestamp: d
           closedByUserId:  userId
           closedByUsername: Meteor.users.findOne(userId).username
         } }
