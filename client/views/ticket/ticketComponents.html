@@ -83,6 +83,9 @@
               {{/if}}
             {{/if}}
             {{#if changeIsType 'field'}}
+              {{#if fieldIs 'queueName'}}
+                User {{authorName}} transferred ticket from {{oldValue}} to {{newValue}}
+              {{/if}}
               {{#if fieldIs 'status'}}
                 User {{authorName}} changed status from {{oldValue}} to {{newValue}}
               {{/if}}
@@ -251,7 +254,7 @@
       </div>
       <div class="pull-right hidden-xs">
         <a href="/ticket/{{ticketNumber}}" name="ticketLink">Ticket #{{ticketNumber}}</a><br>
-        <strong>{{queueName}}</strong><br>
+        <strong><a href="#" name="changeQueue">{{queueName}}</a></strong><br>
         {{>timestampFormatter date=submittedTimestamp}}<br>
         ({{>timeFromNow date=submittedTimestamp}})
       </div>

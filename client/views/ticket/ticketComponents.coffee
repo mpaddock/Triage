@@ -279,6 +279,10 @@ Template.ticketHeadingPanels.helpers
   author: ->
     Meteor.users.findOne {_id: @authorId}
 
+Template.ticketHeadingPanels.events
+  'click a[name="changeQueue"]': (e, tpl) ->
+    Blaze.renderWithData Template.sendToAnotherQueueModal, { ticketId: @_id }, $('body').get(0)
+    $('#sendToAnotherQueueModal').modal('show')
 
 Template.formFieldsPanel.onCreated ->
   this.panelIsCollapsed = new ReactiveVar(true)
