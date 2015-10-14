@@ -108,9 +108,10 @@ Template.queue.rendered = ->
   tpl = @
 
   @autorun ->
-    if Session.get 'queueName'
-      # When queueName changes, reset the new set of tickets to an empty array.
-      tpl.newTicketSet.set []
+    # When queueName changes, reset the new set of tickets to an empty array.
+    Session.get('queueName')
+    Iron.query.get('search')
+    tpl.newTicketSet.set []
   @autorun ->
     # Highlighting of search terms.
     if Iron.query.get('search') and Session.get('ready')
