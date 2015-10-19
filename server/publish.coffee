@@ -132,3 +132,7 @@ Meteor.publish 'file', (fileId) ->
     { queueName: { $in: queues } }
   ] }
     return FileRegistry.find { _id: fileId }
+
+Meteor.publish 'processMiner', ->
+  Changelog.find {field: 'status'}
+

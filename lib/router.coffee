@@ -71,7 +71,8 @@ Router.map ->
           $('#attachmentModal').modal('hide')
 
 
-        
+  @route 'processMiner',
+    path: '/queue/:queueName/process'
 
   @route 'userDashboard',
     path: '/my/dashboard'
