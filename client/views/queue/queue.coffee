@@ -47,12 +47,12 @@ Template.queue.events
   'click button[data-action=nextPage]': (e, tpl) ->
     start = Number(Iron.query.get('start')) || 0
     if (start + offsetIncrement) < Counts.get('ticketCount')
-      Template.instance().newTicketSet.set []
+      Session.set 'newTicketSet', []
       Iron.query.set 'start', start + offsetIncrement
   'click button[data-action=lastPage]': (e, tpl) ->
     start = Number(Iron.query.get('start')) || 0
     Iron.query.set 'start', Math.max start - offsetIncrement, 0
-    Template.instance().newTicketSet.set []
+    Session.set 'newTicketSet', []
 
   'click a[data-action=clearSearch]': (e, tpl) ->
     e.stopPropagation()
@@ -102,16 +102,14 @@ submitQuickAddTicket = (tpl) ->
     tpl.$('input[name=newTicket]').val('')
 
 
-
 Template.queue.rendered = ->
-  @newTicketSet = new ReactiveVar []
-  tpl = @
+  Session.set 'newTicketSet', []
 
   @autorun ->
     # When queueName changes, reset the new set of tickets to an empty array.
     Session.get('queueName')
-    Iron.query.get('search')
-    tpl.newTicketSet.set []
+    Session.set 'newTicketSet', []
+
   @autorun ->
     # Highlighting of search terms.
     if Iron.query.get('search') and Session.get('ready')
@@ -139,5 +137,5 @@ Template.queue.rendered = ->
     Tickets.find(mongoFilter).observe
       added: (ticket) ->
         if Session.get('offset') < 1
-          tpl.newTicketSet.set (_.uniq(tpl.newTicketSet.get()?.concat(ticket._id)) || [ticket._id])
-    Meteor.subscribe 'ticketSet', tpl.newTicketSet.get()
+          Session.set 'newTicketSet', (_.uniq(Session.get('newTicketSet')?.concat(ticket._id)) || [ticket._id])
+    Meteor.subscribe 'ticketSet', Session.get 'newTicketSet'

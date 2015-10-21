@@ -98,6 +98,7 @@ Template.sidebar.events
       Iron.query.set 'user', newUsers.join()
       Iron.query.set 'start', 0
       $(e.target).val('')
+      Session.set 'newTicketSet', []
 
   'click a[data-action="removeFilter"]': (e, tpl) ->
     e.preventDefault()
