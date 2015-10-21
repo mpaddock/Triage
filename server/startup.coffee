@@ -10,6 +10,11 @@ Meteor.startup ->
   Meteor.settings.queues.forEach (x) ->
     Queues.upsert { name: x.name }, { $set: { securityGroups: x.securityGroups } }
 
+  Facets.configure Tickets,
+    tags: [String]
+    status: String
+    associatedUserIds: [String]
+
 if Meteor.settings?.email?.smtpPipe?
   EmailIngestion.monitorNamedPipe Meteor.settings.email.smtpPipe, (message) ->
     console.log 'incoming email via SMTP', message
