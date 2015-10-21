@@ -39,7 +39,9 @@ Package.onTest(function (api) {
     'lib/facets.coffee',
     'client/helpers/helpers.coffee',
     'tests/facets-test.coffee',
-    'tests/parsers-test.coffee'
+    'tests/parsers-test.coffee',
+    'tests/email-function-tests.coffee',
+    'server/emailFunctions.coffee'
   ], ['client', 'server']);
 
 });

@@ -13,13 +13,7 @@ Meteor.startup ->
 if Meteor.settings?.email?.smtpPipe?
   EmailIngestion.monitorNamedPipe Meteor.settings.email.smtpPipe, (message) ->
     console.log 'incoming email via SMTP', message
-    ticketId = null
-    references = message.headers['references'].split(',')
-    _.each references, (r) ->
-      id = r.split('@').shift().substr(1).split('.').pop()
-      if Tickets.findOne(id)
-        ticketId = id
-        console.log "incoming email looks to be for ticket with _id #{id}"
+    ticketId = TriageEmailFunctions.getTicketId message.headers['references']
 
     if ticketId
       # Try to find a user. If no user, just attach the note with the author email address.
@@ -41,7 +35,7 @@ if Meteor.settings?.email?.smtpPipe?
       # Couldn't find a ticket associated with the references; respond to the user and let them know.
       Email.send
         from: Meteor.settings.email?.fromEmail || "triagebot@triage.as.uky.edu"
-        bcc: message.fromEmail
+        to: message.fromEmail
         subject: "There was a problem ingesting your response."
         html: "Sorry - we had a problem finding the correct ticket to attach your reply to. Please visit the link provided
         in the original email and post your response manually."
