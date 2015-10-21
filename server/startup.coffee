@@ -13,13 +13,13 @@ Meteor.startup ->
 if Meteor.settings?.email?.smtpPipe?
   EmailIngestion.monitorNamedPipe Meteor.settings.email.smtpPipe, (message) ->
     console.log 'incoming email via SMTP', message
-
+    ticketId = null
     references = message.headers['references'].split(',')
     _.each references, (r) ->
       id = r.split('@').shift().substr(1).split('.').pop()
       if Tickets.findOne(id)
-        console.log "incoming email looks to be for ticket with _id #{id}"
         ticketId = id
+        console.log "incoming email looks to be for ticket with _id #{id}"
 
     if ticketId
       # Try to find a user. If no user, just attach the note with the author email address.
