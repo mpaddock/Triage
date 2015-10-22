@@ -18,7 +18,7 @@ Meteor.startup ->
 if Meteor.settings?.email?.smtpPipe?
   EmailIngestion.monitorNamedPipe Meteor.settings.email.smtpPipe, (message) ->
     console.log 'incoming email via SMTP', message
-    ticketId = TriageEmailFunctions.getTicketId message.headers['references']
+    ticketId = TriageEmailFunctions.getTicketId message
 
     if ticketId
       # Try to find a user. If no user, just attach the note with the author email address.
