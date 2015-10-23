@@ -67,10 +67,3 @@
       return false
 
     return true
-
-if Meteor.isServer
-  Facets.configure Tickets,
-    tags: [String]
-    status: String
-    associatedUserIds: [String]
-

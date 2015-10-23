@@ -35,11 +35,12 @@ Package.onTest(function (api) {
   ]);
 
   api.addFiles([
-    'lib/collections.coffee',
-    'lib/facets.coffee',
+    'lib/filters.coffee',
     'client/helpers/helpers.coffee',
     'tests/facets-test.coffee',
-    'tests/parsers-test.coffee'
+    'tests/parsers-test.coffee',
+    'tests/email-function-tests.coffee',
+    'server/emailFunctions.coffee'
   ], ['client', 'server']);
 
 });
