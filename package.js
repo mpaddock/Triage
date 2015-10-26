@@ -10,7 +10,7 @@ Package.onUse(function (api) {
     'mongo',
     'coffeescript',
     'aldeed:collection2',
-    'hive:facets@0.0.1',
+    'hive:facets@0.1.4',
   ]);
   api.addFiles([
     'lib/facets.coffee'
@@ -29,15 +29,18 @@ Package.onTest(function (api) {
     'blaze',
     'tinytest',
     'test-helpers',
-    'hive:facets@0.0.1'
+    'hive:facets@0.1.4',
+    'underscore',
+    'check'
   ]);
 
   api.addFiles([
-    'lib/collections.coffee',
-    'lib/facets.coffee',
+    'lib/filters.coffee',
     'client/helpers/helpers.coffee',
     'tests/facets-test.coffee',
-    'tests/parsers-test.coffee'
+    'tests/parsers-test.coffee',
+    'tests/email-function-tests.coffee',
+    'server/emailFunctions.coffee'
   ], ['client', 'server']);
 
 });

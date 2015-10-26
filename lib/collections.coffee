@@ -44,6 +44,9 @@
     optional: true
     type: Number # in seconds
     decimal: true
+  closedTimestamp:
+    optional: true
+    type: new Date()
   closedByUserId:
     optional: true
     type: String

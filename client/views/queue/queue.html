@@ -1,107 +1,115 @@
 <template name="queue">
-<div class="col-xs-12 col-sm-10">
-  {{#if beta}}
-  <div class="row">
-    <div class="alert alert-warning">
-      Triage is currently a <strong>beta</strong> product. Some features may not yet be implemented and some bugs may be present. 
-      In the meantime, feel free to use Triage however you like - any attempts to break features are welcomed. 
-      Please submit any feature requests, bug reports, or comments to the "App Dev" queue with the "Triage" tag.
-    </div>
-  </div>
-  {{/if}}
-  <div class="row">
-    {{#unless connected}}
-    <div class="alert alert-danger">
-      <strong>You are not currently connected. Any changes you make may not be saved.</strong>
-    </div>
-    {{/unless}}
-    <div class="pull-left">
-      <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#newTicketModal">Add New Ticket</button>
-      <button class="btn btn-success" type="button" data-action="openQuickAdd">Quick Add Ticket</button>
-    </div>
-    <div class="pull-right">
-      {{#each members}}
-      {{>userPortrait userId=this class="queue-user-image" fadeIfOffline=true}}
-      {{/each}}
-    </div>
-  </div>
-  {{#if addingTicket}}
-  <hr>
-  <div class="row top-buffer">
-    <div class="form-inline">
-      <div class="form-group">
-        <label for="body" class="control-label">Title:</label>
-        {{>inputAutocomplete settings=tokenSettings name="newTicket" class="form-control quick-add-input"}}
-      </div>
-      <div class="form-group">
-        <label for="status" class="control-label">Status:</label>
-        <input type="text" class="form-control quick-add-status-input" name="newTicketStatus" value="Open">
-      </div>
-      {{#if pseudoqueue}}
-      <div class="form-group">
-        <label for="queue" class="control-label">Queue:</label>
-        <select name="queue" class="form-control" data-placeholder="Select queue">
-          {{#each queues}}
-          <option value="{{name}}" {{selected}}>{{name}}</option>
-          {{/each}}
-        </select>
-      </div>
-      {{/if}}
-      <button type="button" name="quickAddTicket" class="btn btn-primary">Add</button>
-    </div>
-  </div>
-  {{/if}}
-  {{> queueSummary}}
-
-  <div class="row">
-    <hr class="half-padding">
-    <div class="pull-right">
-      <strong>{{firstVisibleTicket}}-{{lastVisibleTicket}}</strong> of <strong>{{getPublishedCount 'ticketCount'}}</strong> 
-      <div class="btn-group">
-        <button type="button" class="btn btn-default" data-action="lastPage" {{lastDisabled}}><span class="glyphicon glyphicon-chevron-left"></span></button>
-        <button type="button" class="btn btn-default" data-action="nextPage" {{nextDisabled}}><span class="glyphicon glyphicon-chevron-right"></span></button>
+  <div class="col-xs-12 col-sm-10">
+    <!--[if lt IE 10]>
+    <div class="row">
+      <div class="alert alert-danger">
+        You are using an outdated browser. Some features of Triage may not work or may work in unexpected ways.
+        Triage performs best in Chrome, Firefox, Safari, or Internet Explorer 10 or newer.
       </div>
     </div>
-  </div>
-  <hr class="half-padding">
-  {{#if ready}}
-  <div class="row">
-    <table name="ticketTable" class="table table-condensed" style="border-collapse:collapse;">
-      <thead>
-        <tr>
-          <th class="col-md-1 hidden-xs">&nbsp;</th>
-          <th class="col-md-4">Subject</th>
-          <th class="col-md-2">Requester</th>
-          <th class="col-md-2 hidden-xs">Associated Users</th>
-          <th class="col-md-1">Status</th>
-          <th class="col-md-2">Submitted</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr></tr>
-        {{#if noTickets}}
-        <tr>
-          <td colspan='6'>
-            {{#if search}}
-            No tickets match your current search. <a href='#' data-action='clearSearch'>Clear your search?</a>
-            {{else}}
-            No tickets found.
-            {{/if}}
-          </td>
-        </tr>
-        {{/if}}
-        {{#each tickets}}
-        {{>ticketRow}}
+    <![endif]-->
+    {{#if beta}}
+      <div class="row">
+        <div class="alert alert-warning">
+          Triage is currently a <strong>beta</strong> product. Some features may not yet be implemented and some bugs may be present. 
+          In the meantime, feel free to use Triage however you like - any attempts to break features are welcomed. 
+          Please submit any feature requests, bug reports, or comments to the "App Dev" queue with the "Triage" tag.
+        </div>
+      </div>
+    {{/if}}
+    <div class="row">
+      {{#unless connected}}
+        <div class="alert alert-danger">
+          <strong>You are not currently connected. Any changes you make may not be saved.</strong>
+        </div>
+      {{/unless}}
+      <div class="pull-left">
+        <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#newTicketModal">Add New Ticket</button>
+        <button class="btn btn-success" type="button" data-action="openQuickAdd">Quick Add Ticket</button>
+      </div>
+      <div class="pull-right">
+        {{#each members}}
+          {{>userPortrait userId=this class="queue-user-image" fadeIfOffline=true}}
         {{/each}}
-      </tbody>
-    </table>
-  </div>
-  {{else}}
-    {{> loading}}
-  {{/if}}
+      </div>
+    </div>
+    {{#if addingTicket}}
+      <hr>
+      <div class="row top-buffer">
+        <div class="form-inline">
+          <div class="form-group">
+            <label for="body" class="control-label">Title:</label>
+            {{>inputAutocomplete settings=tokenSettings name="newTicket" class="form-control quick-add-input"}}
+          </div>
+          <div class="form-group">
+            <label for="status" class="control-label">Status:</label>
+            <input type="text" class="form-control quick-add-status-input" name="newTicketStatus" value="Open">
+          </div>
+          {{#if pseudoqueue}}
+            <div class="form-group">
+              <label for="queue" class="control-label">Queue:</label>
+              <select name="queue" class="form-control" data-placeholder="Select queue">
+                {{#each queues}}
+                  <option value="{{name}}" {{selected}}>{{name}}</option>
+                {{/each}}
+              </select>
+            </div>
+          {{/if}}
+          <button type="button" name="quickAddTicket" class="btn btn-primary">Add</button>
+        </div>
+      </div>
+    {{/if}}
+    {{> queueSummary}}
+
+    <div class="row">
+      <hr class="half-padding">
+      <div class="pull-right">
+        <strong>{{firstVisibleTicket}}-{{lastVisibleTicket}}</strong> of <strong>{{getPublishedCount 'ticketCount'}}</strong> 
+        <div class="btn-group">
+          <button type="button" class="btn btn-default" data-action="lastPage" {{lastDisabled}}><span class="glyphicon glyphicon-chevron-left"></span></button>
+          <button type="button" class="btn btn-default" data-action="nextPage" {{nextDisabled}}><span class="glyphicon glyphicon-chevron-right"></span></button>
+        </div>
+      </div>
+    </div>
+    <hr class="half-padding">
+    {{#if ready}}
+      <div class="row">
+        <table name="ticketTable" class="table table-condensed" style="border-collapse:collapse;">
+          <thead>
+            <tr>
+              <th class="col-md-1 hidden-xs">&nbsp;</th>
+              <th class="col-md-4">Subject</th>
+              <th class="col-md-2">Requester</th>
+              <th class="col-md-2 hidden-xs">Associated Users</th>
+              <th class="col-md-1">Status</th>
+              <th class="col-md-2">Submitted</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr></tr>
+            {{#if noTickets}}
+              <tr>
+                <td colspan='6'>
+                  {{#if search}}
+                    No tickets match your current search. <a href='#' data-action='clearSearch'>Clear your search?</a>
+                    {{else}}
+                    No tickets found.
+                  {{/if}}
+                </td>
+              </tr>
+            {{/if}}
+            {{#each tickets}}
+              {{>ticketRow}}
+            {{/each}}
+          </tbody>
+        </table>
+      </div>
+      {{else}}
+      {{> loading}}
+    {{/if}}
   </div>
 
-<div class="col-sm-2 hidden-xs">
-  {{> sidebar data=tickets}}
-</div>
+  <div class="col-sm-2 hidden-xs">
+    {{> sidebar data=tickets}}
+  </div>
 </template>

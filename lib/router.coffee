@@ -24,10 +24,8 @@ Router.map ->
   @route 'queue',
     path: '/queue/:queueName',
     onBeforeAction: ->
-      Session.set 'loadingMore', false
       Session.set 'pseudoQueue', null
       Session.set 'queueName', @params.queueName
-      Session.set 'newTicketSet', []
       Session.set 'offset', (Number(Iron.query.get('start')) || 0)
       @next()
       if Meteor.userId()
@@ -88,10 +86,8 @@ Router.map ->
     waitOn: ->
       Meteor.subscribe 'queueNames'
     onBeforeAction: ->
-      Session.set 'loadingMore', false
       Session.set 'queueName', null
       Session.set 'pseudoQueue', 'userQueue'
-      Session.set 'newTicketSet', []
       Session.set 'offset', (Number(Iron.query.get('start')) || 0)
       @next()
       if Meteor.userId()
@@ -117,12 +113,22 @@ Router.map ->
           Meteor.subscribe 'ticket', Number(@params.query.ticket)
           ticket = Tickets.findOne { ticketNumber: Number(@params.query.ticket) }
 
-        if ticket
+        if ticket and not $('#ticketModal').length
           Blaze.renderWithData Template.ticketModal, { ticketId: ticket._id }, $('body').get(0)
           $('#ticketModal').modal('show')
-        else
+        else if not ticket
           # In case we navigate with the back button.
           $('#ticketModal').modal('hide')
+
+        if @params.query.attachmentId
+          Meteor.subscribe 'file', @params.query.attachmentId
+          file = FileRegistry.findOne(@params.query.attachmentId)
+
+        if file
+          Blaze.renderWithData Template.attachmentModal, { attachmentId: @params.query.attachmentId }, $('body').get(0)
+          $('#attachmentModal').modal('show')
+        else
+          $('#attachmentModal').modal('hide')
 
   @route 'globalQueue',
     path: '/all/tickets'
@@ -130,10 +136,8 @@ Router.map ->
     waitOn: ->
       Meteor.subscribe 'queueNames'
     onBeforeAction: ->
-      Session.set 'loadingMore', false
       Session.set 'queueName', null
       Session.set 'pseudoQueue', 'globalQueue'
-      Session.set 'newTicketSet', []
       Session.set 'offset', (Number(Iron.query.get('start')) || 0)
       @next()
       if Meteor.userId()
@@ -160,11 +164,21 @@ Router.map ->
           Meteor.subscribe 'ticket', Number(@params.query.ticket)
           ticket = Tickets.findOne { ticketNumber: Number(@params.query.ticket) }
 
-        if ticket
+        if ticket and not $('#ticketModal').length
           Blaze.renderWithData Template.ticketModal, { ticketId: ticket._id }, $('body').get(0)
           $('#ticketModal').modal('show')
-        else
+        else if not ticket
           $('#ticketModal').modal('hide')
+
+        if @params.query.attachmentId
+          Meteor.subscribe 'file', @params.query.attachmentId
+          file = FileRegistry.findOne(@params.query.attachmentId)
+
+        if file
+          Blaze.renderWithData Template.attachmentModal, { attachmentId: @params.query.attachmentId }, $('body').get(0)
+          $('#attachmentModal').modal('show')
+        else
+          $('#attachmentModal').modal('hide')
 
   @route 'ticket',
     path: '/ticket/:ticketNumber'
@@ -193,10 +207,12 @@ Router.map ->
 
       Meteor.call 'checkUsername', @request.body.username
 
-      blackboxKeys = _.difference(_.keys(@request.body), requiredParams.concat(['submitter_name', 'subject_line'], Tickets.simpleSchema()._schemaKeys))
+
+      blackboxKeys = _.difference(_.keys(@request.body), requiredParams.concat(['submitter_name', 'subject_line', 'on_behalf_of'], Tickets.simpleSchema()._schemaKeys))
       formFields = _.pick(@request.body, blackboxKeys)
       username = /// \b#{@request.body.username}\b ///i
-      Tickets.insert
+
+      ticket =
         title: @request.body.subject_line
         body: @request.body.description
         authorName: @request.body.username.toLowerCase()
@@ -210,6 +226,17 @@ Router.map ->
         tags: @request.body.tags?.split(';\n') || []
         formFields: formFields
         attachmentIds: _.pluck(@request.files, '_id')
+
+      if @request.body.on_behalf_of?.length
+        ticket.formFields['Submitted by'] = ticket.authorName
+        ticket.formFields['On behalf of'] = @request.body.on_behalf_of
+        behalfOfId = Meteor.call 'checkUsername', @request.body.on_behalf_of
+        if behalfOfId
+          ticket.submittedByUserId = ticket.authorId
+          ticket.authorName = @request.body.on_behalf_of.toLowerCase()
+          ticket.authorId = behalfOfId
+
+      Tickets.insert ticket
 
       @response.end 'Submission successful.'
 

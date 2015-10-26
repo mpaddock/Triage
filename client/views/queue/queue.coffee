@@ -39,9 +39,9 @@ Template.queue.helpers
     Queues.find()
   selected: ->
     if Session.get('pseudoQueue')
-      if this.name is Meteor.user().defaultQueue then "selected"
+      if @name is Meteor.user().defaultQueue then "selected"
     else
-      if this.name is Session.get('queueName') then "selected"
+      if @name is Session.get('queueName') then "selected"
 
 Template.queue.events
   'click button[data-action=nextPage]': (e, tpl) ->
@@ -102,9 +102,15 @@ submitQuickAddTicket = (tpl) ->
     tpl.$('input[name=newTicket]').val('')
 
 
-
 Template.queue.rendered = ->
-  this.autorun ->
+  Session.set 'newTicketSet', []
+
+  @autorun ->
+    # When queueName changes, reset the new set of tickets to an empty array.
+    Session.get('queueName')
+    Session.set 'newTicketSet', []
+
+  @autorun ->
     # Highlighting of search terms.
     if Iron.query.get('search') and Session.get('ready')
       Meteor.setTimeout ->
@@ -112,7 +118,7 @@ Template.queue.rendered = ->
         $('td').highlight(Iron.query.get('search')?.split(','))
       , 500
 
-  this.autorun ->
+  @autorun ->
     renderedTime = new Date()
     queueName = Session.get('queueName') || _.pluck Queues.find().fetch(), 'name'
     filter = {
@@ -131,6 +137,5 @@ Template.queue.rendered = ->
     Tickets.find(mongoFilter).observe
       added: (ticket) ->
         if Session.get('offset') < 1
-          Session.set 'newTicketSet', _.uniq(Session.get('newTicketSet')?.concat(ticket._id) || [ticket._id])
-
-    Meteor.subscribe 'ticketSet', Session.get('newTicketSet')
+          Session.set 'newTicketSet', (_.uniq(Session.get('newTicketSet')?.concat(ticket._id)) || [ticket._id])
+    Meteor.subscribe 'ticketSet', Session.get 'newTicketSet'

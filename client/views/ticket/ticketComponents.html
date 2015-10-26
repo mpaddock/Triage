@@ -17,7 +17,7 @@
               {{#each arrayify formFields}}
                 <tr>
                   <td class="col-xs-2 col-md-2"><strong>{{name}}</strong></td>
-                  <td class="col-xs-10 col-md-10">{{value}}</td>
+                  <td class="col-xs-10 col-md-10">{{linkify value}}</td>
                 </tr>
               {{/each}}
             </tbody>
@@ -83,6 +83,9 @@
               {{/if}}
             {{/if}}
             {{#if changeIsType 'field'}}
+              {{#if fieldIs 'queueName'}}
+                User {{authorName}} transferred ticket from {{oldValue}} to {{newValue}}
+              {{/if}}
               {{#if fieldIs 'status'}}
                 User {{authorName}} changed status from {{oldValue}} to {{newValue}}
               {{/if}}
@@ -208,17 +211,17 @@
       <div class="input-buttons pull-right">
         {{#if queueMember}}
           {{#if closed}}
-            <button class="btn btn-responsive btn-default" name="addNoteAndReOpen">Re-Open Ticket</button>
+            <button type="button" class="btn btn-responsive btn-default" name="addNoteAndReOpen">Re-Open Ticket</button>
             {{else}}
             {{#if beta}}
-              <button class="btn btn-responsive btn-default" name="closeSilently" title="Close ticket without sending any emails.">Close Ticket Silently</button>
+              <button type="button" class="btn btn-responsive btn-default" name="closeSilently" title="Close ticket without sending any emails.">Close Ticket Silently</button>
             {{/if}}
-            <button class="btn btn-responsive btn-default" name="addNoteAndClose">Close Ticket</button>
+            <button type="button" class="btn btn-responsive btn-default" name="addNoteAndClose">Close Ticket</button>
           {{/if}}
-          <button class="btn btn-responsive btn-default" name="addInternalNote">Add Internal Note</button>
-          <button class="btn btn-responsive btn-success" name="addNoteAdmin">Add Note</button>
+          <button type="button" class="btn btn-responsive btn-default" name="addInternalNote">Add Internal Note</button>
+          <button type="button" class="btn btn-responsive btn-success" name="addNoteAdmin">Add Note</button>
           {{else}}
-          <button class="btn btn-responsive btn-success" name="addNote">Add Note</button>
+          <button type="button" class="btn btn-responsive btn-success" name="addNote">Add Note</button>
         {{/if}}
 
       </div>
@@ -244,14 +247,14 @@
         <div class="user-panel-portrait">{{> userPortrait userId=author._id}}</div>
         <div class="user-panel-info">
           {{author.displayName}}<br>
-          {{author.mail}}<br>
+          <a href="mailto:{{author.mail}}">{{author.mail}}</a><br>
           {{author.department}}<br>
           {{author.physicalDeliveryOfficeName}}<br>
         </div>
       </div>
       <div class="pull-right hidden-xs">
         <a href="/ticket/{{ticketNumber}}" name="ticketLink">Ticket #{{ticketNumber}}</a><br>
-        <strong>{{queueName}}</strong><br>
+        <strong><a href="#" name="changeQueue">{{queueName}}</a></strong><br>
         {{>timestampFormatter date=submittedTimestamp}}<br>
         ({{>timeFromNow date=submittedTimestamp}})
       </div>

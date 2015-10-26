@@ -4,6 +4,11 @@
   title = escape(doc.title)
   body = escape(doc.body)
   switch fn
+    when 'queueName'
+      type = "field"
+      oldValue = doc.queueName
+      newValue = modifier.$set.queueName
+
     when 'tags'
       type = "field"
       if modifier.$addToSet?.tags?

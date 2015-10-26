@@ -5,6 +5,8 @@ Template.attachmentModal.helpers
     _.contains [ 'jpg', 'jpeg', 'gif', 'bmp', 'png', 'tiff', 'tif', 'cr2', 'tga' ], @filename.substr(@filename.lastIndexOf('.')+1).toLowerCase()
   fileIsPdf: ->
     @filename.substr(@filename.indexOf('.')+1) is 'pdf'
+  encodedURI: ->
+    encodeURI Meteor.absoluteUrl() + 'file/' + @filenameOnDisk
 
 Template.attachmentModal.events
   'hidden.bs.modal': (e, tpl) ->

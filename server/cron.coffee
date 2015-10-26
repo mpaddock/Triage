@@ -41,7 +41,7 @@ updateQueueStatistics = (queueName) ->
     $match:
       queueName: queueName
       status: 'Closed'
-      submittedTimestamp: $gt: new Date(weekStart)
+      closedTimestamp: $gt: new Date(weekStart)
   ,
     $group:
       _id: "$closedByUsername"
