@@ -4,7 +4,6 @@ Meteor.startup ->
     body: "text"
     additionalText: "text"
     authorName: "text"
-    ticketNumber: "text"
     formFields: "text"
 
   Meteor.settings.queues.forEach (x) ->

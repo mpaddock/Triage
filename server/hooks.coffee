@@ -12,16 +12,17 @@ if Npm.require('cluster').isMaster
     QueueBadgeCounts.update { queueName: doc.queueName, userId: { $ne: userId } }, { $inc: { count: 1 } }, { multi: true }
 
 
-    # Add author's displayName and department to the text index.
-    author = Meteor.users.findOne(doc.authorId)
-    Job.push new TextAggregateJob
-      ticketId: doc._id
-      text: [ author?.displayName, author?.department ]
 
     # Set the ticket number, store the ticket submitter, server-side timestamp, notify author.
     doc = prepareTicket userId, doc
     notifyTicketAuthor userId, doc
     
+    # Add ticketNumber and author's displayName and department to the text index.
+    author = Meteor.users.findOne(doc.authorId)
+    Job.push new TextAggregateJob
+      ticketId: doc._id
+      text: [ author?.displayName, author?.department, doc.ticketNumber?.toString() ]
+
     if doc.attachmentIds
       text = []
       _.each doc.attachmentIds, (id) ->

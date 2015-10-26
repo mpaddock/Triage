@@ -131,8 +131,4 @@ UI.registerHelper 'tagSettings', ->
 @Parsers.getTerms = (text) ->
   # Gets separate terms that do NOT match the other tokens.
   terms = text.match /"[^"]*"|status:(\w+-\w+|\w+|"[^"]*"+|'[^']*')|\#\S+|\@\S+|[^\s]+/g
-  _.difference terms, text.match(/status:(\w+-\w+|\w+|"[^"]*"+|'[^']*')|#\S+|\@\S+|ticket:([0-9])+/g)
-
-@Parsers.getTicket = (text) ->
-  ticket = text.match(/ticket:([0-9])+/g)?.pop()
-  ticket?.replace('ticket:', '')
+  _.difference terms, text.match(/status:(\w+-\w+|\w+|"[^"]*"+|'[^']*')|#\S+|\@\S+/g)

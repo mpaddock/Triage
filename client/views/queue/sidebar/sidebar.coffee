@@ -91,9 +91,6 @@ Template.sidebar.events
       newTags = _.union tags, Parsers.getTags(text)
       newStatus = _.union statuses, Parsers.getStatuses(text)
       newUsers = _.union users, Parsers.getUsernames(text)
-      ticket = Parsers.getTicket(text)
-
-      Iron.query.set 'ticket', ticket
 
       Iron.query.set 'search', newFilter.join()
       Iron.query.set 'tag', newTags.join()
