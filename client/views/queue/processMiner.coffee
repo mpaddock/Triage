@@ -19,7 +19,14 @@ Template.processMiner.helpers
       j = JSON.parse(k)
       from = _.find nodes, (n) -> n.status == j.oldValue
       to = _.find nodes, (n) -> n.status == j.newValue
-      {from: from, to: to, count: 0.1*count}
+      offset =
+        x: to.x - from.x
+        y: to.y - from.y
+      dist = Math.sqrt(offset.x*offset.x+offset.y*offset.y)
+      arcRadii =
+        x: dist*0.5
+        y: dist*0.5*(9.0/16.0)
+      {from: from, to: to, r: arcRadii, rot: Math.atan2(offset.y,offset.x)*180/Math.PI, count: 0.5*count}
 
     {nodes: nodes, edges: edges}
 
