@@ -190,6 +190,16 @@ Router.map ->
       if Meteor.userId()
         Meteor.subscribe 'ticket', Number(@params.ticketNumber)
 
+        if @params.query.attachmentId
+          Meteor.subscribe 'file', @params.query.attachmentId
+          file = FileRegistry.findOne(@params.query.attachmentId)
+
+        if file
+          Blaze.renderWithData Template.attachmentModal, { attachmentId: @params.query.attachmentId }, $('body').get(0)
+          $('#attachmentModal').modal('show')
+        else
+          $('#attachmentModal').modal('hide')
+
 
   @route 'apiSubmit',
     path: '/api/1.0/submit'

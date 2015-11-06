@@ -132,4 +132,3 @@ UI.registerHelper 'tagSettings', ->
   # Gets separate terms that do NOT match the other tokens.
   terms = text.match /"[^"]*"|status:(\w+-\w+|\w+|"[^"]*"+|'[^']*')|\#\S+|\@\S+|[^\s]+/g
   _.difference terms, text.match(/status:(\w+-\w+|\w+|"[^"]*"+|'[^']*')|#\S+|\@\S+/g)
-   

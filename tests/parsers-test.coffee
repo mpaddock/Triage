@@ -9,4 +9,3 @@ Tinytest.add 'Parsers', (test) ->
 
     test.equal Parsers.getTerms(test2), []
     test.equal Parsers.getUsernames(test2), ['vrang2']
-

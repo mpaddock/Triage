@@ -18,5 +18,11 @@ Migrations.add
         $set:
           closedTimestamp: new Date(doc.submittedTimestamp.getTime() + doc.timeToClose*1000)
 
+Migrations.add
+  version: 4
+  up: ->
+    _.each Tickets.find().fetch(), (doc) ->
+      Tickets.direct.update doc._id, { $addToSet: { additionalText: doc.ticketNumber.toString() } }
+
 Meteor.startup ->
-  Migrations.migrateTo(3)
+  Migrations.migrateTo(4)

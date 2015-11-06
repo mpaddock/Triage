@@ -27,4 +27,4 @@ class @NotificationJob extends Job
 # (e.g. OCR from attachments and attachment filenames).
 class @TextAggregateJob extends Job
   handleJob: ->
-    Tickets.update @params.ticketId, { $addToSet: { additionalText: { $each: @params.text } } }
+    Tickets.direct.update @params.ticketId, { $addToSet: { additionalText: { $each: @params.text } } }
