@@ -5,7 +5,8 @@
     body = escape(doc.body)
     subject = "Triage ticket ##{doc.ticketNumber} submitted: #{title}"
     message = "You submitted ticket ##{doc.ticketNumber} with body:<br>#{body}"
-    if (doc.submissionData?.method is "Form" and Meteor.settings.email.sendEmailOnFormSubmit) or !(doc.submissionData?.method is "Form")
+    queue = Queues.findOne({name: doc.queueName})
+    if (doc.submissionData?.method is "Form" and queue.settings?.notifyOnAPISubmit) or !(doc.submissionData?.method is "Form")
       Job.push new NotificationJob
         ticketId: doc._id
         bcc: author.mail

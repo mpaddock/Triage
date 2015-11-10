@@ -8,7 +8,7 @@ Meteor.startup ->
     formFields: "text"
 
   Meteor.settings.queues.forEach (x) ->
-    Queues.upsert { name: x.name }, { $set: { securityGroups: x.securityGroups } }
+    Queues.upsert { name: x.name }, { $set: { securityGroups: x.securityGroups, settings: x.settings } }
 
   Facets.configure Tickets,
     tags: [String]

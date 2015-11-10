@@ -178,6 +178,12 @@
     type: Number
     optional: true
     decimal: true
+  settings:
+    type: Object
+    optional: true
+  'settings.notifyOnAPISubmit':
+    type: Boolean
+    optional: true
 
 notificationSettingDefaults =
   submitted: true
