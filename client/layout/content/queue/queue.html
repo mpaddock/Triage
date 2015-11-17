@@ -60,56 +60,10 @@
       </div>
     {{/if}}
     {{> queueSummary}}
-
-    <div class="row">
-      <hr class="half-padding">
-      <div class="pull-right">
-        <strong>{{firstVisibleTicket}}-{{lastVisibleTicket}}</strong> of <strong>{{getPublishedCount 'ticketCount'}}</strong> 
-        <div class="btn-group">
-          <button type="button" class="btn btn-default" data-action="lastPage" {{lastDisabled}}><span class="glyphicon glyphicon-chevron-left"></span></button>
-          <button type="button" class="btn btn-default" data-action="nextPage" {{nextDisabled}}><span class="glyphicon glyphicon-chevron-right"></span></button>
-        </div>
-      </div>
-    </div>
-    <hr class="half-padding">
-    {{#if ready}}
-      <div class="row">
-        <table name="ticketTable" class="table table-condensed" style="border-collapse:collapse;">
-          <thead>
-            <tr>
-              <th class="col-md-1 hidden-xs">&nbsp;</th>
-              <th class="col-md-4">Subject</th>
-              <th class="col-md-2">Requester</th>
-              <th class="col-md-2 hidden-xs">Associated Users</th>
-              <th class="col-md-1">Status</th>
-              <th class="col-md-2">Submitted</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr></tr>
-            {{#if noTickets}}
-              <tr>
-                <td colspan='6'>
-                  {{#if search}}
-                    No tickets match your current search. <a href='#' data-action='clearSearch'>Clear your search?</a>
-                    {{else}}
-                    No tickets found.
-                  {{/if}}
-                </td>
-              </tr>
-            {{/if}}
-            {{#each tickets}}
-              {{>ticketRow}}
-            {{/each}}
-          </tbody>
-        </table>
-      </div>
-      {{else}}
-      {{> loading}}
-    {{/if}}
+    {{> Template.dynamic template='ticketTable'}}
   </div>
-
   <div class="col-sm-2 hidden-xs">
     {{> sidebar data=tickets}}
   </div>
 </template>
+
