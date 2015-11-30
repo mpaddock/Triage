@@ -36,7 +36,7 @@ Package.onTest(function (api) {
 
   api.addFiles([
     'lib/filters.coffee',
-    'client/helpers/helpers.coffee',
+    'client/components/helpers/helpers.coffee',
     'tests/facets-test.coffee',
     'tests/parsers-test.coffee',
     'tests/email-function-tests.coffee',
