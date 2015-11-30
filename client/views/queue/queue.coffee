@@ -69,6 +69,32 @@ Template.queue.rendered = ->
   Session.set 'newTicketSet', []
 
   @autorun ->
+    # Render ticketModal on query parameter change.
+    ticketParam = Iron.query.get('ticket')
+    if ticketParam
+      Meteor.subscribe 'ticket', Number(ticketParam)
+      ticket = Tickets.findOne({ ticketNumber: Number(ticketParam) })
+
+    if ticket and not $('#ticketModal').length
+      Blaze.renderWithData Template.ticketModal, { ticketId: ticket._id }, $('body').get(0)
+      $('#ticketModal').modal('show')
+    else if not ticket
+      # In case we navigate with the back button.
+      $('#ticketModal').modal('hide')
+
+  @autorun ->
+    # Render attachment modal on query parameter change.
+    attachmentParam = Iron.query.get('attachmentId')
+    if attachmentParam
+      Meteor.subscribe 'file', attachmentParam
+      file = FileRegistry.findOne(attachmentParam)
+      if file
+        Blaze.renderWithData Template.attachmentModal, { attachmentId: attachmentParam }, $('body').get(0)
+        $('#attachmentModal').modal('show')
+      else
+        $('#attachmentModal').modal('hide')
+
+  @autorun ->
     # When queueName changes, reset the new set of tickets to an empty array.
     Session.get('queueName')
     Session.set 'newTicketSet', []

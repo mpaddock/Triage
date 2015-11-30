@@ -49,37 +49,6 @@ Router.map ->
             Session.set 'ready', false
         }
 
-        if @params.query.ticket
-          Meteor.subscribe 'ticket', Number(@params.query.ticket)
-          ticket = Tickets.findOne({ ticketNumber: Number(@params.query.ticket) })
-      
-        if ticket and not $('#ticketModal').length
-          Blaze.renderWithData Template.ticketModal, { ticketId: ticket._id }, $('body').get(0)
-          $('#ticketModal').modal('show')
-        else if not ticket
-          # In case we navigate with the back button.
-          $('#ticketModal').modal('hide')
-
-        if @params.query.attachmentId
-          Meteor.subscribe 'file', @params.query.attachmentId
-          file = FileRegistry.findOne(@params.query.attachmentId)
-
-        if file
-          Blaze.renderWithData Template.attachmentModal, { attachmentId: @params.query.attachmentId }, $('body').get(0)
-          $('#attachmentModal').modal('show')
-        else
-          $('#attachmentModal').modal('hide')
-
-
-        
-
-  @route 'userDashboard',
-    path: '/my/dashboard'
-    onBeforeAction: ->
-      Session.set 'queueName', null
-      Session.set 'pseudoQueue', null
-      @next()
-
   @route 'userQueue',
     path: '/my/tickets'
     template: 'queue'
@@ -108,27 +77,6 @@ Router.map ->
           onStop: ->
             Session.set 'ready', false
         }
-        
-        if @params.query.ticket
-          Meteor.subscribe 'ticket', Number(@params.query.ticket)
-          ticket = Tickets.findOne { ticketNumber: Number(@params.query.ticket) }
-
-        if ticket and not $('#ticketModal').length
-          Blaze.renderWithData Template.ticketModal, { ticketId: ticket._id }, $('body').get(0)
-          $('#ticketModal').modal('show')
-        else if not ticket
-          # In case we navigate with the back button.
-          $('#ticketModal').modal('hide')
-
-        if @params.query.attachmentId
-          Meteor.subscribe 'file', @params.query.attachmentId
-          file = FileRegistry.findOne(@params.query.attachmentId)
-
-        if file
-          Blaze.renderWithData Template.attachmentModal, { attachmentId: @params.query.attachmentId }, $('body').get(0)
-          $('#attachmentModal').modal('show')
-        else
-          $('#attachmentModal').modal('hide')
 
   @route 'globalQueue',
     path: '/all/tickets'
@@ -159,26 +107,6 @@ Router.map ->
           onStop: ->
             Session.set 'ready', false
         }
-        
-        if @params.query.ticket
-          Meteor.subscribe 'ticket', Number(@params.query.ticket)
-          ticket = Tickets.findOne { ticketNumber: Number(@params.query.ticket) }
-
-        if ticket and not $('#ticketModal').length
-          Blaze.renderWithData Template.ticketModal, { ticketId: ticket._id }, $('body').get(0)
-          $('#ticketModal').modal('show')
-        else if not ticket
-          $('#ticketModal').modal('hide')
-
-        if @params.query.attachmentId
-          Meteor.subscribe 'file', @params.query.attachmentId
-          file = FileRegistry.findOne(@params.query.attachmentId)
-
-        if file
-          Blaze.renderWithData Template.attachmentModal, { attachmentId: @params.query.attachmentId }, $('body').get(0)
-          $('#attachmentModal').modal('show')
-        else
-          $('#attachmentModal').modal('hide')
 
   @route 'ticket',
     path: '/ticket/:ticketNumber'
@@ -189,16 +117,12 @@ Router.map ->
       if Meteor.userId()
         Meteor.subscribe 'ticket', Number(@params.ticketNumber)
 
-        if @params.query.attachmentId
-          Meteor.subscribe 'file', @params.query.attachmentId
-          file = FileRegistry.findOne(@params.query.attachmentId)
-
-        if file
-          Blaze.renderWithData Template.attachmentModal, { attachmentId: @params.query.attachmentId }, $('body').get(0)
-          $('#attachmentModal').modal('show')
-        else
-          $('#attachmentModal').modal('hide')
-
+  @route 'userDashboard',
+    path: '/my/dashboard'
+    onBeforeAction: ->
+      Session.set 'queueName', null
+      Session.set 'pseudoQueue', null
+      @next()
 
   @route 'apiSubmit',
     path: '/api/1.0/submit'
