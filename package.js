@@ -40,7 +40,7 @@ Package.onTest(function (api) {
     'tests/facets-test.coffee',
     'tests/parsers-test.coffee',
     'tests/email-function-tests.coffee',
-    'server/emailFunctions.coffee'
+    'server/email/emailFunctions.coffee'
   ], ['client', 'server']);
 
 });
