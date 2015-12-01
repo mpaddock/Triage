@@ -52,6 +52,19 @@ if Npm.require('cluster').isMaster
 
       getEventMessagesFromUpdate userId, doc, fn, modifier
 
+  # Flag ticket as unread for associated users when it's updated
+  Tickets.after.update (userId, doc, fieldNames, modifier, options) ->
+    if doc.authorId != userId
+      TicketFlags.upsert {userId: doc.authorId, ticketId: doc._id, k: 'unread'},
+        $set:
+          v: true
+    _.each doc.associatedUserIds, (u) ->
+      if u != userId
+        TicketFlags.upsert {userId: u, ticketId: doc._id, k: 'unread'},
+          $set:
+            v: true
+
+
   Changelog.before.insert (userId, doc) ->
     #Server-side note timestamping.
     if doc.type is "note"
@@ -66,3 +79,18 @@ if Npm.require('cluster').isMaster
         text: [doc.message, authorName]
 
       sendNotificationForNote userId, doc
+
+
+  # After modification, set unread ticket flag
+  Changelog.after.insert (userId, doc) ->
+    ticket = Tickets.findOne(doc.ticketId)
+    if ticket?.authorId != userId
+      TicketFlags.upsert {userId: ticket.authorId, ticketId: doc.ticketId, k: 'unread'},
+        $set:
+          v: true
+    _.each ticket?.associatedUserIds, (u) ->
+      if u != userId
+        TicketFlags.upsert {userId: u, ticketId: doc.ticketId, k: 'unread'},
+          $set:
+            v: true
+
