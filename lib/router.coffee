@@ -88,7 +88,7 @@ Router.map ->
       Meteor.subscribe 'queueNames'
     onBeforeAction: ->
       queueBeforeAction @,
-        queueName: _.pluck(Queues.find().fetch(), 'name')
+        queueName: _.pluck(Queues.find({memberIds: Meteor.userId()}).fetch(), 'name')
         pseudoQueue: 'globalQueue'
         clearQueueBadge: false
         filterByUserId: false
