@@ -1,0 +1,85 @@
+<template name="mobileFilter">
+  <div class="row">
+    <div class="mobile-filter-buttons">
+      <button class="btn btn-primary" role="button" data-toggle="collapse" data-target="#mobileFilters" aria-expanded="false">
+        <span class="pull-left">Filters</span>
+        <span class="glyphicon glyphicon-chevron-down pull-right" name="mobileFilters"></span>
+      </button>
+      <div class="collapse" id="mobileFilters">
+        <!-- Status Dropdown -->
+        <button class="btn btn-default" role="button" data-toggle="collapse" data-target="#mobileStatusFilter" aria-expanded="false">
+          <span class="pull-left">Status</span>
+          <span class="glyphicon glyphicon-chevron-down pull-right" name="mobileStatusFilter"></span>
+        </button>
+        <div class="collapse" id="mobileStatusFilter">
+          {{#each status}} 
+            <div class="checkbox"> 
+              <label> 
+                <input type="checkbox" data-field="status" checked={{checked}}>{{name}} ({{count}}) 
+              </label> 
+            </div> 
+          {{/each}} 
+          {{#unless filtering}} 
+            {{#with closed}} 
+              <div class="checkbox"> 
+                <label> 
+                  <input type="checkbox" data-field="status">{{name}} ({{count}}) 
+                </label> 
+              </div> 
+            {{/with}} 
+          {{/unless}} 
+          {{#each zeroCountStatus}} 
+            <div class="checkbox"> 
+              <label> 
+                <input type="checkbox" data-field="status" checked={{checked}}>{{name}} ({{count}}) 
+              </label> 
+            </div> 
+          {{/each}} 
+        </div>
+        <!-- Tag Dropdown -->
+        <button class="btn btn-default" role="button" data-toggle="collapse" data-target="#mobileTagFilter" aria-expanded="false">
+          <span class="pull-left">Tag</span>
+          <span class="glyphicon glyphicon-chevron-down pull-right" name="mobileTagFilter"></span>
+        </button>
+        <div class="collapse" id="mobileTagFilter">
+          {{#each tags}}
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" data-field="tag" checked={{checked}}>{{name}} ({{count}})
+              </label>
+            </div>
+          {{/each}}
+          {{#each zeroCountTags}}
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" data-field="tag" checked={{checked}}>{{name}} ({{count}})
+              </label>
+            </div>
+          {{/each}}
+        </div>
+
+        <!-- Associated User Dropdown -->
+        <button class="btn btn-default" role="button" data-toggle="collapse" data-target="#mobileAssociatedUserFilter" aria-expanded="false">
+          <span class="pull-left">Associated User</span>
+          <span class="glyphicon glyphicon-chevron-down pull-right" name="mobileAssociatedUserFilter"></span>
+        </button>
+        <div class="collapse" id="mobileAssociatedUserFilter">
+          {{#each associatedUsers}}
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" data-field="user" checked="{{checked}}">{{> userPortrait userId=name class="in-row"}} {{username}} ({{count}})
+              </label>
+            </div>
+          {{/each}}
+          {{#each zeroCountUsers}}
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" data-field="user" checked={{checked}}>{{username}} ({{count}})
+              </label>
+            </div>
+          {{/each}}
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

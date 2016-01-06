@@ -27,7 +27,7 @@
         <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#newTicketModal">Add New Ticket</button>
         <button class="btn btn-success" type="button" data-action="openQuickAdd">Quick Add Ticket</button>
       </div>
-      <div class="pull-right">
+      <div class="pull-right hidden-xs">
         {{#each members}}
           {{>userPortrait userId=this class="queue-user-image" fadeIfOffline=true}}
         {{/each}}
@@ -59,10 +59,15 @@
         </div>
       </div>
     {{/if}}
-    {{> queueSummary}}
+    <div class="hidden-xs">
+      {{> queueSummary}}
+    </div>
+    <div class="hidden-sm hidden-md hidden-lg">
+      {{> mobileFilter data=tickets}}
+    </div>
     {{> Template.dynamic template='ticketTable'}}
   </div>
-  <div class="col-sm-2 hidden-xs">
+  <div class="hidden-xs col-sm-2">
     {{> sidebar data=tickets}}
   </div>
 </template>

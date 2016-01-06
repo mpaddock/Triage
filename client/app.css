@@ -515,9 +515,18 @@ blockquote {
   color: red;
 }
 
-.form-inline .form-group .quick-add-input {
-  width: 35em;
-  margin-right: 10px;
+@media (max-width: 768px) {
+  .form-inline .form-group .quick-add-input {
+    width: 25em;
+    margin-right: 10px;
+  }
+}
+
+@media (min-width: 769px) {
+  .form-inline .form-group .quick-add-input {
+    width: 35em;
+    margin-right: 10px;
+  }
 }
 
 .form-inline .form-group .quick-add-status-input {
@@ -646,3 +655,12 @@ blockquote {
 .attachment-modal-download-button {
   padding-top: 20px;
 }
+
+.mobile-filter-buttons {
+  padding-top: 5px;
+}
+
+.mobile-filter-buttons button {
+  width: 100%;
+}
+ 
