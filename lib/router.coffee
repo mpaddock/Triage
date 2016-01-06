@@ -10,6 +10,45 @@ Router.configure
     else
       @next()
 
+queueBeforeAction = (router, options) ->
+  #check router, Object
+  if options?.pseudoQueue then check options.pseudoQueue, String
+  if options?.clearQueueBadge then check options.clearQueueBadge, Boolean
+  #if options?.queueName then check options.queueName, String
+  if options?.filterByUserId then check options.filterByUserId, Boolean
+
+  Session.set 'queueName', if options?.pseudoQueue then null else options?.queueName
+  Session.set 'pseudoQueue', options?.pseudoQueue || null
+  Session.set 'offset', (Number(Iron.query.get('start')) || 0)
+
+  queueName = options?.queueName
+
+  router.next()
+  if Meteor.userId()
+    filter =
+      queueName: queueName
+      search: router.params.query.search
+      status: router.params.query.status || '!Closed'
+      tag: router.params.query.tag
+      user: router.params.query.user
+      associatedUser: router.params.query.associatedUser
+
+    if options?.filterByUserId
+      filter.userId = Meteor.userId()
+
+    if Session.get('offset') < 1
+      renderedTime = new Date()
+      Meteor.subscribe 'newTickets', filter, renderedTime
+    Meteor.subscribe 'tickets', filter, Session.get('offset'), limit, {
+      onReady: () ->
+        if options?.clearQueueBadge
+          Meteor.call 'clearQueueBadge', queueName
+        Session.set('ready', true)
+      onStop: ->
+        Session.set 'ready', false
+    }
+
+
 Router.map ->
   @route 'default',
     path: '/'
@@ -24,61 +63,11 @@ Router.map ->
   @route 'queue',
     path: '/queue/:queueName',
     onBeforeAction: ->
-      Session.set 'pseudoQueue', null
-      Session.set 'queueName', @params.queueName
-      Session.set 'offset', (Number(Iron.query.get('start')) || 0)
-      @next()
-      if Meteor.userId()
-        filter =
-          queueName: @params.queueName
-          search: @params.query.search
-          status: @params.query.status || '!Closed'
-          tag: @params.query.tag
-          user: @params.query.user
-          associatedUser: @params.query.associatedUser
-        
-        if Session.get('offset') < 1
-          renderedTime = new Date()
-          Meteor.subscribe 'newTickets', filter, renderedTime
-        queueName = @params.queueName
-        Meteor.subscribe 'tickets', filter, Session.get('offset'), limit, {
-          onReady: () ->
-            Meteor.call 'clearQueueBadge', queueName
-            Session.set('ready', true)
-          onStop: ->
-            Session.set 'ready', false
-        }
-
-        if @params.query.ticket
-          Meteor.subscribe 'ticket', Number(@params.query.ticket)
-          ticket = Tickets.findOne({ ticketNumber: Number(@params.query.ticket) })
-      
-        if ticket and not $('#ticketModal').length
-          Blaze.renderWithData Template.ticketModal, { ticketId: ticket._id }, $('body').get(0)
-          $('#ticketModal').modal('show')
-        else if not ticket
-          # In case we navigate with the back button.
-          $('#ticketModal').modal('hide')
-
-        if @params.query.attachmentId
-          Meteor.subscribe 'file', @params.query.attachmentId
-          file = FileRegistry.findOne(@params.query.attachmentId)
-
-        if file
-          Blaze.renderWithData Template.attachmentModal, { attachmentId: @params.query.attachmentId }, $('body').get(0)
-          $('#attachmentModal').modal('show')
-        else
-          $('#attachmentModal').modal('hide')
-
-
-        
-
-  @route 'userDashboard',
-    path: '/my/dashboard'
-    onBeforeAction: ->
-      Session.set 'queueName', null
-      Session.set 'pseudoQueue', null
-      @next()
+      queueBeforeAction @,
+        queueName: @params.queueName
+        pseudoQueue: null
+        clearQueueBadge: true
+        filterByUserId: false
 
   @route 'userQueue',
     path: '/my/tickets'
@@ -86,49 +75,11 @@ Router.map ->
     waitOn: ->
       Meteor.subscribe 'queueNames'
     onBeforeAction: ->
-      Session.set 'queueName', null
-      Session.set 'pseudoQueue', 'userQueue'
-      Session.set 'offset', (Number(Iron.query.get('start')) || 0)
-      @next()
-      if Meteor.userId()
-        filter =
-          queueName: _.pluck(Queues.find().fetch(), 'name')
-          search: @params.query.search
-          status: @params.query.status || '!Closed'
-          tag: @params.query.tag
-          user: @params.query.user
-          associatedUser: @params.query.associatedUser
-          userId: Meteor.userId()
-        if Session.get('offset') < 1
-          renderedTime = new Date()
-          Meteor.subscribe 'newTickets', filter, renderedTime
-        Meteor.subscribe 'tickets', filter, Session.get('offset'), limit, {
-          onReady: ->
-            Session.set 'ready', true
-          onStop: ->
-            Session.set 'ready', false
-        }
-        
-        if @params.query.ticket
-          Meteor.subscribe 'ticket', Number(@params.query.ticket)
-          ticket = Tickets.findOne { ticketNumber: Number(@params.query.ticket) }
-
-        if ticket and not $('#ticketModal').length
-          Blaze.renderWithData Template.ticketModal, { ticketId: ticket._id }, $('body').get(0)
-          $('#ticketModal').modal('show')
-        else if not ticket
-          # In case we navigate with the back button.
-          $('#ticketModal').modal('hide')
-
-        if @params.query.attachmentId
-          Meteor.subscribe 'file', @params.query.attachmentId
-          file = FileRegistry.findOne(@params.query.attachmentId)
-
-        if file
-          Blaze.renderWithData Template.attachmentModal, { attachmentId: @params.query.attachmentId }, $('body').get(0)
-          $('#attachmentModal').modal('show')
-        else
-          $('#attachmentModal').modal('hide')
+      queueBeforeAction @,
+        queueName: _.pluck(Queues.find().fetch(), 'name')
+        pseudoQueue: 'userQueue'
+        clearQueueBadge: false
+        filterByUserId: true
 
   @route 'globalQueue',
     path: '/all/tickets'
@@ -136,49 +87,11 @@ Router.map ->
     waitOn: ->
       Meteor.subscribe 'queueNames'
     onBeforeAction: ->
-      Session.set 'queueName', null
-      Session.set 'pseudoQueue', 'globalQueue'
-      Session.set 'offset', (Number(Iron.query.get('start')) || 0)
-      @next()
-      if Meteor.userId()
-        filter =
-          queueName: _.pluck(Queues.find({memberIds: Meteor.userId()}).fetch(), 'name')
-          search: @params.query.search
-          status: @params.query.status || '!Closed'
-          tag: @params.query.tag
-          user: @params.query.user
-          associatedUser: @params.query.associatedUser
-
-        if Session.get('offset') < 1
-          renderedTime = new Date()
-          Meteor.subscribe 'newTickets', filter, renderedTime
-
-        Meteor.subscribe 'tickets', filter, Session.get('offset'), limit, {
-          onReady: ->
-            Session.set 'ready', true
-          onStop: ->
-            Session.set 'ready', false
-        }
-        
-        if @params.query.ticket
-          Meteor.subscribe 'ticket', Number(@params.query.ticket)
-          ticket = Tickets.findOne { ticketNumber: Number(@params.query.ticket) }
-
-        if ticket and not $('#ticketModal').length
-          Blaze.renderWithData Template.ticketModal, { ticketId: ticket._id }, $('body').get(0)
-          $('#ticketModal').modal('show')
-        else if not ticket
-          $('#ticketModal').modal('hide')
-
-        if @params.query.attachmentId
-          Meteor.subscribe 'file', @params.query.attachmentId
-          file = FileRegistry.findOne(@params.query.attachmentId)
-
-        if file
-          Blaze.renderWithData Template.attachmentModal, { attachmentId: @params.query.attachmentId }, $('body').get(0)
-          $('#attachmentModal').modal('show')
-        else
-          $('#attachmentModal').modal('hide')
+      queueBeforeAction @,
+        queueName: _.pluck(Queues.find({memberIds: Meteor.userId()}).fetch(), 'name')
+        pseudoQueue: 'globalQueue'
+        clearQueueBadge: false
+        filterByUserId: false
 
   @route 'ticket',
     path: '/ticket/:ticketNumber'
@@ -189,16 +102,12 @@ Router.map ->
       if Meteor.userId()
         Meteor.subscribe 'ticket', Number(@params.ticketNumber)
 
-        if @params.query.attachmentId
-          Meteor.subscribe 'file', @params.query.attachmentId
-          file = FileRegistry.findOne(@params.query.attachmentId)
-
-        if file
-          Blaze.renderWithData Template.attachmentModal, { attachmentId: @params.query.attachmentId }, $('body').get(0)
-          $('#attachmentModal').modal('show')
-        else
-          $('#attachmentModal').modal('hide')
-
+  @route 'userDashboard',
+    path: '/my/dashboard'
+    onBeforeAction: ->
+      Session.set 'queueName', null
+      Session.set 'pseudoQueue', null
+      @next()
 
   @route 'apiSubmit',
     path: '/api/1.0/submit'

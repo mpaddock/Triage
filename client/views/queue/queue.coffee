@@ -6,31 +6,12 @@ Template.queue.helpers
     Meteor.settings.public.beta
   ready: ->
     Session.get 'ready'
-  firstVisibleTicket: ->
-    if Tickets.find().count() is 0 then 0 else Session.get('offset') + 1
-  lastVisibleTicket: ->
-    if Session.get('ready')
-      Math.min Session.get('offset') + Tickets.find().count(), Counts.get('ticketCount')
-    else
-      Math.min Session.get('offset') + offsetIncrement, Counts.get('ticketCount')
-  lastDisabled: ->
-    if Session.get('offset') is 0 then "disabled"
-  nextDisabled: ->
-    if (Session.get('offset') + offsetIncrement + 1) > Counts.get('ticketCount') then "disabled"
   connected: ->
     Meteor.status().connected
-  noTickets: ->
-    Tickets.find().count() is 0
-  clientCount: ->
-    Tickets.find().count()
-  search: ->
-    Iron.query.get('search')? or Iron.query.get('status')? or Iron.query.get('tag')? or Iron.query.get('user')?
   members: ->
     Queues.findOne({name: Session.get('queueName')})?.memberIds
   queueName: ->
     Session.get 'queueName'
-  tickets: ->
-    Tickets.find {}, {sort: {submittedTimestamp: -1}}
   addingTicket: ->
     Session.get 'addingTicket'
   pseudoqueue: ->
@@ -44,24 +25,6 @@ Template.queue.helpers
       if @name is Session.get('queueName') then "selected"
 
 Template.queue.events
-  'click button[data-action=nextPage]': (e, tpl) ->
-    start = Number(Iron.query.get('start')) || 0
-    if (start + offsetIncrement) < Counts.get('ticketCount')
-      Session.set 'newTicketSet', []
-      Iron.query.set 'start', start + offsetIncrement
-  'click button[data-action=lastPage]': (e, tpl) ->
-    start = Number(Iron.query.get('start')) || 0
-    Iron.query.set 'start', Math.max start - offsetIncrement, 0
-    Session.set 'newTicketSet', []
-
-  'click a[data-action=clearSearch]': (e, tpl) ->
-    e.stopPropagation()
-    Iron.query.set 'search', ''
-    Iron.query.set 'tag', ''
-    Iron.query.set 'status', ''
-    Iron.query.set 'user', ''
-    Iron.query.set 'start', ''
-
   'click button[data-action=openQuickAdd]': (e, tpl) ->
     Session.set 'addingTicket', !Session.get('addingTicket')
 
@@ -104,6 +67,32 @@ submitQuickAddTicket = (tpl) ->
 
 Template.queue.rendered = ->
   Session.set 'newTicketSet', []
+
+  @autorun ->
+    # Render ticketModal on query parameter change.
+    ticketParam = Iron.query.get('ticket')
+    if ticketParam
+      Meteor.subscribe 'ticket', Number(ticketParam)
+      ticket = Tickets.findOne({ ticketNumber: Number(ticketParam) })
+
+    if ticket and not $('#ticketModal').length
+      Blaze.renderWithData Template.ticketModal, { ticketId: ticket._id }, $('body').get(0)
+      $('#ticketModal').modal('show')
+    else if not ticket
+      # In case we navigate with the back button.
+      $('#ticketModal').modal('hide')
+
+  @autorun ->
+    # Render attachment modal on query parameter change.
+    attachmentParam = Iron.query.get('attachmentId')
+    if attachmentParam
+      Meteor.subscribe 'file', attachmentParam
+      file = FileRegistry.findOne(attachmentParam)
+      if file
+        Blaze.renderWithData Template.attachmentModal, { attachmentId: attachmentParam }, $('body').get(0)
+        $('#attachmentModal').modal('show')
+      else
+        $('#attachmentModal').modal('hide')
 
   @autorun ->
     # When queueName changes, reset the new set of tickets to an empty array.

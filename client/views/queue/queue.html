@@ -27,7 +27,7 @@
         <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#newTicketModal">Add New Ticket</button>
         <button class="btn btn-success" type="button" data-action="openQuickAdd">Quick Add Ticket</button>
       </div>
-      <div class="pull-right">
+      <div class="pull-right hidden-xs">
         {{#each members}}
           {{>userPortrait userId=this class="queue-user-image" fadeIfOffline=true}}
         {{/each}}
@@ -59,57 +59,16 @@
         </div>
       </div>
     {{/if}}
-    {{> queueSummary}}
-
-    <div class="row">
-      <hr class="half-padding">
-      <div class="pull-right">
-        <strong>{{firstVisibleTicket}}-{{lastVisibleTicket}}</strong> of <strong>{{getPublishedCount 'ticketCount'}}</strong> 
-        <div class="btn-group">
-          <button type="button" class="btn btn-default" data-action="lastPage" {{lastDisabled}}><span class="glyphicon glyphicon-chevron-left"></span></button>
-          <button type="button" class="btn btn-default" data-action="nextPage" {{nextDisabled}}><span class="glyphicon glyphicon-chevron-right"></span></button>
-        </div>
-      </div>
+    <div class="hidden-xs">
+      {{> queueSummary}}
     </div>
-    <hr class="half-padding">
-    {{#if ready}}
-      <div class="row">
-        <table name="ticketTable" class="table table-condensed" style="border-collapse:collapse;">
-          <thead>
-            <tr>
-              <th class="col-md-1 hidden-xs">&nbsp;</th>
-              <th class="col-md-4">Subject</th>
-              <th class="col-md-2">Requester</th>
-              <th class="col-md-2 hidden-xs">Associated Users</th>
-              <th class="col-md-1">Status</th>
-              <th class="col-md-2">Submitted</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr></tr>
-            {{#if noTickets}}
-              <tr>
-                <td colspan='6'>
-                  {{#if search}}
-                    No tickets match your current search. <a href='#' data-action='clearSearch'>Clear your search?</a>
-                    {{else}}
-                    No tickets found.
-                  {{/if}}
-                </td>
-              </tr>
-            {{/if}}
-            {{#each tickets}}
-              {{>ticketRow}}
-            {{/each}}
-          </tbody>
-        </table>
-      </div>
-      {{else}}
-      {{> loading}}
-    {{/if}}
+    <div class="hidden-sm hidden-md hidden-lg">
+      {{> mobileFilter data=tickets}}
+    </div>
+    {{> Template.dynamic template='ticketTable'}}
   </div>
-
-  <div class="col-sm-2 hidden-xs">
+  <div class="hidden-xs col-sm-2">
     {{> sidebar data=tickets}}
   </div>
 </template>
+
