@@ -17,3 +17,5 @@ Template.queuebar.events
   'click a': (e, tpl) ->
     if (e.target.name is Session.get('queueName')) and QueueBadgeCounts.findOne({queueName: Session.get('queueName')}).count > 0
       Meteor.call 'clearQueueBadge', Session.get('queueName')
+    if tpl.$('.collapse').hasClass('in') and $(window).width() < 769
+      tpl.$('.collapse').collapse('hide')

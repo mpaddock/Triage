@@ -78,9 +78,9 @@ Template.mobileFilter.events
   'show.bs.collapse': (e, tpl) ->
     tpl.$('span[name='+e.target.id+']').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up')
 
-  'keyup input[name=textSearch]': (e, tpl) ->
-    if e.keyCode is 13 and $(e.target).val().trim() isnt ""
-      text = $(e.target).val()
+  'keyup input[name=textSearch], click button[name=textSearch]': (e, tpl) ->
+    if (e.type is 'click' or e.keyCode is 13) and tpl.$('input[name=textSearch]').val().trim() isnt ""
+      text = tpl.$('input[name=textSearch]').val()
       filter = Iron.query.get('search')?.split(',') || []
       tags = Iron.query.get('tags')?.split(',') || []
       statuses = Iron.query.get('status')?.split(',') || []
@@ -98,7 +98,7 @@ Template.mobileFilter.events
       Iron.query.set 'status', newStatus.join()
       Iron.query.set 'user', newUsers.join()
       Iron.query.set 'start', 0
-      $(e.target).val('')
+      tpl.$('input[name=textSearch]').val('')
       Session.set 'newTicketSet', []
 
   'click a[data-action="removeFilter"]': (e, tpl) ->

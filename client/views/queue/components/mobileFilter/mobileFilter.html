@@ -6,6 +6,20 @@
         <span class="glyphicon glyphicon-chevron-down pull-right" name="mobileFilters"></span>
       </button>
       <div class="collapse" id="mobileFilters">
+        <div class="input-group top-buffer">
+          {{>inputAutocomplete name="textSearch" class="form-control" settings=tokenSettings}}
+          <span class="input-group-btn">
+            <button class="btn btn-primary" name="textSearch">Search</button>
+          </span>
+        </div>
+        <ul class="list-unstyled">
+          {{#each textFilter}}
+            <li><a data-action="removeFilter" data-type="search" data-value="{{this}}"><span class="glyphicon glyphicon-remove"></span></a>search: {{this}}</li>
+          {{/each}}
+          {{#each userFilter}}
+            <li><a data-action="removeFilter" data-type="user" data-value="{{this}}"><span class="glyphicon glyphicon-remove"></span></a>user: {{this}}</li>
+          {{/each}}
+        </ul>
         <!-- Status Dropdown -->
         <button class="btn btn-default" role="button" data-toggle="collapse" data-target="#mobileStatusFilter" aria-expanded="false">
           <span class="pull-left">Status</span>
