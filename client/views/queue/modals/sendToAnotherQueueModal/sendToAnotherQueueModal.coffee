@@ -7,7 +7,7 @@ Template.sendToAnotherQueueModal.events
     zIndex = 1040 + ( 10 * $('.modal:visible').length)
     $(e.target).css('z-index', zIndex)
     setTimeout ->
-      $('.modal-backdrop').not('.modal-stack').css('z-index',  zIndex-1).addClass('.modal-stack')
+      $('.modal-backdrop').not('.modal-stack').css('z-index',  zIndex-1).addClass('modal-stack')
     , 10
 
   'hidden.bs.modal': (e, tpl) ->
