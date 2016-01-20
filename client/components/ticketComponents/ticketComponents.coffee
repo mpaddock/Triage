@@ -9,8 +9,6 @@ Template.ticketNoteArea.helpers
 Template.ticketChangelogItem.helpers
   internalNoteClass: ->
     if @internal then 'internal-note'
-  allEvents: ->
-    Session.get 'allEvents'
   changeIsType: (type) ->
     @type is type
   fieldIs: (field) ->

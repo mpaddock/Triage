@@ -71,11 +71,11 @@ Template.sidebar.helpers
   filtering: ->
     ( Iron.query.get('status')? or Iron.query.get('tag')? or (Session.get('ready') is false) ) and ( Session.get('queueName')? or Session.get('pseudoQueue') )
   helpText: ->
-    Session.get 'helpText'
+    Template.instance().helpText.get()
 
 Template.sidebar.events
-  'click a[data-action=showHelp]': ->
-    Session.set 'helpText', !Session.get('helpText')
+  'click a[data-action=showHelp]': (e, tpl) ->
+    tpl.helpText.set !(tpl.helpText.get())
 
   'keyup input[name=textSearch]': (e, tpl) ->
     if e.keyCode is 13 and $(e.target).val().trim() isnt ""
@@ -121,10 +121,10 @@ Template.sidebar.events
     Iron.query.set 'start', 0
 
   'hide.bs.collapse': (e, tpl) ->
-    tpl.$('span[name='+e.target.id+']').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-right')
+    tpl.$("span[name=#{e.target.id}]").removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-right')
 
   'show.bs.collapse': (e, tpl) ->
-    tpl.$('span[name='+e.target.id+']').removeClass('glyphicon-chevron-right').addClass('glyphicon-chevron-down')
+    tpl.$("span[name=#{e.target.id}]").removeClass('glyphicon-chevron-right').addClass('glyphicon-chevron-down')
 
 
 Template.sidebar.rendered = () ->
@@ -138,3 +138,6 @@ Template.sidebar.rendered = () ->
       $(node).slideToggle 350, () ->
         this.remove()
   }
+
+Template.sidebar.onCreated ->
+  @helpText = new ReactiveVar(false)

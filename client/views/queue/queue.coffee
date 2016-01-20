@@ -25,6 +25,10 @@ Template.queue.helpers
       if @name is Session.get('queueName') then "selected"
 
 Template.queue.events
+  'click button[data-action=showNewTicketModal]': (e, tpl) ->
+    Blaze.render Template.newTicketModal, $('body').get(0)
+    $('#newTicketModal').modal('show')
+
   'click button[data-action=openQuickAdd]': (e, tpl) ->
     Session.set 'addingTicket', !Session.get('addingTicket')
 

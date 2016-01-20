@@ -1,33 +1,32 @@
 Template.newTicketModal.helpers
   queues: -> Queues.find()
-  errorText: -> Session.get 'errorText'
-  submitting: -> Session.get 'submitting'
+  errorText: -> Template.instance().errorText.get()
+  submitting: -> Template.instance().submitting.get()
   files: ->
-    if Session.get('newTicketAttachedFiles')
-      FileRegistry.find {_id: {$in: Session.get('newTicketAttachedFiles')}}
-
-Tracker.autorun ->
-  if Session.get('newTicketAttachedFiles')
-    Meteor.subscribe 'unattachedFiles', Session.get('newTicketAttachedFiles')
+    files = Template.instance().attachedFiles.get()
+    if files.length
+      FileRegistry.find { _id: { $in: files } }
 
 Template.newTicketModal.events
+  'hidden.bs.modal': (e, tpl) ->
+    tpl.$('input[name=tags]').select2('destroy') # Removes a DOM artifact select2 leaves
+    Blaze.remove tpl.view
+
   'click button[data-action=uploadFile]': (e, tpl) ->
     Media.pickLocalFile (fileId) ->
       console.log "Uploaded a file, got _id: ", fileId
-      files = Session.get('newTicketAttachedFiles') || []
+      files = tpl.attachedFiles.get() || []
       files.push(fileId)
-      Session.set 'newTicketAttachedFiles', files
+      tpl.attachedFiles.set files
 
   'click a[data-action=removeAttachment]': (e, tpl) ->
     id = $(e.target).data('file')
-    files = _.without Session.get('newTicketAttachedFiles'), id
-    Session.set 'newTicketAttachedFiles', files
-
+    files = _.without tpl.attachedFiles.get(), id
+    tpl.attachedFiles.set files
 
   'click button[data-action=submit]': (e, tpl) ->
-    Session.set 'submitting', true
-    #Probably need a record of 'true' submitter for on behalf of submissions.
-    
+    tpl.submitting.set true
+
     #Parsing for tags.
     body = tpl.find('textarea[name=body]').value
     title = tpl.find('input[name=title]').value
@@ -49,11 +48,9 @@ Template.newTicketModal.events
 
     Meteor.call 'checkUsername', submitter, (err, res) ->
       if res
-
         unless submitter is Meteor.user().username
-          tpl.$('input[name=onBehalfOf]').closest('div .form-group').removeClass('has-error').addClass('has-success')
-          tpl.$('button[data-action=checkUsername]').html('<span class="glyphicon glyphicon-ok"></span>')
-          tpl.$('button[data-action=checkUsername]').removeClass('btn-danger').removeClass('btn-primary').addClass('btn-success')
+          setUsernameSuccess tpl
+
         Tickets.insert {
           title: title
           body: body
@@ -64,13 +61,13 @@ Template.newTicketModal.events
           authorName: submitter
           status: status || 'Open'
           submittedTimestamp: new Date()
-          attachmentIds: Session.get('newTicketAttachedFiles')
+          attachmentIds: tpl.attachedFiles.get()
           submissionData:
             method: "Web"
         }, (err, res) ->
           if err
-            Session.set 'submitting', false
-            Session.set 'errorText', "Error: #{err.message}."
+            tpl.submitting.set false
+            tpl.errorText.set "Error: #{err.message}."
             tpl.$('.has-error').removeClass('has-error')
             console.log err
             for key in err.invalidKeys
@@ -80,10 +77,8 @@ Template.newTicketModal.events
             $('#newTicketModal').modal('hide')
             
       else
-        Session.set 'submitting', false
-        tpl.$('input[name=onBehalfOf]').closest('div .form-group').removeClass('has-success').addClass('has-error')
-        tpl.$('button[data-action=checkUsername]').removeClass('btn-success').removeClass('btn-primary').addClass('btn-danger')
-        tpl.$('button[data-action=checkUsername]').html('<span class="glyphicon glyphicon-remove"></span>')
+        tpl.submitting.set false
+        setUsernameFail tpl
 
   #Username checking and DOM manipulation for on behalf of submission field.
   'click button[data-action=checkUsername]': (e, tpl) ->
@@ -94,9 +89,7 @@ Template.newTicketModal.events
       checkUsername e, tpl, tpl.$('input[name="onBehalfOf"]').val()
 
   'autocompleteselect input[name=onBehalfOf]': (e, tpl) ->
-    tpl.$('input[name=onBehalfOf]').closest('div .form-group').removeClass('has-error').addClass('has-success')
-    tpl.$('button[data-action=checkUsername]').html('<span class="glyphicon glyphicon-ok"></span>')
-    tpl.$('button[data-action=checkUsername]').removeClass('btn-danger').removeClass('btn-primary').addClass('btn-success')
+    setUsernameSuccess tpl
 
   # When the modal is shown, we get the set of unique tags and update the modal with them.
   # Could do this with mizzao:autocomplete now...
@@ -111,20 +104,27 @@ Template.newTicketModal.events
   'click button[data-dismiss="modal"]': (e, tpl) ->
     clearFields tpl
   
+Template.newTicketModal.onCreated ->
+  @attachedFiles = new ReactiveVar []
+  @errorText = new ReactiveVar()
+  @submitting = new ReactiveVar(false)
 
 Template.newTicketModal.rendered = () ->
+  tpl = @
+  @autorun ->
+    if tpl.attachedFiles.get().length
+      Meteor.subscribe 'unattachedFiles', tpl.attachedFiles.get()
+
   tags = _.pluck Tags.find().fetch(), 'name'
-  if not Session.get('newTicketAttachedFiles')
-    Session.set 'newTicketAttachedFiles', []
   $('input[name=tags]').select2({
     tags: tags
     tokenSeparators: [' ', ',']
   })
 
 clearFields = (tpl) ->
-  Session.set 'submitting', false
-  Session.set 'errorText', null
-  Session.set 'newTicketAttachedFiles', []
+  tpl.submitting.set false
+  tpl.errorText.set null
+  tpl.attachedFiles.set []
   tpl.$('input, textarea').val('')
   tpl.$('.has-error').removeClass('has-error')
   tpl.$('.has-success').removeClass('has-success')
@@ -136,11 +136,16 @@ checkUsername = (e, tpl, val) ->
   unless val.length < 1
     Meteor.call 'checkUsername', val, (err, res) ->
       if res
-        tpl.$('input[name=onBehalfOf]').closest('div .form-group').removeClass('has-error').addClass('has-success')
-        tpl.$('button[data-action=checkUsername]').html('<span class="glyphicon glyphicon-ok"></span>')
-        tpl.$('button[data-action=checkUsername]').removeClass('btn-danger').removeClass('btn-primary').addClass('btn-success')
+        setUsernameSuccess tpl
       else
-        tpl.$('input[name=onBehalfOf]').closest('div .form-group').removeClass('has-success').addClass('has-error')
-        tpl.$('button[data-action=checkUsername]').removeClass('btn-success').removeClass('btn-primary').addClass('btn-danger')
-        tpl.$('button[data-action=checkUsername]').html('<span class="glyphicon glyphicon-remove"></span>')
+        setUsernameFail tpl
 
+setUsernameSuccess = (tpl) ->
+  tpl.$('input[name=onBehalfOf]').closest('div .form-group').removeClass('has-error').addClass('has-success')
+  tpl.$('button[data-action=checkUsername]').html('<span class="glyphicon glyphicon-ok"></span>')
+  tpl.$('button[data-action=checkUsername]').removeClass('btn-danger').removeClass('btn-primary').addClass('btn-success')
+
+setUsernameFail = (tpl) ->
+  tpl.$('input[name=onBehalfOf]').closest('div .form-group').removeClass('has-success').addClass('has-error')
+  tpl.$('button[data-action=checkUsername]').removeClass('btn-success').removeClass('btn-primary').addClass('btn-danger')
+  tpl.$('button[data-action=checkUsername]').html('<span class="glyphicon glyphicon-remove"></span>')
