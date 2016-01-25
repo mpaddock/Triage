@@ -19,7 +19,7 @@
       </div>
       {{authorName}}
     </td>
-    <td class="hidden-xs">
+    <td>
       {{#each associatedUserIds}}
         {{>userPortrait userId=this associated=true class="in-row"}}
       {{/each}}
@@ -38,6 +38,6 @@
         {{status}}
       {{/if}}
     </td>
-    <td>{{>timeFromNow date=submittedTimestamp}}</td>
+    <td class="hidden-xs">{{>timeFromNow date=submittedTimestamp}}</td>
   </tr>
 </template>

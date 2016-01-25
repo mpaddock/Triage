@@ -14,11 +14,12 @@
             {{#if fileIsPdf}}
               <embed class="attachment-modal-pdf" src="{{encodedURI}}" type="application/pdf">
             {{/if}}
-            <div class="attachment-modal-download-button">
-              <a href="/download/{{filenameOnDisk}}" target="_blank">
-                <button type="button" class="btn btn-lg btn-primary">Download File</button>
-              </a>
-            </div>
+          </div>
+          <div class="modal-footer">
+            <a href="/download/{{filenameOnDisk}}" target="_blank">
+              <button type="button" class="btn btn-lg btn-primary pull-left">Download File</button>
+            </a>
+            <button type="button" class="btn btn-lg btn-danger pull-right" data-dismiss="modal">Close</button>
           </div>
         </div>
       </div>
