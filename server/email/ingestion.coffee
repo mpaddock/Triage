@@ -24,6 +24,7 @@ if Meteor.settings?.email?.smtpPipe?
 
       else
         # Couldn't find a ticket associated with the references; respond to the user and let them know.
+        console.log "couldn't find ticket to attach response to, reporting error to user"
         Email.send
           from: Meteor.settings.email?.fromEmail || "triagebot@triage.as.uky.edu"
           to: message.fromEmail

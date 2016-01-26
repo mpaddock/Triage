@@ -131,11 +131,18 @@ Router.map ->
       formFields = _.pick(@request.body, blackboxKeys)
       username = /// \b#{@request.body.username}\b ///i
 
+      associated = _.uniq _.map @request.body.associate?.split(/[ ;]+/), (u) ->
+        q = /// \b#{u}\b ///i
+        Meteor.users.findOne({username: q})?._id
+
+      associated = _.without associated, undefined
+
       ticket =
         title: @request.body.subject_line
         body: @request.body.description
         authorName: @request.body.username.toLowerCase()
         authorId: Meteor.users.findOne({username: username})._id
+        associatedUserIds: associated
         submissionData:
           method: 'Form'
           ipAddress: @request.body.ip_address
