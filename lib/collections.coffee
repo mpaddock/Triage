@@ -266,6 +266,9 @@ Meteor.users.attachSchema new SimpleSchema
     optional: true
     type: String
     label: "Title"
+  shareTicketsWithUserIds:
+    optional: true
+    type: [String]
 
 @Tags = new Mongo.Collection 'tags'
 @Tags.attachSchema new SimpleSchema

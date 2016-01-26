@@ -9,8 +9,32 @@ Template.userDashboard.helpers
 
   saved: -> Template.instance().saved.get()
   user: -> Meteor.user()
+  name: -> Meteor.users.findOne(@valueOf())?.displayName
 
 Template.userDashboard.events
+  'autocompleteselect input[name=newSharedWithUser]': (e, tpl) ->
+    tpl.$('button[data-action=addSharedWithUser]').click()
+
+  'keyup input[name=newSharedWithUser]': (e, tpl) ->
+    if e.keyCode is 13
+      tpl.$('button[data-action=addSharedWithUser]').click()
+
+  'click button[data-action=addSharedWithUser]': (e, tpl) ->
+    id = Meteor.users.findOne({username: tpl.$('input[name=newSharedWithUser]').val()})?._id
+    if id and id isnt Meteor.userId()
+      Meteor.users.update Meteor.userId(), { $addToSet: { shareTicketsWithUserIds: id } }
+      tpl.$('input[name=newSharedWithUser]').val('')
+    else if id is Meteor.userId()
+      tpl.$('input[name=newSharedWithUser]').val('')
+    else
+      tpl.$('input[name=newSharedWithUser]').tooltip('show')
+      Meteor.setTimeout ->
+        tpl.$('input[name=newSharedWithUser]').tooltip('hide')
+      , 3000
+
+  'click a[data-action=removeSharedWithUser]': (e, tpl) ->
+    Meteor.users.update Meteor.userId(), { $pull: { shareTicketsWithUserIds: @valueOf() } }
+
   'click button[data-action=submit]': (e, tpl) ->
     defaultQueue = tpl.$('select[name=defaultQueue]').val()
     notificationSettings = {}

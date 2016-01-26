@@ -10,6 +10,21 @@
       {{/each}}
     </select>
   </div>
+  <div class="form-group">
+    <label for="shareTicketsWith" class="control-label">Share Access To My Tickets With:</label>
+    {{#each user.shareTicketsWithUserIds}}
+      <p>
+        <a href="#" data-action="removeSharedWithUser" data-userId="{{this}}"><span class="glyphicon glyphicon-remove" style="color: red;"></span></a>
+        {{> userPortrait userId=this class="in-row"}} {{name}}
+      </p>
+    {{/each}}
+    <div class="input-group col-md-6 col-xs-12">
+      {{> inputAutocomplete settings=userSettingsBottom name="newSharedWithUser" class="form-control" data-toggle="tooltip" title="User not found." data-trigger="manual"}}
+      <span class="input-group-btn">
+        <button type="button" class="btn btn-primary" data-action="addSharedWithUser">Add</button>
+      </span>
+    </div>
+  </div>
   {{#with notificationSettings}}
     <div class="form-group">
       <label for="authorPreferences" class="control-label">If I am the author of a ticket, notify me when:</label>
