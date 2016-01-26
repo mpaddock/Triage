@@ -131,7 +131,7 @@ Router.map ->
       formFields = _.pick(@request.body, blackboxKeys)
       username = /// \b#{@request.body.username}\b ///i
 
-      associated = _.uniq _.map @request.body.associate?.split(/[ ;]+/), (u) ->
+      associated = _.uniq _.map @request.body.associate?.split(/[^a-zA-Z0-9]+/), (u) ->
         q = /// \b#{u}\b ///i
         Meteor.users.findOne({username: q})?._id
 
