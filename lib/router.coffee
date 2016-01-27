@@ -132,8 +132,9 @@ Router.map ->
       username = /// \b#{@request.body.username}\b ///i
 
       associated = _.uniq _.map @request.body.associate?.split(/[^a-zA-Z0-9]+/), (u) ->
-        q = /// \b#{u}\b ///i
-        Meteor.users.findOne({username: q})?._id
+        if u.trim().length
+          q = /// \b#{u}\b ///i
+          Meteor.users.findOne({username: q})?._id
 
       associated = _.without associated, undefined
 
