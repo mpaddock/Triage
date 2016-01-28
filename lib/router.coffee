@@ -36,6 +36,9 @@ queueBeforeAction = (router, options) ->
     if options?.filterByUserId
       filter.userId = Meteor.userId()
 
+    if options?.sharedTickets
+      filter.sharedTickets = true
+
     if Session.get('offset') < 1
       renderedTime = new Date()
       Meteor.subscribe 'newTickets', filter, renderedTime
@@ -88,10 +91,11 @@ Router.map ->
       Meteor.subscribe 'queueNames'
     onBeforeAction: ->
       queueBeforeAction @,
-        queueName: _.pluck(Queues.find({memberIds: Meteor.userId()}).fetch(), 'name')
+        queueName: _.pluck(Queues.find().fetch(), 'name')
         pseudoQueue: 'globalQueue'
         clearQueueBadge: false
         filterByUserId: false
+        sharedTickets: true
 
   @route 'ticket',
     path: '/ticket/:ticketNumber'

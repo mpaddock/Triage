@@ -14,11 +14,12 @@
         { associatedUserIds: {$in: userIds}},
         { authorId: {$in: userIds}}
       ]
-    if filter.userId?
+    if filter.userId or filter.sharedWithUserIds
+      userIds = (filter.sharedWithUserIds || []).concat(filter.userId)
       selfFilter = [
-          { associatedUserIds: filter.userId },
-          { authorId: filter.userId },
-          { submittedByUserId: filter.userId }
+          { associatedUserIds: { $in: userIds } },
+          { authorId: { $in: userIds } },
+          { submittedByUserId: { $in: userIds } }
       ]
     if Meteor.isServer
       # $text operator doesn't work on the client.
@@ -67,3 +68,7 @@
       return false
 
     return true
+
+  getSharedUserIds: (userId) ->
+    shared = _.pluck Meteor.users.find({ shareTicketsWithUserIds: userId }).fetch(), '_id'
+

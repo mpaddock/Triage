@@ -1,5 +1,8 @@
 Meteor.publishComposite 'tickets', (filter, offset, limit) ->
   if offset < 0 then offset = 0
+  if filter.sharedTickets
+    filter.userId = @userId
+    filter.sharedWithUserIds = _.pluck Meteor.users.find({shareTicketsWithUserIds: @userId}).fetch(), '_id'
   if Filter.verifyFilterObject filter, _.pluck(Queues.find({memberIds: @userId}).fetch(), 'name'), @userId
     mongoFilter = Filter.toMongoSelector filter
     [ticketSet, facets] = Tickets.findWithFacets(mongoFilter, {sort: {submittedTimestamp: -1}, limit: limit, skip: offset})
@@ -27,6 +30,9 @@ Meteor.publishComposite 'tickets', (filter, offset, limit) ->
   }
 
 Meteor.publishComposite 'newTickets', (filter, time) ->
+  if filter.sharedTickets
+    filter.userId = @userId
+    filter.sharedWithUserIds = _.pluck Meteor.users.find({shareTicketsWithUserIds: @userId}).fetch(), '_id'
   if Filter.verifyFilterObject filter, _.pluck(Queues.find({memberIds: @userId}).fetch(), 'name'), @userId
     mongoFilter = Filter.toMongoSelector filter
     _.extend mongoFilter, { submittedTimestamp: { $gt: time } }
@@ -43,6 +49,8 @@ Meteor.publishComposite 'newTickets', (filter, time) ->
   }
 
 Meteor.publishComposite 'ticketSet', (ticketSet) ->
+  sharedUserIds = _.pluck Meteor.users.find({shareTicketsWithUserIds: @userId}).fetch(), '_id'
+  sharedUserIds.concat(@userId)
   {
     find: () ->
       if not ticketSet then return
@@ -50,8 +58,9 @@ Meteor.publishComposite 'ticketSet', (ticketSet) ->
       Tickets.find {
         _id: { $in: ticketSet },
         $or: [
-          { associatedUserIds: @userId },
-          { authorId: @userId },
+          { associatedUserIds: { $in: sharedUserIds } },
+          { authorId: { $in: sharedUserIds } },
+          { submittedByUserIds: { $in: sharedUserIds } },
           { queueName: { $in: queues } }
         ] },
         {sort: {submittedTimestamp: -1}}
@@ -67,6 +76,8 @@ Meteor.publishComposite 'ticketSet', (ticketSet) ->
 
 
 Meteor.publishComposite 'ticket', (ticketNumber) ->
+  sharedUserIds = _.pluck Meteor.users.find({shareTicketsWithUserIds: @userId}).fetch(), '_id'
+  sharedUserIds.concat(@userId)
   {
     find: () ->
       username = Meteor.users.findOne(@userId).username
@@ -74,9 +85,9 @@ Meteor.publishComposite 'ticket', (ticketNumber) ->
       return Tickets.find
         ticketNumber: ticketNumber,
         $or: [
-          { associatedUserIds: @userId },
-          { authorId: @userId },
-          { authorName: username },
+          { associatedUserIds: { $in: sharedUserIds } },
+          { authorId: { $in: sharedUserIds } },
+          { submittedByUserIds: { $in: sharedUserIds } },
           { queueName: { $in: queues } }
         ]
 
