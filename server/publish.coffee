@@ -2,7 +2,7 @@ Meteor.publishComposite 'tickets', (filter, offset, limit) ->
   if offset < 0 then offset = 0
   if filter.sharedTickets
     filter.userId = @userId
-    filter.sharedWithUserIds = _.pluck Meteor.users.find({shareTicketsWithUserIds: @userId}).fetch(), '_id'
+    filter.sharedWithUserIds = Filter.getSharedUserIds @userId
   if Filter.verifyFilterObject filter, _.pluck(Queues.find({memberIds: @userId}).fetch(), 'name'), @userId
     mongoFilter = Filter.toMongoSelector filter
     [ticketSet, facets] = Tickets.findWithFacets(mongoFilter, {sort: {submittedTimestamp: -1}, limit: limit, skip: offset})
@@ -32,7 +32,7 @@ Meteor.publishComposite 'tickets', (filter, offset, limit) ->
 Meteor.publishComposite 'newTickets', (filter, time) ->
   if filter.sharedTickets
     filter.userId = @userId
-    filter.sharedWithUserIds = _.pluck Meteor.users.find({shareTicketsWithUserIds: @userId}).fetch(), '_id'
+    filter.sharedWithUserIds = Filter.getSharedUserIds @userId
   if Filter.verifyFilterObject filter, _.pluck(Queues.find({memberIds: @userId}).fetch(), 'name'), @userId
     mongoFilter = Filter.toMongoSelector filter
     _.extend mongoFilter, { submittedTimestamp: { $gt: time } }
@@ -49,7 +49,7 @@ Meteor.publishComposite 'newTickets', (filter, time) ->
   }
 
 Meteor.publishComposite 'ticketSet', (ticketSet) ->
-  sharedUserIds = _.pluck Meteor.users.find({shareTicketsWithUserIds: @userId}).fetch(), '_id'
+  sharedUserIds = Filter.getSharedUserIds @userId
   sharedUserIds.concat(@userId)
   {
     find: () ->
@@ -76,7 +76,7 @@ Meteor.publishComposite 'ticketSet', (ticketSet) ->
 
 
 Meteor.publishComposite 'ticket', (ticketNumber) ->
-  sharedUserIds = _.pluck Meteor.users.find({shareTicketsWithUserIds: @userId}).fetch(), '_id'
+  sharedUserIds = Filter.getSharedUserIds @userId
   sharedUserIds.concat(@userId)
   {
     find: () ->
@@ -136,10 +136,12 @@ Meteor.publish 'statuses', ->
 Meteor.publish 'file', (fileId) ->
   queues = _.pluck Queues.find({memberIds: @userId}).fetch(), 'name'
   username = Meteor.users.findOne(@userId).username
+  sharedUserIds = Filter.getSharedUserIds @userId
+  sharedUserIds.concat(@userId)
   if Tickets.findOne { attachmentIds: fileId , $or: [
-    { associatedUserIds: @userId },
-    { authorId: @userId },
-    { authorName: username },
+    { associatedUserIds: { $in: sharedUserIds } },
+    { authorId: { $in: sharedUserIds } },
+    { submittedByUserId: { $in: sharedUserIds } }
     { queueName: { $in: queues } }
   ] }
     return FileRegistry.find { _id: fileId }
