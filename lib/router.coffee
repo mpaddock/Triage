@@ -40,13 +40,16 @@ queueBeforeAction = (router, options) ->
       renderedTime = new Date()
       Meteor.subscribe 'newTickets', filter, renderedTime
     Meteor.subscribe 'tickets', filter, Session.get('offset'), limit, {
-      onReady: () ->
+      onReady: ->
         if options?.clearQueueBadge
           Meteor.call 'clearQueueBadge', queueName
         Session.set('ready', true)
       onStop: ->
         Session.set 'ready', false
     }
+    setTimeout ->
+      Session.set('ready', true)
+    , 2000
 
 
 Router.map ->
