@@ -34,7 +34,7 @@ geojson-utils@1.0.4
 hive:accounts-ldap@0.4.1
 hive:email-ingestion@0.0.2
 hive:facets@0.1.4
-hive:file-registry@0.9.13
+hive:file-registry@0.9.15
 hive:workers@2.0.5
 hot-code-push@1.0.0
 html-tools@1.0.5
