@@ -3,7 +3,7 @@ if Meteor.settings?.email?.smtpPipe?
     console.log 'incoming email via SMTP', message
     ticketId = TriageEmailFunctions.getTicketId message
     # Don't process auto-submitted messages - header should be either 'auto-submitted' or 'auto-replied'
-    if message.headers['auto-submitted']?.match(/(auto-)\w+/g)
+    if message.headers['auto-submitted']?.match(/(auto-)\w+/g) or message.headers['x-auto-response-suppress'] is 'All'
       console.log 'auto-generated message, ignoring'
     else
       if ticketId
