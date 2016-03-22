@@ -16,3 +16,8 @@
       console.log "Parsed in-reply-to, got _id: #{id}"
 
   return ticketId
+
+@TriageEmailFunctions.getDirectlyEmailedQueueId = (message) ->
+  for q in Meteor.settings.queues
+    if q.email? == message.fromEmail
+      return Queues.findOne({name: q.name})._id

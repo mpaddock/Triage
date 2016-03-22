@@ -1,12 +1,27 @@
 if Meteor.settings?.email?.smtpPipe?
   EmailIngestion.monitorNamedPipe Meteor.settings.email.smtpPipe, (message) ->
     console.log 'incoming email via SMTP', message
-    ticketId = TriageEmailFunctions.getTicketId message
     # Don't process auto-submitted messages - header should be either 'auto-submitted' or 'auto-replied'
     if message.headers['auto-submitted']?.match(/(auto-)\w+/g) or message.headers['x-auto-response-suppress'] is 'All'
       console.log 'auto-generated message, ignoring'
+    else if queueId = TriageEmailFunctions.getDirectlyEmailedQueueId message
+      # A new submission emailed directly to the queue
+      queue = Queues.findOne queueId
+      user = Meteor.users.findOne { $or: [ { mail: message.fromEmail}, { emails: message.fromEmail } ] }
+      # TODO: handle unknown email address users... probably just issue an error reply
+      # TODO: handle getting the quote text if it's a forward instead of a direct email
+      ticket =
+        title: message.subject
+        body: message.body
+        authorId: user._id
+        authorName: user.name
+        submissionData:
+          method: 'Email'
+        submittedTimestamp: Date.now()
+        queueName: queue.name
+        attachmentIds: message.attachments
     else
-      if ticketId
+      if ticketId = TriageEmailFunctions.getTicketId message
         # Try to find a user. If no user, just attach the note with the author email address.
         user = Meteor.users.findOne { $or: [ { mail: message.fromEmail }, { emails: message.fromEmail } ] }
 
