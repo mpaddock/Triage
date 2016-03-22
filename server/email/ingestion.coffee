@@ -12,7 +12,9 @@ if Meteor.settings?.email?.smtpPipe?
       # TODO: handle getting the quote text if it's a forward instead of a direct email
       ticket =
         title: message.subject
-        body: message.body
+        body: EmailIngestion.extractReplyFromBody message.body
+        formFields:
+          'Full Message': message.body
         authorId: user._id
         authorName: user.name
         submissionData:
