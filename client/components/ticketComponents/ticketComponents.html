@@ -120,10 +120,12 @@
   <div name="associatedUsers" class="panel panel-default">
     <div class="panel-heading">Assigned Users</div>
     <div class="panel-body">
-      <div class="assign-user-field">
-        <span class="icon glyphicon glyphicon-plus"></span>
-        {{>inputAutocomplete settings=userSettings name="assignUser" placeholder="Assign User" data-toggle="tooltip" data-trigger="manual" title="User not found."}}
-      </div>
+      {{#if queueMember}}
+        <div class="assign-user-field">
+          <span class="icon glyphicon glyphicon-plus"></span>
+          {{>inputAutocomplete settings=userSettings name="assignUser" placeholder="Assign User" data-toggle="tooltip" data-trigger="manual" title="User not found."}}
+        </div>
+      {{/if}}
       {{#each associatedUserIds}}
         {{> userPortrait userId=this associated=true}}
       {{/each}}
@@ -134,13 +136,19 @@
   <div name="tags" class="panel panel-default">
     <div class="panel-heading">Tags</div>
     <div class="panel-body">
-      <div class="add-tag-field">
-        <span class="icon glyphicon glyphicon-plus"></span>
-        {{>inputAutocomplete settings=tagSettings name="addTag" placeholder="Add a tag"}}
-      </div> 
-      {{#each tags}}
-        {{> ticketTag}}
-      {{/each}}
+      {{#if queueMember}}
+        <div class="add-tag-field">
+          <span class="icon glyphicon glyphicon-plus"></span>
+          {{>inputAutocomplete settings=tagSettings name="addTag" placeholder="Add a tag"}}
+        </div> 
+        {{#each tags}}
+          {{> ticketTag}}
+        {{/each}}
+        {{else}}
+        {{#each tags}}
+          {{this}}
+        {{/each}}
+      {{/if}}
     </div>
   </div>
 
@@ -179,7 +187,11 @@
 <template name="ticketNoteInput">
   <div class="row ticket-note-input-area">
     <div class="col-xs-12 col-md-10 col-md-offset-2">
-      {{# textareaAutocomplete name="newNote" class='form-control' placeholder="Add a new note..." settings=tokenSettings data-ticket=_id }}{{/textareaAutocomplete}}
+      {{#if queueMember}}
+        {{# textareaAutocomplete name="newNoteAdmin" class='form-control' placeholder="Add a new note..." settings=tokenSettings data-ticket=_id }}{{/textareaAutocomplete}}
+        {{else}}
+        <textarea class="form-control" placeholder="Add a new note..." name="newNote" data-ticket="{{_id}}"></textarea>
+      {{/if}}
     </div>
   </div>
   <div class="row">
