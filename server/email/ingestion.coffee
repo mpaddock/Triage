@@ -8,13 +8,19 @@ if Meteor.settings?.email?.smtpPipe?
       # A new submission emailed directly to the queue
       queue = Queues.findOne queueId
       user = Meteor.users.findOne { $or: [ { mail: message.fromEmail}, { emails: message.fromEmail } ] }
-      # TODO: handle unknown email address users... probably just issue an error reply
-      # TODO: handle getting the quote text if it's a forward instead of a direct email
+      unless user
+        console.log "couldn't find user corresponding to <#{message.fromEmail}>, reporting error to user"
+        Email.send
+          from: Meteor.settings.email?.fromEmail || "triagebot@triage.as.uky.edu"
+          to: message.fromEmail
+          subject: "There was a problem ingesting your ticket."
+          html: "Sorry - we were not able to identify a user from this email address.  Please make sure you have
+          logged into "+Meteor.absoluteUrl()+" before trying to email tickets directly to this address."
+        return
+
       ticket =
         title: message.subject
         body: EmailIngestion.extractReplyFromBody message.body
-        formFields:
-          'Full Message': message.body
         authorId: user._id
         authorName: user.name
         submissionData:
@@ -22,6 +28,12 @@ if Meteor.settings?.email?.smtpPipe?
         submittedTimestamp: Date.now()
         queueName: queue.name
         attachmentIds: message.attachments
+
+      if ticket.body != message.body
+        ticket.formFields =
+          'Full Message': message.body
+
+      Tickets.insert ticket
     else
       if ticketId = TriageEmailFunctions.getTicketId message
         # Try to find a user. If no user, just attach the note with the author email address.
