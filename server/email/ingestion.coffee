@@ -22,7 +22,7 @@ if Meteor.settings?.email?.smtpPipe?
         title: message.subject
         body: EmailIngestion.extractReplyFromBody message.body
         authorId: user._id
-        authorName: user.name
+        authorName: user.username
         submissionData:
           method: 'Email'
         submittedTimestamp: Date.now()
