@@ -19,5 +19,5 @@
 
 @TriageEmailFunctions.getDirectlyEmailedQueueId = (message) ->
   for q in Meteor.settings.queues
-    if q.email? == message.toEmail
+    if q.email == message.toEmail
       return Queues.findOne({name: q.name})._id
