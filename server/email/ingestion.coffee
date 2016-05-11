@@ -47,6 +47,27 @@ if Meteor.settings?.email?.smtpPipe?
           authorEmail: message.fromEmail
           type: "note"
           message: EmailIngestion.extractReplyFromBody message.body
+        
+        _.each message.attachments, (a) ->
+          # No way to trick collection-hooks into thinking there's a user doing these actions,
+          # so we update the changelog manually.
+          file = FileRegistry.findOne(a)
+          Tickets.direct.update ticketId, { $addToSet: { attachments: file._id } }
+
+          Changelog.direct.insert
+            ticketId: ticketId
+            timestamp: new Date()
+            authorId: user?._id
+            authorName: user?.username
+            authorEmail: message.fromEmail
+            type: "attachment"
+            otherId: file._id
+            newValue: file.filename
+
+          Job.push new TextAggregateJob
+            ticketId: ticketId
+            text: file.filename
+
 
         if user
           Meteor.call 'setFlag', user._id, ticketId, 'replied', true
