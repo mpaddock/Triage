@@ -47,12 +47,13 @@ if Meteor.settings?.email?.smtpPipe?
           authorEmail: message.fromEmail
           type: "note"
           message: EmailIngestion.extractReplyFromBody message.body
-        
+
         _.each message.attachments, (a) ->
+          console.log "message has attachment with id #{a}"
           # No way to trick collection-hooks into thinking there's a user doing these actions,
           # so we update the changelog manually.
           file = FileRegistry.findOne(a)
-          Tickets.direct.update ticketId, { $addToSet: { attachments: file._id } }
+          Tickets.direct.update ticketId, { $addToSet: { attachmentIds: file._id } }
 
           Changelog.direct.insert
             ticketId: ticketId
@@ -66,7 +67,7 @@ if Meteor.settings?.email?.smtpPipe?
 
           Job.push new TextAggregateJob
             ticketId: ticketId
-            text: file.filename
+            text: [file.filename]
 
 
         if user
