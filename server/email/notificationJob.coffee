@@ -22,5 +22,4 @@ class @NotificationJob extends Job
         headers:
           'Message-ID': makeMessageID @params.ticketId
           'auto-submitted': 'auto-replied'
-          'x-auto-resopnse-suppress': 'OOF, AutoReply'
-
+          'x-auto-response-suppress': 'OOF, AutoReply'
