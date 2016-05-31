@@ -1,3 +1,6 @@
+UI.registerHelper 'usernameFromId', (userId) ->
+  Meteor.users.findOne(userId)?.username
+
 UI.registerHelper 'isCordova', ->
   Meteor.isCordova
 
