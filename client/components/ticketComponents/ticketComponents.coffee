@@ -275,7 +275,7 @@ Template.ticketTag.events
 
 Template.ticketHeadingPanels.helpers
   submittedByOther: ->
-    @authorId isnt @submittedByUserId
+    @submittedByUserId and @authorId isnt @submittedByUserId
   author: ->
     Meteor.users.findOne {_id: @authorId}
 
