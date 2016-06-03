@@ -1,6 +1,10 @@
 <template name="ticketTable">
   <div class="row">
     <hr class="half-padding">
+    <div class="pull-left">
+      <button class="btn btn-sm btn-default" data-action="setKanban">Kanban View</button>
+      <button class="btn btn-sm btn-default" data-action="setTable">Table View</button>
+    </div>
     <div class="pull-right">
       <strong>{{firstVisibleTicket}}-{{lastVisibleTicket}}</strong> of <strong>{{getPublishedCount 'ticketCount'}}</strong> 
       <div class="btn-group">

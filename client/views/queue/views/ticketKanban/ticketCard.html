@@ -1,0 +1,22 @@
+<template name="ticketCard">
+  <div class="ticket-card">
+    <div class="ticket-card-header">
+      {{title}}
+    </div>
+    <div class="ticket-card-body">
+      {{body}}
+      <div class="ticket-card-footer">
+        <div class="ticket-card-footer-associated pull-left">
+          {{#each associatedUserIds}}
+            {{> userPortrait userId=this class="in-row"}}
+          {{/each}}
+        </div>
+        <div class="ticket-card-footer-tags pull-right">
+          {{#each tags}}
+            <span class="label label-default">{{this}}</span>
+          {{/each}}
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

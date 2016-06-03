@@ -1,0 +1,40 @@
+<template name="ticketKanban">
+  <div class="row">
+    <hr class="half-padding">
+    <div class="pull-left">
+      <button class="btn btn-sm btn-default" data-action="setKanban">Kanban View</button>
+      <button class="btn btn-sm btn-default" data-action="setTable">Table View</button>
+    </div>
+    <div class="pull-right">
+      <strong>{{firstVisibleTicket}}-{{lastVisibleTicket}}</strong> of <strong>{{getPublishedCount 'ticketCount'}}</strong> 
+      <div class="btn-group">
+        <button type="button" class="btn btn-default" data-action="lastPage" {{lastDisabled}}><span class="glyphicon glyphicon-chevron-left"></span></button>
+        <button type="button" class="btn btn-default" data-action="nextPage" {{nextDisabled}}><span class="glyphicon glyphicon-chevron-right"></span></button>
+      </div>
+    </div>
+  </div>
+  <hr class="half-padding">
+  {{#if ready}}
+    <div class="row">
+      {{#if noTickets}}
+        {{#if search}}
+          No tickets match your current search. <a href='#' data-action='clearSearch'>Clear your search?</a>
+          {{else}}
+          No tickets found.
+        {{/if}}
+      {{/if}}
+      {{#each uniqueStatuses}}
+        <div class="status-column" name="{{this}}">
+          <h3 class="status-column-header">{{this}}</h3>
+          <div class="status-column-sort-area">
+            {{#each ticketsByStatus this}}
+              {{> ticketCard}}
+            {{/each}}
+          </div>
+        </div>
+      {{/each}}
+    </div>
+    {{else}}
+    {{> loading}}
+  {{/if}}
+</template>

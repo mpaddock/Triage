@@ -2,6 +2,8 @@ limit = Meteor.settings?.public?.limitDefault || 20
 offsetIncrement = Meteor.settings?.public?.offsetIncrement || 20
 
 Template.queue.helpers
+  ticketTemplate: ->
+    Session.get('ticketTemplate') || 'ticketTable'
   beta: ->
     Meteor.settings.public.beta
   ready: ->

@@ -1,0 +1,39 @@
+.status-column {
+  width: 300px;
+  float: left;
+  padding-top: 0px;
+  margin-right: 10px;
+}
+
+.status-column-header {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.status-column-sort-area {
+  background-color: #eee;
+  border: 1px solid #eee;
+  border-radius: 4px;
+  padding: 10px 5px 30px 5px;
+}
+
+.ticket-card {
+  border: 1px solid #aaa;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  background: #fff;
+}
+
+.ticket-card-header {
+  background-color: #ccc;
+  cursor: move;
+  padding: 0px 3px 0px 3px;
+}
+
+.ticket-card-body {
+  cursor: pointer;
+  padding: 5px;
+  height: 100%;
+  overflow: hidden;
+}
+

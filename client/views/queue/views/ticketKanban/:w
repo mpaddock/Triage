@@ -1,0 +1,38 @@
+<template name="ticketKanban">
+  <div class="row">
+    <hr class="half-padding">
+    <div class="pull-right">
+      <strong>{{firstVisibleTicket}}-{{lastVisibleTicket}}</strong> of <strong>{{getPublishedCount 'ticketCount'}}</strong> 
+      <div class="btn-group">
+        <button type="button" class="btn btn-default" data-action="lastPage" {{lastDisabled}}><span class="glyphicon glyphicon-chevron-left"></span></button>
+        <button type="button" class="btn btn-default" data-action="nextPage" {{nextDisabled}}><span class="glyphicon glyphicon-chevron-right"></span></button>
+      </div>
+    </div>
+  </div>
+  <hr class="half-padding">
+  {{#if ready}}
+    <div class="row">
+      {{#if noTickets}}
+        {{#if search}}
+          No tickets match your current search. <a href='#' data-action='clearSearch'>Clear your search?</a>
+          {{else}}
+          No tickets found.
+        {{/if}}
+      {{/if}}
+      <div class="gridster">
+        <ul>
+        </ul>
+      </div>
+    </div>
+    {{else}}
+    {{> loading}}
+  {{/if}}
+</template>
+
+<template name="ticketSquare">
+  <li data-row={{row}} data-col={{col}} data-sizex={{size_x}} data-sizey={{size_y}}>
+    <div style="display: block;">
+      {{title}}
+    </div>
+  </li>
+</template>
