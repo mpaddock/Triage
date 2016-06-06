@@ -24,17 +24,23 @@
         {{/if}}
       {{/if}}
       {{#each uniqueStatuses}}
-        <div class="status-column" name="{{this}}">
-          <h3 class="status-column-header">{{this}}</h3>
-          <div class="status-column-sort-area">
-            {{#each ticketsByStatus this}}
-              {{> ticketCard}}
-            {{/each}}
-          </div>
-        </div>
+        {{#statusColumn}}
+          {{#each ticketsByStatus this}}
+            {{> ticketCard}}
+          {{/each}}
+        {{/statusColumn}}
       {{/each}}
     </div>
     {{else}}
     {{> loading}}
   {{/if}}
+</template>
+
+<template name="statusColumn">
+  <div class="status-column" name="{{this}}">
+    <h3 class="status-column-header">{{this}}</h3>
+    <div class="status-column-sort-area">
+      {{> UI.contentBlock}}
+    </div>
+  </div>
 </template>

@@ -3,8 +3,6 @@ offsetIncrement = Meteor.settings?.public?.offsetIncrement || 20
 
 Template.ticketKanban.helpers
   uniqueStatuses: ->
-    enableSortable()
-    #_.uniq _.pluck Tickets.find().fetch(), 'status'
     Template.instance().statuses.get()
   search: ->
     Iron.query.get('search')? or Iron.query.get('status')? or Iron.query.get('tag')? or Iron.query.get('user')?
@@ -24,7 +22,6 @@ Template.ticketKanban.helpers
   tickets: ->
     Tickets.find {}, {sort: {submittedTimestamp: -1}}
   ticketsByStatus: (status) ->
-    enableSortable()
     Tickets.find { status: status }, { sort: { submittedTimestamp: -1 } }
   noTickets: ->
     Tickets.find().count() is 0
@@ -68,16 +65,13 @@ Template.ticketKanban.onRendered ->
   @autorun =>
     # Store statuses in a ReactiveVar so they won't disappear when empty.
     old = @statuses.get()
-    statuses = _.pluck Tickets.find().fetch(), 'status'
+    statuses = _.pluck Tickets.find({queueName: Session.get('queueName')}).fetch(), 'status'
     union = _.uniq old.concat(statuses)
     if _.difference(union,old).length
       @statuses.set union.sort()
 
-  Meteor.setTimeout ->
-    enableSortable()
-  , 1000
-
-enableSortable = ->
+Template.statusColumn.onRendered ->
+  # On each status column render, we re-run sortable so any new statuses are connected.
   $('.status-column-sort-area').sortable({
     connectWith: '.status-column-sort-area'
     handle: '.ticket-card-header'
