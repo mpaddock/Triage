@@ -26,8 +26,34 @@
 
 .ticket-card-header {
   background-color: #ccc;
+  position: relative;
   cursor: move;
   padding: 0px 3px 0px 3px;
+  height: 20px;
+}
+
+.ticket-card-header .ticket-card-header-title {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  width: 250px;
+}
+
+.ticket-card-header .submitter-portrait {
+  position: absolute;
+  top: -3px;
+  right: -3px;
+}
+
+.ticket-card-header .submitter-portrait img {
+  border-radius: 50%;
+  object-fit: cover;
+  width: 25px;
+  height: 25px;
+}
+
+.ticket-card-header .submitter-portrait .user-profile {
+  position: absolute;
 }
 
 .ticket-card-body {
@@ -36,4 +62,5 @@
   height: 100%;
   overflow: hidden;
 }
+
 

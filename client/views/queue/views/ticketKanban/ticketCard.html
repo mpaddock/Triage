@@ -1,7 +1,10 @@
 <template name="ticketCard">
   <div class="ticket-card">
     <div class="ticket-card-header">
-      {{title}}
+      <div class="ticket-card-header-title">
+        {{title}}
+      </div>
+      {{> userPortrait userId=authorId class="submitter-portrait"}}
     </div>
     <div class="ticket-card-body">
       {{body}}
