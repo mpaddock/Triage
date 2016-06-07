@@ -48,12 +48,18 @@
 .ticket-card-header .submitter-portrait img {
   border-radius: 50%;
   object-fit: cover;
+  border: 1px solid #aaa;
   width: 25px;
   height: 25px;
 }
 
 .ticket-card-header .submitter-portrait .user-profile {
   position: absolute;
+}
+
+.ticket-card-header .submitter-portrait .user-info {
+  top: 0px;
+  left: 25px;
 }
 
 .ticket-card-body {
