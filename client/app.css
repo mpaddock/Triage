@@ -510,6 +510,10 @@ blockquote {
   word-wrap: break-word;
 }
 
+.panel-title .collapse-icon {
+  padding-right: 5px;
+}
+
 .error {
   font-weight: bold;
   color: red;
