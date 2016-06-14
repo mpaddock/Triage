@@ -16,20 +16,22 @@
   <hr class="half-padding">
   {{#if ready}}
     <div class="row">
-      {{#if noTickets}}
-        {{#if search}}
-          No tickets match your current search. <a href='#' data-action='clearSearch'>Clear your search?</a>
-          {{else}}
-          No tickets found.
+      <div id="board">
+        {{#if noTickets}}
+          {{#if search}}
+            No tickets match your current search. <a href='#' data-action='clearSearch'>Clear your search?</a>
+            {{else}}
+            No tickets found.
+          {{/if}}
         {{/if}}
-      {{/if}}
-      {{#each uniqueStatuses}}
-        {{#statusColumn}}
-          {{#each ticketsByStatus this}}
-            {{> ticketCard}}
-          {{/each}}
-        {{/statusColumn}}
-      {{/each}}
+        {{#each uniqueStatuses}}
+          {{#statusColumn}}
+            {{#each ticketsByStatus this}}
+              {{> ticketCard}}
+            {{/each}}
+          {{/statusColumn}}
+        {{/each}}
+      </div>
     </div>
     {{else}}
     {{> loading}}

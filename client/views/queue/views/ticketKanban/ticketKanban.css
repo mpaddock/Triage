@@ -1,8 +1,15 @@
+#board {
+  display: flex;
+  flex-direction: row;
+  height: 70vh;
+}
+
 .status-column {
-  width: 300px;
-  float: left;
+  display: inline-block;
+  vertical-align: top;
   padding-top: 0px;
   margin-right: 10px;
+  flex: 1;
 }
 
 .status-column-header {
@@ -15,6 +22,9 @@
   border: 1px solid #eee;
   border-radius: 4px;
   padding: 10px 5px 30px 5px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: 100%;
 }
 
 .ticket-card {
@@ -65,7 +75,6 @@
 .ticket-card-body {
   cursor: pointer;
   padding: 5px;
-  height: 100%;
   overflow: hidden;
 }
 
