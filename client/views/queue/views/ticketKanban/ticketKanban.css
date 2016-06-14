@@ -10,6 +10,7 @@
   padding-top: 0px;
   margin-right: 10px;
   flex: 1;
+  max-width: 500px;
 }
 
 .status-column-header {
