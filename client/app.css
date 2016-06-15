@@ -21,9 +21,6 @@ body {
 
 /***************************** SVG SPINNER *****************************/
 .loader {
-  height:40px;
-  width:40px;
-  margin:0px auto;
   position:relative;
   -webkit-animation: rotation .6s infinite linear;
   -moz-animation: rotation .6s infinite linear;
@@ -35,6 +32,19 @@ body {
   border-top:4px solid rgba(255,255,255,.0);
   border-radius:100%;
 }
+
+.loader.page-loader {
+  height: 40px;
+  width: 40px;
+  margin: 0px auto;
+}
+
+.loader.submit-loader {
+  display: inline-block;
+  height: 20px;
+  width: 20px;
+}
+
 
 @-webkit-keyframes rotation {
   from {-webkit-transform: rotate(0deg);}
