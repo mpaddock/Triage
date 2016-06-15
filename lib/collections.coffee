@@ -1,3 +1,5 @@
+@Stats = new Mongo.Collection 'stats'
+
 @Tickets = new Mongo.Collection 'tickets'
 @Tickets.attachSchema new SimpleSchema
   title:
