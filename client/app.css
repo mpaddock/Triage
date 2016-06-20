@@ -21,6 +21,9 @@ body {
 
 /***************************** SVG SPINNER *****************************/
 .loader {
+  height: 60px;
+  width: 60px;
+  margin: auto;
   position:relative;
   -webkit-animation: rotation .6s infinite linear;
   -moz-animation: rotation .6s infinite linear;
