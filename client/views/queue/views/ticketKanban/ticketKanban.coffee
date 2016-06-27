@@ -75,6 +75,7 @@ Template.statusColumn.onRendered ->
   $('.status-column-sort-area').sortable({
     connectWith: '.status-column-sort-area'
     handle: '.ticket-card-header'
+    scroll: false
     stop: (e, ui) ->
       el = ui.item.get(0)
       ticket = Blaze.getData(el)
