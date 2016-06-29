@@ -35,9 +35,9 @@ sendNotificationForNote = (userId, doc) ->
   noteAuthor = Meteor.users.findOne(userId) || Meteor.users.findOne(doc.authorId)
   noteAuthorName = doc.authorName || doc.authorEmail || noteAuthor.username
 
-  title = escape(ticket.title)
-  body = escape(ticket.body)
-  note = escape(doc.message)
+  title = escapeString(ticket.title)
+  body = escapeString(ticket.body)
+  note = escapeString(doc.message)
 
   recipients = []
 

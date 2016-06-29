@@ -22,7 +22,6 @@ matb33:collection-hooks
 mizzao:user-status
 tmeasday:publish-counts
 email
-logandk:validator
 hive:facets
 hive:email-ingestion
 

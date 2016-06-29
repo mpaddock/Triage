@@ -17,7 +17,7 @@ UI.registerHelper 'arrayify', (obj) ->
 UI.registerHelper 'linkify', (text) ->
   # URLs starting with http://, https://, or ftp://
   
-  text = escape(text)
+  text = escapeString(text)
 
   urlPattern = /(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gim
   pseudoUrlPattern = /(^|[^\/])(www\.[-A-Z0-9+&@#\/%=~_|.]*[-A-Z0-9+&@#\/%=~_|])/gim

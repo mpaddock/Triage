@@ -66,8 +66,8 @@ if Npm.require('cluster').isMaster
 notifyTicketAuthor = (userId, doc) ->
   author = Meteor.users.findOne(doc.authorId)
   if author?.notificationSettings?.submitted
-    title = escape(doc.title)
-    body = escape(doc.body)
+    title = escapeString(doc.title)
+    body = escapeString(doc.body)
     subject = "Triage ticket ##{doc.ticketNumber} submitted: #{title}"
     message = "You submitted ticket ##{doc.ticketNumber} with body:<br>#{body}"
     queue = Queues.findOne({name: doc.queueName})
@@ -85,9 +85,9 @@ notifyAssociatedUsers = (doc) ->
     if user.notificationSettings?.associatedWithTicket
       recipients.push(user.mail)
   if recipients.length
-    subject = "You have been associated with Triage ticket ##{doc.ticketNumber}: #{escape(doc.title)}"
+    subject = "You have been associated with Triage ticket ##{doc.ticketNumber}: #{escapeString(doc.title)}"
     message = "You are now associated with ticket ##{doc.ticketNumber}.<br>
-    The original ticket body was:<br>#{escape(doc.body)}"
+    The original ticket body was:<br>#{escapeString(doc.body)}"
     Job.push new NotificationJob
       ticketId: doc._id
       bcc: recipients
@@ -113,8 +113,8 @@ prepareTicket = (userId, doc) ->
 getEventMessagesFromUpdate = (userId, doc, fn, modifier) ->
   user = Meteor.users.findOne(userId)
   author = Meteor.users.findOne(doc.authorId)
-  title = escape(doc.title)
-  body = escape(doc.body)
+  title = escapeString(doc.title)
+  body = escapeString(doc.body)
   switch fn
     when 'queueName'
       type = "field"
@@ -134,8 +134,8 @@ getEventMessagesFromUpdate = (userId, doc, fn, modifier) ->
         oldValue = "#{modifier.$pull.tags}" #in case its an array.
 
     when 'status'
-      oldStatus = escape(doc.status)
-      newStatus = escape(modifier.$set.status)
+      oldStatus = escapeString(doc.status)
+      newStatus = escapeString(modifier.$set.status)
       unless oldStatus is newStatus
         Statuses.upsert { name: newStatus }, { $set: { lastUse: new Date() } }
         type = "field"
