@@ -67,7 +67,7 @@ notifyTicketAuthor = (userId, doc) ->
   author = Meteor.users.findOne(doc.authorId)
   if author?.notificationSettings?.submitted
     title = escapeString(doc.title)
-    body = escapeString(doc.body)
+    body = Parsers.prepareContentForEmail(doc.body)
     subject = "Triage ticket ##{doc.ticketNumber} submitted: #{title}"
     message = "You submitted ticket ##{doc.ticketNumber} with body:<br>#{body}"
     queue = Queues.findOne({name: doc.queueName})
@@ -85,9 +85,11 @@ notifyAssociatedUsers = (doc) ->
     if user.notificationSettings?.associatedWithTicket
       recipients.push(user.mail)
   if recipients.length
-    subject = "You have been associated with Triage ticket ##{doc.ticketNumber}: #{escapeString(doc.title)}"
+    title = escapeString(doc.title)
+    body = Parsers.prepareContentForEmail(doc.body)
+    subject = "You have been associated with Triage ticket ##{doc.ticketNumber}: #{title}"
     message = "You are now associated with ticket ##{doc.ticketNumber}.<br>
-    The original ticket body was:<br>#{escapeString(doc.body)}"
+    The original ticket body was:<br>#{body}"
     Job.push new NotificationJob
       ticketId: doc._id
       bcc: recipients
@@ -114,7 +116,7 @@ getEventMessagesFromUpdate = (userId, doc, fn, modifier) ->
   user = Meteor.users.findOne(userId)
   author = Meteor.users.findOne(doc.authorId)
   title = escapeString(doc.title)
-  body = escapeString(doc.body)
+  body = Parsers.prepareContentForEmail(doc.body)
   switch fn
     when 'queueName'
       type = "field"

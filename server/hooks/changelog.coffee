@@ -36,8 +36,8 @@ sendNotificationForNote = (userId, doc) ->
   noteAuthorName = doc.authorName || doc.authorEmail || noteAuthor.username
 
   title = escapeString(ticket.title)
-  body = escapeString(ticket.body)
-  note = escapeString(doc.message)
+  body = Parsers.prepareContentForEmail(ticket.body)
+  note = Parsers.prepareContentForEmail(doc.message)
 
   recipients = []
 
