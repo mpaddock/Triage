@@ -5,11 +5,10 @@
   # Output: 
   #   Sanitized, separated string.
   #
-  paragraphs = content.split('\n')
-  newContent = ""
-  _.each paragraphs, (p) ->
-    newContent = newContent +
-      "<p>#{escapeString(p)}</p>"
-  return newContent
-
-
+  #
+  md = new markdownit {
+    linkify: true
+    breaks: true
+  }
+  md.disable [ 'image', 'table', 'heading' ]
+  md.render(content)

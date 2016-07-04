@@ -12,13 +12,13 @@
       <label for="title">Title:</label>
       <blockquote>
         <strong>
-          {{linkify title}}
+          {{markdown title}}
         </strong>
       </blockquote>
       <label for="body">Body:</label>
       <blockquote>
         {{#each bodyParagraph}}
-          <p>{{linkify this}}</p>
+          <p>{{markdown this}}</p>
         {{/each}}
       </blockquote>
     </div>

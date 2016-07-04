@@ -145,7 +145,10 @@ Template.ticketInfoPanels.events
       Meteor.call 'setFlag', Meteor.userId(), tpl.data._id, 'attachment', true
 
 
+Template.ticketNoteInput.onCreated ->
+  @showingMarkdownHelp = new ReactiveVar(false)
 Template.ticketNoteInput.helpers
+  showingMarkdownHelp: -> Template.instance().showingMarkdownHelp.get()
   closed: -> Tickets.findOne(@ticketId).status is "Closed"
   beta: -> Meteor.settings.public.beta
   status: -> Tickets.findOne(@ticketId).status
@@ -162,6 +165,9 @@ Template.ticketNoteInput.helpers
     }
 
 Template.ticketNoteInput.events
+  'click button[data-action=showMarkdownHelp]': (e, tpl) ->
+    tpl.showingMarkdownHelp.set !tpl.showingMarkdownHelp.get()
+
   'click button[name=addNote]': (e, tpl) ->
     addNote e, tpl, false, false
 
