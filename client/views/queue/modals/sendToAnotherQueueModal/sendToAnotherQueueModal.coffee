@@ -22,7 +22,6 @@ Template.sendToAnotherQueueModal.events
     Tickets.update {_id: @ticketId},
       $set:
         queueName: tpl.$('select[name=queue]').val()
-        status: 'Transferred'
     tpl.$('#sendToAnotherQueueModal').modal('hide')
 
 
