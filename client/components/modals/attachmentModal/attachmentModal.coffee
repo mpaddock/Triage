@@ -7,6 +7,8 @@ Template.attachmentModal.helpers
     @filename.substr(@filename.indexOf('.')+1) is 'pdf'
   encodedURI: ->
     encodeURI Meteor.absoluteUrl() + 'file/' + @filenameOnDisk
+  encodedDownloadURI: ->
+    encodeURI Meteor.absoluteUrl() + 'download/' + @filenameOnDisk
 
 Template.attachmentModal.events
   'hidden.bs.modal': (e, tpl) ->
