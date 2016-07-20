@@ -274,6 +274,8 @@ Template.ticketTag.events
     Iron.query.set 'tag', filter.join()
 
 Template.ticketHeadingPanels.helpers
+  queueMember: ->
+    _.contains Queues.findOne({name: @queueName})?.memberIds, Meteor.userId()
   submittedByOther: ->
     @submittedByUserId and @authorId isnt @submittedByUserId
   author: ->

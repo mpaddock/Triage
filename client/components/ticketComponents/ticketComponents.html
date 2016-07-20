@@ -254,7 +254,11 @@
       </div>
       <div class="pull-right hidden-xs">
         <a href="/ticket/{{ticketNumber}}" name="ticketLink">Ticket #{{ticketNumber}}</a><br>
-        <strong><a href="#" name="changeQueue">{{queueName}}</a></strong><br>
+        {{#if queueMember}}
+          <strong><a href="#" name="changeQueue">{{queueName}}</a></strong><br>
+          {{else}}
+          <strong>{{queueName}}</strong><br>
+        {{/if}}
         {{>timestampFormatter date=submittedTimestamp}}<br>
         ({{>timeFromNow date=submittedTimestamp}})<br>
         {{#if submittedByOther}}
