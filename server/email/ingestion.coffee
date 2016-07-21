@@ -2,6 +2,10 @@ if Meteor.settings?.email?.smtpPipe?
   EmailIngestion.monitorNamedPipe Meteor.settings.email.smtpPipe, (message) ->
     console.log 'incoming email via SMTP', message
 
+    if _.contains Meteor.settings?.email?.blacklist, message?.fromEmail
+      console.log "Message is from blacklisted address: #{message.fromEmail}, ignoring"
+      return
+
     if queueId = TriageEmailFunctions.getDirectlyEmailedQueueId message
       # A new submission emailed directly to the queue - we check this BEFORE checking
       # if the message was auto-generated, since forwarded emails give auto-generated header
