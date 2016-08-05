@@ -98,6 +98,11 @@ Template.queue.rendered = ->
       else
         $('#attachmentModal').modal('hide')
 
+    else if not attachmentParam
+      # Navigating with back button or clearing query param manually should close the modal.
+      $('#attachmentModal').modal('hide')
+      
+
   @autorun ->
     # When queueName changes, reset the new set of tickets to an empty array.
     Session.get('queueName')
