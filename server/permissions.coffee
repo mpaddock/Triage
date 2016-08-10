@@ -1,5 +1,7 @@
 @Tickets.allow
-  insert: -> true
+  insert: (userId, doc) ->
+    # Member of at least one queue.
+    Queues.findOne({memberIds: userId})?
   update: (userId, doc, fields, modifier) ->
     unless _.intersection(['_id', 'authorId', 'authorName', 'body', 'submissionData', 'submittedTimestamp', 'ticketNumber', 'title'], fields).length is 0
       return false
