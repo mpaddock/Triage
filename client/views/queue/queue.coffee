@@ -10,6 +10,12 @@ Template.queue.helpers
     Meteor.status().connected
   members: ->
     Queues.findOne({name: Session.get('queueName')})?.memberIds
+  queueMember: ->
+    # Member of this queue; or, if in a pseudo queue, at least one queue.
+    if Session.get('queueName')
+      _.contains Queues.findOne({name: Session.get('queueName')}).memberIds, Meteor.userId()
+    else
+      _.contains Queues.findOne().memberIds, Meteor.userId()
   queueName: ->
     Session.get 'queueName'
   addingTicket: ->
