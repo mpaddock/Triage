@@ -46,13 +46,22 @@ sendNotificationForNote = (userId, doc) ->
     #{note}<br><br>
     <strong>#{ticket.authorName}'s original ticket body was:</strong><br>
     #{body}"
+  
+  if !doc.internal or Queues.findOne({ name: ticket.queueName, memberIds: ticket.authorId })
+    # If it's not an internal note or the author is a queue member, check notification settings and send
+    if (noteAuthor?._id is ticketAuthor?._id) and (ticketAuthor?.notificationSettings?.authorSelfNote)
+      recipients.push(ticketAuthor.mail)
+    else if (noteAuthor?._id isnt ticketAuthor?._id) and ticketAuthor?.notificationSettings?.authorOtherNote
+      recipients.push(ticketAuthor.mail)
 
-  if (noteAuthor?._id is ticketAuthor?._id) and (ticketAuthor?.notificationSettings?.authorSelfNote) and not doc.internal
-    recipients.push(ticketAuthor.mail)
-  else if (noteAuthor?._id isnt ticketAuthor?._id) and ticketAuthor?.notificationSettings?.authorOtherNote and not doc.internal
-    recipients.push(ticketAuthor.mail)
+  associated = ticket.associatedUserIds
+  # If it's an internal note, filter out non-queue member associated users
+  if doc.internal
+    associated = _.filter associated, (u) ->
+      Queues.findOne({ name: ticket.queueName, memberIds: u })?
 
-  _.each ticket.associatedUserIds, (id) ->
+  _.each associated, (id) ->
+    # Check notification settings for each user
     u = Meteor.users.findOne(id)
     if (u._id is noteAuthor?._id) and (u.notificationSettings?.associatedSelfNote)
       recipients.push(u.mail)
