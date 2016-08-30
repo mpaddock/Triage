@@ -23,13 +23,13 @@
           <strong>You are not currently connected. Any changes you make may not be saved.</strong>
         </div>
       {{/unless}}
-      {{#if queueMember}}
+      {{#if shouldShowTicketButtons}}
         <div class="pull-left">
           <button class="btn btn-primary" type="button" data-action="showNewTicketModal">Add New Ticket</button>
           <button class="btn btn-success" type="button" data-action="openQuickAdd">Quick Add Ticket</button>
         </div>
       {{else}}
-        <a href="https://resources.as.uky.edu/hive-forms"><button class="btn btn-primary">Submit a Ticket</button></a>
+        <a href="{{submissionUrl}}"><button class="btn btn-primary">Submit a Ticket</button></a>
       {{/if}}
       <div class="pull-right hidden-xs">
         {{#each members}}

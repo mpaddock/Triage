@@ -10,12 +10,9 @@ Template.queue.helpers
     Meteor.status().connected
   members: ->
     Queues.findOne({name: Session.get('queueName')})?.memberIds
-  queueMember: ->
-    # Member of this queue; or, if in a pseudo queue, at least one queue.
-    if Session.get('queueName')
-      Queues.findOne({name: Session.get('queueName'), memberIds: Meteor.userId()})?
-    else
-      Queues.findOne({memberIds: Meteor.userId()})
+  shouldShowTicketButtons: ->
+    # Member of at least one queue, or no submission URL set.
+    Queues.findOne({memberIds: Meteor.userId()}) or !Meteor.settings.public.ticketSubmissionUrl
   queueName: ->
     Session.get 'queueName'
   addingTicket: ->
@@ -29,6 +26,8 @@ Template.queue.helpers
       if @name is Meteor.user().defaultQueue then "selected"
     else
       if @name is Session.get('queueName') then "selected"
+  submissionUrl: ->
+    Meteor.settings.public.ticketSubmissionUrl
 
 Template.queue.events
   'click button[data-action=showNewTicketModal]': (e, tpl) ->
