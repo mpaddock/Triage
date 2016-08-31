@@ -1,6 +1,6 @@
 fs = Npm.require('fs')
 
-emaildir = process.env.PWD+'/packages/hive:email-ingestion/emails/'
+emaildir = process.env.PWD+'/emails/'
 
 testFiles = [
   {
@@ -29,6 +29,10 @@ testFiles = [
   {
     file: 'uky_forwarded_to_gmail2.mail'
     expected: 'test'
+  },
+  {
+    file: 'iphone.mail'
+    expected: 'How soon can you ?'
   }
 ]
 
