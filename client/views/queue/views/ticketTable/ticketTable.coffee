@@ -18,7 +18,16 @@ Template.ticketTable.helpers
   nextDisabled: ->
     if (Session.get('offset') + offsetIncrement + 1) > Counts.get('ticketCount') then "disabled"
   tickets: ->
-    Tickets.find {}, {sort: {submittedTimestamp: -1}}
+    queueName = Session.get('queueName') || _.pluck Queues.find().fetch(), 'name'
+    filter = {
+      queueName: queueName
+      status: Iron.query.get 'status'
+      tag: Iron.query.get 'tag'
+      user: Iron.query.get 'user'
+      associatedUser: Iron.query.get 'associatedUser'
+    }
+    mongoFilter = Filter.toMongoSelector filter
+    Tickets.find mongoFilter, {sort: {submittedTimestamp: -1}}
   noTickets: ->
     Tickets.find().count() is 0
   clientCount: ->
