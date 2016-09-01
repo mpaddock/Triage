@@ -1,8 +1,8 @@
-Meteor.publish 'stats', (startDate, endDate) ->
-  calculateStats startDate, endDate
-  Stats.find { startDate: startDate, endDate: endDate }
+Meteor.publish 'userStats', (startDate, endDate) ->
+  calculateUserStats startDate, endDate
+  UserStats.find { startDate: startDate, endDate: endDate }
 
-calculateStats = (startDate, endDate) ->
+calculateUserStats = (startDate, endDate) ->
   console.log "calculating stats between #{startDate} and #{endDate}"
   pipeline = []
   pipeline.push { $project: { 'queueName': 1, 'closedByUsername': 1, 'closedTimestamp': 1, 'timeToClose': 1 } }
@@ -17,6 +17,74 @@ calculateStats = (startDate, endDate) ->
 
   tickets = Tickets.aggregate(pipeline)
   _.each tickets, (t) ->
-    Stats.upsert { startDate: startDate, endDate: endDate, queueName: t._id.queueName, closedByUsername: t._id.closedByUsername },
+    UserStats.upsert { startDate: startDate, endDate: endDate, queueName: t._id.queueName, closedByUsername: t._id.closedByUsername },
       { $set: { timeToClose: t.timeToClose, count: t.count } }
 
+
+Meteor.publish 'ticketStats', ->
+  TicketStats.find()
+
+aggregateTicketsByDay = ->
+  TicketStats.remove({})
+  submittedPipeline = []
+  submittedPipeline.push { $project:
+    {
+      queueName: 1
+      year: { $year: '$submittedTimestamp' }
+      month: { $month: '$submittedTimestamp' }
+      day: { $dayOfMonth: '$submittedTimestamp' }
+    }
+  }
+  submittedPipeline.push { $group:
+    {
+      _id: {
+        queueName: '$queueName'
+        year: '$year'
+        month: '$month'
+        day: '$day'
+      }
+      submittedCount: { $sum: 1 }
+    }
+  }
+
+  closedPipeline = []
+  closedPipeline.push { $match: { closedTimestamp: { $exists: true } } }
+  closedPipeline.push { $project:
+    {
+      queueName: 1
+      year: { $year: '$closedTimestamp' }
+      month: { $month: '$closedTimestamp' }
+      day: { $dayOfMonth: '$closedTimestamp' }
+    }
+  }
+  closedPipeline.push { $group:
+    {
+      _id: {
+        queueName: '$queueName'
+        year: '$year'
+        month: '$month'
+        day: '$day'
+      }
+      closedCount: { $sum: 1 }
+    }
+  }
+
+  submitted = Tickets.aggregate(submittedPipeline)
+  closed = Tickets.aggregate(closedPipeline)
+  _.each submitted, (s) ->
+    closedMatch = _.find(closed, (c) ->
+      c._id.year is s._id.year and c._id.month is s._id.month and c._id.day is s._id.day and s._id.queueName is c._id.queueName
+    )
+    s.closedCount = closedMatch?.closedCount || 0
+    TicketStats.upsert {
+      queueName: s._id.queueName
+      date: "#{s._id.year}-#{s._id.month}-#{s._id.day}"
+    }, { $set: { closedCount: s.closedCount, submittedCount: s.submittedCount } }
+
+SyncedCron.add
+  name: 'Update queue submitted/closed tickets'
+  schedule: (parser) -> parser.text 'every 15 minutes'
+  job: ->
+    aggregateTicketsByDay()
+
+SyncedCron.start()

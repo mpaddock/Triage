@@ -1,0 +1,25 @@
+<template name="stats">
+  <div class="stats-filters">
+    Closed Between
+    <div class="input-daterange stats-daterange">
+      <input type="text" class="form-control" data-filter="startDate" value="{{startDate}}">
+      <span class="checkout-daterange-addon">And</span>
+      <input type="text" class="form-control" data-filter="endDate" value="{{endDate}}">
+    </div>
+    <button type="button" class="reset btn btn-default" data-action="reset">Reset</button>
+  </div>
+  {{#unless ready}}
+    <div>
+      Generating statistics... this may take a moment.
+      {{> loading class="stats-loader"}}
+    </div>
+  {{/unless}}
+  <div class="row">
+    <div id="tickets-by-queue">
+    </div>
+    <div id="tickets-by-closer">
+    </div>
+    <table class="table table-condensed" id="data-table">
+    </table>
+  </div>
+</template>

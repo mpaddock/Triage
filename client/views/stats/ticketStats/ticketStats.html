@@ -1,4 +1,4 @@
-<template name="stats">
+<template name="ticketStats">
   <div class="stats-filters">
     Closed Between
     <div class="input-daterange stats-daterange">
@@ -15,24 +15,10 @@
     </div>
   {{/unless}}
   <div class="row">
-    <div id="tickets-by-queue">
+    <div id="tickets-by-day">
     </div>
-    <div id="tickets-by-closer">
+    <div id="closed-by-day">
     </div>
-    <table class="table table-condensed" id="data-table">
-    </table>
-  </div>
+    <div id="volume-chart">
+    </div> </div>
 </template>
-
-<template name="closedByQueue">
-  <svg class="chart" width="800" height="500">
-    <title>Tickets Closed By Queue</title>
-    {{#each queueNames}}
-      <g class="bar">
-        <rect width="{{width}}" height="{{height}}" y={{y}}></rect>
-        <text x="{{x}}" y="{{y}}" dy=".35em">{{this}}</text>
-      </g>
-    {{/each}}
-  </svg>
-</template>
-

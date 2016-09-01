@@ -1,4 +1,5 @@
-@Stats = new Mongo.Collection 'stats'
+@UserStats = new Mongo.Collection 'userStats'
+@TicketStats = new Mongo.Collection 'ticketStats'
 
 @Tickets = new Mongo.Collection 'tickets'
 @Tickets.attachSchema new SimpleSchema

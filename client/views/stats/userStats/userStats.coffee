@@ -6,8 +6,8 @@ Template.stats.helpers
   ready: ->
     Template.instance().ready.get()
   noResults: ->
-    Template.instance().ready.get() and !Stats.count()
-  stats: -> Stats.find()
+    Template.instance().ready.get() and !UserStats.count()
+  stats: -> UserStats.find()
   startDate: -> Iron.query.get('startDate')
   endDate: -> Iron.query.get('endDate')
 
@@ -31,11 +31,12 @@ Template.stats.onRendered ->
   })
 
   @autorun =>
-    startDate = endDate = null
+    startDate = new Date('1960-01-01')
+    endDate = new Date('3000-01-01') # hopefully future proof enough
     if Iron.query.get('startDate')
       startDate = moment(Iron.query.get('startDate')).toDate()
       endDate = moment(Iron.query.get('endDate')).toDate()
-    @subscribe 'stats',
+    @subscribe 'userStats',
       startDate,
       endDate,
       onReady: =>
@@ -45,7 +46,7 @@ Template.stats.onRendered ->
 
   @autorun =>
     if @ready.get()
-      stats = Stats.find().fetch()
+      stats = UserStats.find().fetch()
       data = crossfilter(stats)
       all = data.groupAll()
 
