@@ -57,6 +57,23 @@ Template.ticketStats.onRendered ->
         dateFormat.parse(dateFormat(d.closedTimestamp))
       closedGroup = closedPerDayDim.group()
 
+      closedByUsernameDim = data.dimension (d) ->
+        d.closedByUsername
+      closedByUsernameGroup = closedByUsernameDim.group()
+      add = (p, v) ->
+        p.count++
+        p.total += v.timeToClose
+        p.avg = p.total / p.count
+        p
+      sub = (p, v) ->
+        p.count--
+        p.total -= v.timeToClose
+        if p.count is 0 then p.avg = 0 else p.avg = p.total / p.count
+        p
+      initial = ->
+        { count: 0, total: 0, avg: 0 }
+      timeToCloseGroup = closedByUsernameDim.group().reduce(add, sub, initial)
+
 
       queueDim = data.dimension (d) -> d.queueName
       queueGroup = queueDim.group()
@@ -67,7 +84,7 @@ Template.ticketStats.onRendered ->
       # Range chart, with submitted for bars
       volumeChart = dc.barChart('#volume-chart')
         .height(100)
-        .width(window.innerWidth -  400)
+        .width(window.innerWidth * 2/3 - 50)
         .margins(margins)
         .dimension(dayDim)
         .group(submittedGroup)
@@ -84,7 +101,7 @@ Template.ticketStats.onRendered ->
       # Composite line chart
       lineChart = dc.compositeChart('#tickets-by-day')
       lineChart
-        .width(window.innerWidth - 400)
+        .width(window.innerWidth * 2/3 - 50)
         #.height(window.innerHeight - 300)
         .height(200)
         .transitionDuration(1000)
@@ -112,8 +129,8 @@ Template.ticketStats.onRendered ->
       # Pie/donut chart for queue
       queuePieChart = dc.pieChart("#tickets-by-queue")
       queuePieChart
-        .width(180)
-        .height(180)
+        .width(window.innerWidth/6 - 50)
+        .height(window.innerWidth/6 - 50)
         .radius(80)
         .dimension(queueDim)
         .group(queueGroup)
@@ -130,14 +147,43 @@ Template.ticketStats.onRendered ->
 
       departmentPieChart = dc.pieChart("#tickets-by-submitter-department")
       departmentPieChart
-        .width(180)
-        .height(180)
+        .width(window.innerWidth/6 - 50)
+        .height(window.innerWidth/6 - 50)
         .radius(89)
         .dimension(departmentDim)
         .group(departmentGroup)
         .renderLabel(true)
 
       departmentPieChart.render()
+
+      closedByUserRowChart = dc.rowChart('#tickets-closed-by-user')
+      closedByUserRowChart
+        .width(window.innerWidth / 3 - 50)
+        .height(600)
+        .margins(margins)
+        .dimension(closedByUsernameDim)
+        .group(closedByUsernameGroup)
+        .label (d) ->
+          d.key + " - " + d.value
+        .elasticX(true)
+
+      closedByUserRowChart.render()
+      closedByUserRowChart.turnOnControls(true)
+
+      timeToCloseRowChart = dc.rowChart('#time-to-close-by-user')
+      timeToCloseRowChart
+        .width(window.innerWidth /3 - 50)
+        .height(600)
+        .margins(margins)
+        .dimension(closedByUsernameDim)
+        .group(timeToCloseGroup).valueAccessor (d) ->  d.value.avg
+        .label (d) ->
+          d.key + " - " + secondsToString(d.value.avg)
+        .elasticX(true)
+      timeToCloseRowChart.render()
+      timeToCloseRowChart.turnOnControls(true)
+
+      window.cb = closedByUserRowChart
 
       # Tooltips with d3-tip
       tip = d3.tip().attr('class', 'd3-tip').offset([-10, 0]).html (d) ->
@@ -149,9 +195,21 @@ Template.ticketStats.onRendered ->
 
  
 secondsToString = (seconds) ->
-  numdays = Math.floor((seconds % 31536000) / 86400)
-  numhours = Math.floor(((seconds % 31536000) % 86400) / 3600)
-  numminutes = Math.floor((((seconds % 31536000) % 86400) % 3600) / 60)
-  numseconds = Math.floor (((seconds % 31536000) % 86400) % 3600) % 60
-  return numdays + " days " + numhours + " hours " + numminutes + " minutes " + numseconds + " seconds"
-
+  minutes = Math.floor(seconds / 60)
+  if minutes < 60
+    return minutes + " minutes"
+  hours = Math.floor(minutes / 60)
+  minutes -= 60 * hours
+  if hours < 24
+    return hours + " hours " + minutes + " minutes"
+  days = Math.floor(hours / 24)
+  hours -= 24 * days
+  if days < 7
+    return days + " days " + hours + " hours"
+  weeks = Math.floor(days / 7)
+  days -= 7 * weeks
+  if weeks < 4
+    return weeks + " weeks " + days + " days"
+  months = Math.floor(weeks / 4)
+  weeks -= 4 * months
+  return months + " months " + weeks + " weeks"

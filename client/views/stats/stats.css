@@ -21,4 +21,8 @@
   display: inline;
 }
 
-
+.row text.row {
+  text-shadow: 1px 1px #000;
+  -webkit-text-stroke-color: black;
+  -webkit-text-stroke-width: 1px;
+}

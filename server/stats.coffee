@@ -25,7 +25,7 @@ Meteor.methods
   'getTicketsForStats': ->
     queues = _.pluck Queues.find({memberIds: @userId}).fetch(), 'name'
     console.log 'finding tickets for stats'
-    t = Tickets.find({queueName: {$in: queues}},
+    t = Tickets.find({queueName: {$in: queues}, closedTimestamp: { $exists: true } },
       {fields: {
         _id: 0
         submittedTimestamp: 1
