@@ -80,18 +80,20 @@ Template.ticketStats.onRendered ->
       departmentDim = data.dimension (d) -> d.submitterDepartment
       departmentGroup = departmentDim.group()
 
+      # Width for volume and line charts
+      overTimeWidth = window.innerWidth - 50
 
       # Range chart, with submitted for bars
       volumeChart = dc.barChart('#volume-chart')
         .height(100)
-        .width(window.innerWidth * 2/3 - 50)
+        .width(overTimeWidth)
         .margins(margins)
         .dimension(dayDim)
         .group(submittedGroup)
         .centerBar(true)
         .gap(1)
-        #.x(d3.time.scale().domain([new Date(2015, 6, 1), new Date()]))
-        .x(d3.time.scale().domain([new Date(Date.now() - 1000*60*60*24*30), new Date(Date.now() + 1000*60*60*24)]))
+        .x(d3.time.scale().domain([new Date(2015, 6, 1), new Date()]))
+        #.x(d3.time.scale().domain([new Date(Date.now() - 1000*60*60*24*30), new Date(Date.now() + 1000*60*60*24)]))
         .round(d3.time.day.round)
         .alwaysUseRounding(true)
         .xUnits(d3.time.day)
@@ -101,7 +103,7 @@ Template.ticketStats.onRendered ->
       # Composite line chart
       lineChart = dc.compositeChart('#tickets-by-day')
       lineChart
-        .width(window.innerWidth * 2/3 - 50)
+        .width(overTimeWidth)
         #.height(window.innerHeight - 300)
         .height(200)
         .transitionDuration(1000)
@@ -109,7 +111,8 @@ Template.ticketStats.onRendered ->
         .dimension(dayDim)
         .mouseZoomable(false)
         .brushOn(false)
-        .x(d3.time.scale().domain([new Date(Date.now() - 1000*60*60*24*30), new Date(Date.now() + 1000*60*60*24)]))
+        .x(d3.time.scale().domain([new Date(2015, 6, 1), new Date()]))
+        #.x(d3.time.scale().domain([new Date(Date.now() - 1000*60*60*24*30), new Date(Date.now() + 1000*60*60*24)]))
         .round(d3.time.day.round)
         .xUnits(d3.time.day)
         .elasticY(true)
@@ -126,12 +129,16 @@ Template.ticketStats.onRendered ->
       # Render line charts
       lineChart.render()
 
+      # Pie chart sizing
+      pieChartDiameter = window.innerWidth / 6 - 50
+      pieChartRadius = pieChartDiameter / 2
+
       # Pie/donut chart for queue
       queuePieChart = dc.pieChart("#tickets-by-queue")
       queuePieChart
-        .width(window.innerWidth/6 - 50)
-        .height(window.innerWidth/6 - 50)
-        .radius(80)
+        .width(pieChartDiameter)
+        .height(pieChartDiameter)
+        .radius(pieChartDiameter / 2)
         .dimension(queueDim)
         .group(queueGroup)
         .renderLabel(true)
@@ -147,18 +154,21 @@ Template.ticketStats.onRendered ->
 
       departmentPieChart = dc.pieChart("#tickets-by-submitter-department")
       departmentPieChart
-        .width(window.innerWidth/6 - 50)
-        .height(window.innerWidth/6 - 50)
-        .radius(89)
+        .width(pieChartDiameter)
+        .height(pieChartDiameter)
+        .radius(pieChartDiameter / 2)
         .dimension(departmentDim)
         .group(departmentGroup)
         .renderLabel(true)
 
       departmentPieChart.render()
+      # Row chart widths
+      rowChartWidth = window.innerWidth /2 - 50
 
+      # Row charts - tickets closed by user and time to close by user
       closedByUserRowChart = dc.rowChart('#tickets-closed-by-user')
       closedByUserRowChart
-        .width(window.innerWidth / 3 - 50)
+        .width(rowChartWidth)
         .height(600)
         .margins(margins)
         .dimension(closedByUsernameDim)
@@ -172,7 +182,7 @@ Template.ticketStats.onRendered ->
 
       timeToCloseRowChart = dc.rowChart('#time-to-close-by-user')
       timeToCloseRowChart
-        .width(window.innerWidth /3 - 50)
+        .width(rowChartWidth)
         .height(600)
         .margins(margins)
         .dimension(closedByUsernameDim)

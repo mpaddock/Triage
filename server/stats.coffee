@@ -34,10 +34,9 @@ Meteor.methods
         closedTimestamp: 1
         closedByUsername: 1
         queueName: 1
-      }, limit: 1000}).map (t) ->
+      }}).map (t) ->
         _.extend t,
           submitterDepartment: Meteor.users.findOne(t.submittedByUserId)?.department
-    console.log t
     return t
 
 

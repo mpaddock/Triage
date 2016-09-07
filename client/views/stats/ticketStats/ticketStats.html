@@ -1,13 +1,4 @@
 <template name="ticketStats">
-  <div class="stats-filters">
-    Closed Between
-    <div class="input-daterange stats-daterange">
-      <input type="text" class="form-control" data-filter="startDate" value="{{startDate}}">
-      <span class="checkout-daterange-addon">And</span>
-      <input type="text" class="form-control" data-filter="endDate" value="{{endDate}}">
-    </div>
-    <button type="button" class="reset btn btn-default" data-action="reset">Reset</button>
-  </div>
   {{#unless ready}}
     <div>
       Generating statistics... this may take a moment.
@@ -15,7 +6,8 @@
     </div>
   {{/unless}}
   <div class="row">
-    <div class="col-md-8">
+    <div class="col-md-12">
+      <strong>Tickets Closed/Submitted Over Time</strong>
       <div id="tickets-by-day">
       </div>
       <div id="closed-by-day">
@@ -23,20 +15,28 @@
       <div id="volume-chart">
       </div>
     </div>
-    <div class="col-md-4">
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <strong>Tickets Submitted By Queue</strong>
       <div id="tickets-by-queue">
       </div>
+    </div>
+    <div class="col-md-6">
+      <strong>Tickets Submitted By Department</strong>
       <div id="tickets-by-submitter-department">
       </div>
     </div>
   </div>
   <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-6">
       <div id="tickets-closed-by-user">
+        <strong>Tickets Closed By User</strong>
       </div>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-6">
       <div id="time-to-close-by-user">
+        <strong>Average Time to Close by User</strong>
       </div>
     </div>
   </div>
