@@ -129,6 +129,14 @@ Template.ticketStats.onRendered ->
       # Render line charts
       lineChart.render()
 
+      # Tooltips with d3-tip
+      tip = d3.tip().attr('class', 'd3-tip').offset([-10, 0]).html (d) ->
+        "<span style='color: #0b0'>#{d.data.value}</span> #{d.layer} on #{moment(d.data.key).format('l')}"
+      d3.selectAll('.dot').call(tip)
+      d3.selectAll('.dot')
+        .on('mouseover', tip.show)
+        .on('mouseleave', tip.hide)
+
       # Pie chart sizing
       pieChartDiameter = window.innerWidth / 6 - 50
       pieChartRadius = pieChartDiameter / 2
@@ -193,15 +201,19 @@ Template.ticketStats.onRendered ->
       timeToCloseRowChart.render()
       timeToCloseRowChart.turnOnControls(true)
 
-      window.cb = closedByUserRowChart
+      dataTable = dc.dataTable('#data-table')
+        .dimension(timeToCloseGroup) # data tables can take groups as dimensions...
+        .group (d) -> null
+        .showGroups(false)
+        .order(d3.descending)
+        .sortBy (d) -> d.value.count
+        .columns([
+          (d) -> d.key
+          (d) -> secondsToString(d.value.avg)
+          (d) -> d.value.count
+        ])
 
-      # Tooltips with d3-tip
-      tip = d3.tip().attr('class', 'd3-tip').offset([-10, 0]).html (d) ->
-        "<span style='color: #0b0'>#{d.data.value}</span> #{d.layer} on #{moment(d.data.key).format('l')}"
-      d3.selectAll('.dot').call(tip)
-      d3.selectAll('.dot')
-        .on('mouseover', tip.show)
-        .on('mouseleave', tip.hide)
+      dataTable.render()
 
  
 secondsToString = (seconds) ->
