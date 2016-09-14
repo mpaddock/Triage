@@ -60,6 +60,9 @@ Template.ticketStats.onRendered ->
       closedByUsernameDim = data.dimension (d) ->
         d.closedByUsername
       closedByUsernameGroup = closedByUsernameDim.group()
+      closedByUsernameDim2 = data.dimension (d) ->
+        d.closedByUsername
+
       add = (p, v) ->
         p.count++
         p.total += v.timeToClose
@@ -72,7 +75,7 @@ Template.ticketStats.onRendered ->
         p
       initial = ->
         { count: 0, total: 0, avg: 0 }
-      timeToCloseGroup = closedByUsernameDim.group().reduce(add, sub, initial)
+      timeToCloseGroup = closedByUsernameDim2.group().reduce(add, sub, initial)
 
 
       queueDim = data.dimension (d) -> d.queueName
@@ -184,6 +187,7 @@ Template.ticketStats.onRendered ->
         .label (d) ->
           d.key + " - " + d.value
         .elasticX(true)
+        .ordering (d) -> -d.value
 
       closedByUserRowChart.render()
       closedByUserRowChart.turnOnControls(true)
@@ -193,27 +197,14 @@ Template.ticketStats.onRendered ->
         .width(rowChartWidth)
         .height(600)
         .margins(margins)
-        .dimension(closedByUsernameDim)
+        .dimension(closedByUsernameDim2)
         .group(timeToCloseGroup).valueAccessor (d) ->  d.value.avg
         .label (d) ->
           d.key + " - " + secondsToString(d.value.avg)
         .elasticX(true)
+        .ordering (d) -> -d.value.avg
       timeToCloseRowChart.render()
       timeToCloseRowChart.turnOnControls(true)
-
-      dataTable = dc.dataTable('#data-table')
-        .dimension(timeToCloseGroup) # data tables can take groups as dimensions...
-        .group (d) -> null
-        .showGroups(false)
-        .order(d3.descending)
-        .sortBy (d) -> d.value.count
-        .columns([
-          (d) -> d.key
-          (d) -> secondsToString(d.value.avg)
-          (d) -> d.value.count
-        ])
-
-      dataTable.render()
 
  
 secondsToString = (seconds) ->
