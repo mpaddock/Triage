@@ -6,12 +6,12 @@ Meteor.methods
       {fields: {
         _id: 0
         submittedTimestamp: 1
-        submittedByUserId: 1
+        authorId: 1
         timeToClose: 1
         closedTimestamp: 1
         closedByUsername: 1
         queueName: 1
       }}).map (t) ->
         _.extend t,
-          submitterDepartment: Meteor.users.findOne(t.submittedByUserId)?.department
+          submitterDepartment: Meteor.users.findOne(t.authorId)?.department || '(unknown)'
     return t
