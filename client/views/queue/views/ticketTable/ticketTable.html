@@ -1,5 +1,5 @@
 <template name="ticketTable">
-  <div class="row">
+  <div class="row hidden-print">
     <hr class="half-padding">
     <div class="pull-right">
       <strong>{{firstVisibleTicket}}-{{lastVisibleTicket}}</strong> of <strong>{{getPublishedCount 'ticketCount'}}</strong> 
@@ -15,7 +15,7 @@
       <table name="ticketTable" class="table table-condensed" style="border-collapse:collapse;">
         <thead>
           <tr>
-            <th class="col-md-1 hidden-xs">&nbsp;</th>
+            <th class="col-md-1 hidden-xs hidden-print">&nbsp;</th>
             <th class="col-md-4"><span class="field-table-heading" data-sort-key="subject">Subject</span></th>
             <th class="col-md-2">Requester</th>
             <th class="col-md-2">Associated</th>

@@ -1,6 +1,6 @@
 <template name="ticketRow">
   <tr data-toggle="collapse" class="accordion-toggle ticket-row" data-ticket="{{_id}}">
-    <td class="hidden-xs">
+    <td class="hidden-xs hidden-print">
       <span class="badge" title="{{noteCount}} notes">{{noteCount}}</span>
       {{#if repliedTo}}
         <span class="glyphicon glyphicon-comment"></span>
@@ -12,12 +12,28 @@
         <span class="glyphicon glyphicon-bell" style="color: red;"></span>
       {{/if}}
     </td>
-    <td>{{title}}</td>
     <td>
-      <div class="ticket-requester-portrait">
-        {{>userPortrait userId=this.authorId class="in-row"}}
-      </div>
-      {{authorName}}
+      <span class="hidden-print">{{title}}</span>
+      <span class="visible-print-block">
+        <strong>{{title}}</strong>
+        {{#each printableFormFields}}
+          <div>{{k}}: {{v}}</div>
+        {{/each}}
+      </span>
+    </td>
+    <td>
+      <span class="hidden-print">
+        <div class="ticket-requester-portrait">
+          {{>userPortrait userId=this.authorId class="in-row"}}
+        </div>
+        {{authorName}}
+      </span>
+      <span class="visible-print-block">
+        {{author.displayName}} ({{author.username}})<br>
+        {{author.mail}}<br>
+        {{author.department}}<br>
+        {{author.physicalDeliveryOfficeName}}<br>
+      </span>
     </td>
     <td>
       {{#each associatedUserIds}}
