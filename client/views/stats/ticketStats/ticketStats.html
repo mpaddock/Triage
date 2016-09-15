@@ -1,0 +1,43 @@
+<template name="ticketStats">
+  {{#unless ready}}
+    <div>
+      Generating statistics... this may take a moment.
+      {{> loading class="stats-loader"}}
+    </div>
+  {{/unless}}
+  <div class="row">
+    <div class="col-md-12">
+      {{#if ready}}<strong>Tickets Closed/Submitted Over Time</strong>{{/if}}
+      <div id="tickets-by-day">
+      </div>
+      <div id="closed-by-day">
+      </div>
+      <div id="volume-chart">
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      {{#if ready}}<strong>Tickets Submitted By Queue</strong>{{/if}}
+      <div id="tickets-by-queue">
+      </div>
+    </div>
+    <div class="col-md-6">
+      {{#if ready}}<strong>Tickets Submitted By Department</strong>{{/if}}
+      <div id="tickets-by-submitter-department">
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <div id="tickets-closed-by-user">
+        {{#if ready}}<strong>Tickets Closed By User</strong>{{/if}}
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div id="time-to-close-by-user">
+        {{#if ready}}<strong>Average Time to Close by User</strong>{{/if}}
+      </div>
+    </div>
+  </div>
+</template>

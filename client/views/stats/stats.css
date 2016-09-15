@@ -1,0 +1,28 @@
+.dc-table-group {
+  background-color: #ccc;
+}
+
+/***** Filters *****/
+.stats-filters .input-daterange {
+  width: auto;
+  display: inline;
+}
+
+.stats-filters .input-daterange .form-control {
+  width: auto;
+  display: inline;
+}
+
+.stats-daterange .stats-daterange-addon {
+  padding: 3px;
+}
+
+.stats-filters {
+  display: inline;
+}
+
+.row text.row {
+  text-shadow: 1px 1px #000;
+  -webkit-text-stroke-color: black;
+  -webkit-text-stroke-width: 1px;
+}

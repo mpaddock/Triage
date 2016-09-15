@@ -53,6 +53,10 @@ queueBeforeAction = (router, options) ->
 
 
 Router.map ->
+  @route 'stats',
+    path: '/stats'
+    template: 'ticketStats'
+
   @route 'default',
     path: '/'
     waitOn: -> Meteor.subscribe 'userData'
