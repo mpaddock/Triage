@@ -1,0 +1,31 @@
+{
+  "name": "triage",
+  "version": "1.0.0",
+  "description": "Triage is a Meteor.js application for ticket tracking and management.",
+  "dependencies": {
+    "meteor-node-stubs": "^0.2.3"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0"
+  },
+  "scripts": {
+    "test": "meteor test --port 4096 --once --driver-package=dispatch:mocha-phantomjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/UK-AS-HIVE/Triage.git"
+  },
+  "keywords": [
+    "ticketing",
+    "help",
+    "support",
+    "service",
+    "requests"
+  ],
+  "author": "UK A&S HIVE",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/UK-AS-HIVE/Triage/issues"
+  },
+  "homepage": "https://github.com/UK-AS-HIVE/Triage#readme"
+}

@@ -23,3 +23,6 @@
     if message.toEmail?.toLowerCase() in queueEmails
       return Queues.findOne({name: q.name})._id
   return null
+
+exports.TriageEmailFunctions = @TriageEmailFunctions
+

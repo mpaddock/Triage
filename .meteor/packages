@@ -47,3 +47,5 @@ rajit:bootstrap3-datepicker
 standard-minifier-css
 standard-minifier-js
 shell-server
+dispatch:mocha-phantomjs
+modules
