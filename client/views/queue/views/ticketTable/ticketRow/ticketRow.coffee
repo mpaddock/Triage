@@ -40,6 +40,11 @@ Template.ticketRow.helpers
     @attachmentIds?.length > 0
   noteCount: ->
     Counts.get("#{@_id}-noteCount") || null
+  author: ->
+    Meteor.users.findOne({_id: @authorId})
+  printableFormFields: ->
+    fields = _.map @formFields, (v, k) -> {k: k, v: v}
+    _.filter fields, (f) -> !!f.v
   statusSettings: ->
     {
       position: "bottom"
