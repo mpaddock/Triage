@@ -48,6 +48,17 @@ Template.ticketStats.onRendered ->
 
       all = data.groupAll()
 
+      dataCount = dc.dataCount('#data-count')
+        .dimension(data)
+        .group(all)
+        .html {
+          some: "<strong>%filter-count</strong> selected out of <strong>%total-count</strong> tickets
+          <a class='btn btn-default btn-xs' href='javascript:dc.filterAll(); dc.renderAll();' role='button'>
+          Reset filters</a>"
+          all: "<strong>%total-count</strong> tickets. Select a queue, user, or date range to filter."
+        }
+      dataCount.render()
+
       margins = { top: 20, left: 40, right: 10, bottom: 20 }
       dateFormat = d3.time.format('%Y-%m-%d')
       dayDim = data.dimension (d) ->
@@ -142,19 +153,18 @@ Template.ticketStats.onRendered ->
 
       # Pie chart sizing
       pieChartDiameter = window.innerWidth / 6 - 50
-      pieChartRadius = pieChartDiameter / 2
+      if window.innerWidth < 1200
+        pieChartDiameter = window.innerWidth / 6
 
       # Pie/donut chart for queue
       queuePieChart = dc.pieChart("#tickets-by-queue")
       queuePieChart
-        .width(pieChartDiameter)
         .height(pieChartDiameter)
         .radius(pieChartDiameter / 2)
         .dimension(queueDim)
         .group(queueGroup)
         .renderLabel(true)
-        #.label (d) -> d.queueName
-        #.innerRadius(20)
+        .legend(dc.legend().legendText (d) -> "#{d.name} - #{d.data}")
 
       queueName = Iron.query.get('queueName')
       if queueName?
@@ -165,12 +175,13 @@ Template.ticketStats.onRendered ->
 
       departmentPieChart = dc.pieChart("#tickets-by-submitter-department")
       departmentPieChart
-        .width(pieChartDiameter)
         .height(pieChartDiameter)
         .radius(pieChartDiameter / 2)
         .dimension(departmentDim)
         .group(departmentGroup)
         .renderLabel(true)
+        .slicesCap(10)
+        .legend(dc.legend().legendText (d) -> "#{d.name} - #{d.data}")
 
       departmentPieChart.render()
       # Row chart widths
@@ -191,6 +202,7 @@ Template.ticketStats.onRendered ->
 
       closedByUserRowChart.render()
       closedByUserRowChart.turnOnControls(true)
+
 
       timeToCloseRowChart = dc.rowChart('#time-to-close-by-user')
       timeToCloseRowChart

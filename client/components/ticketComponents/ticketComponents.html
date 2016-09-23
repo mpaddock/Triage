@@ -1,5 +1,5 @@
 <template name="formFieldsPanel">
-  <div class="hidden-xs col-md-12">
+  <div class="col-xs-12">
     <div class="panel panel-success more-info-panel">
       <div class="panel-heading">
         {{#if collapsed}}
@@ -16,8 +16,8 @@
             <tbody>
               {{#each arrayify formFields}}
                 <tr>
-                  <td class="col-xs-2 col-md-2"><strong>{{name}}</strong></td>
-                  <td class="col-xs-10 col-md-10">{{linkify value}}</td>
+                  <td class="col-xs-2"><strong>{{name}}</strong></td>
+                  <td class="col-xs-10">{{linkify value}}</td>
                 </tr>
               {{/each}}
             </tbody>
