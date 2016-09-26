@@ -209,13 +209,15 @@
         </div>
       {{/if}}
       <div class="input-buttons pull-right">
-        {{#if queueMember}}
-          {{#if closed}}
-            <button type="button" class="btn btn-responsive btn-default" name="addNoteAndReOpen">Re-Open Ticket</button>
-            {{else}}
+        {{#if closed}}
+          <button type="button" class="btn btn-responsive btn-default" name="addNoteAndReOpen">Re-Open Ticket</button>
+          {{else}}
+          {{#if queueMember}}
             <button type="button" class="btn btn-responsive btn-default" name="closeSilently" title="Close ticket without sending any emails.">Close Ticket Silently</button>
-            <button type="button" class="btn btn-responsive btn-default" name="addNoteAndClose">Close Ticket</button>
           {{/if}}
+          <button type="button" class="btn btn-responsive btn-default" name="addNoteAndClose">Close Ticket</button>
+        {{/if}}
+        {{#if queueMember}}
           <button type="button" class="btn btn-responsive btn-default" name="addInternalNote">Add Internal Note</button>
           <button type="button" class="btn btn-responsive btn-success" name="addNoteAdmin">Add Note</button>
           {{else}}
