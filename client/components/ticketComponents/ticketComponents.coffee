@@ -146,11 +146,14 @@ Template.ticketInfoPanels.events
 
 
 Template.ticketNoteInput.helpers
+  allowStatusChange: ->
+    if Tickets.findOne(@ticketId).status isnt "Closed"
+      return true
+    else
+      sinceClose = (Date.now() - Tickets.findOne(@ticketId).closedTimestamp)/1000
+      max = Meteor.settings?.public?.reopenAllowedTimespan
+      return sinceClose < max
   closed: -> Tickets.findOne(@ticketId).status is "Closed"
-  canBeReopened: ->
-    elapsedSinceClose = new Date() - Tickets.findOne(@ticketId).closedTimestamp
-    max = Meteor.settings?.public?.reopenAllowedTimespan
-    elapsedSinceClose < max
   beta: -> Meteor.settings.public.beta
   status: -> Tickets.findOne(@ticketId).status
   statusSettings: ->

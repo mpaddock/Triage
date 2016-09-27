@@ -197,20 +197,24 @@
   <div class="row">
     <div class="note-input-buttons col-md-10 col-md-offset-2 col-xs-12">
       {{#if queueMember}}
-        <div class="status-button pull-left">
-          <div class="dropdown" data-ticket="{{_id}}" style="display: inline-block;">
-            <button class="btn btn-default btn-responsive dropdown-toggle" type="button" data-toggle="dropdown" name="statusButton" aria-expanded="false">{{status}}<span class="caret dropdown-toggle"></span></button>
-            <ul class="dropdown-menu" name="statusMenu" role="menu" aria-labelledby="ticketStatusDropdown">
-              <li role="presentation"><a role="menuitem" tabindex="-1">Open</a></li>
-              <li role="presentation"><a role="menuitem" tabindex="-1">Closed</a></li>
-              <li role="presentation" class="ticket-status-input">{{> inputAutocomplete name="customStatus" placeholder="Or a custom status" settings=statusSettings}}</li>
-            </ul>
+        {{#if allowStatusChange}}
+          <div class="status-button pull-left">
+            <div class="dropdown" data-ticket="{{_id}}" style="display: inline-block;">
+              <button class="btn btn-default btn-responsive dropdown-toggle" type="button" data-toggle="dropdown" name="statusButton" aria-expanded="false">{{status}}<span class="caret dropdown-toggle"></span></button>
+              <ul class="dropdown-menu" name="statusMenu" role="menu" aria-labelledby="ticketStatusDropdown">
+                <li role="presentation"><a role="menuitem" tabindex="-1">Open</a></li>
+                <li role="presentation"><a role="menuitem" tabindex="-1">Closed</a></li>
+                <li role="presentation" class="ticket-status-input">{{> inputAutocomplete name="customStatus" placeholder="Or a custom status" settings=statusSettings}}</li>
+              </ul>
+            </div>
           </div>
-        </div>
+        {{/if}}
       {{/if}}
       <div class="input-buttons pull-right">
         {{#if closed}}
-          <button type="button" class="btn btn-responsive btn-default" name="addNoteAndReOpen">Re-Open Ticket</button>
+          {{#if allowStatusChange}}
+            <button type="button" class="btn btn-responsive btn-default" name="addNoteAndReOpen">Re-Open Ticket</button>
+          {{/if}}
           {{else}}
           {{#if queueMember}}
             <button type="button" class="btn btn-responsive btn-default" name="closeSilently" title="Close ticket without sending any emails.">Close Ticket Silently</button>
