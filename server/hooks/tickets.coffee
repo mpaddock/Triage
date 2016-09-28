@@ -168,7 +168,7 @@ getEventMessagesFromUpdate = (userId, doc, fn, modifier) ->
       if modifier.$addToSet?.associatedUserIds?.$each?
         associatedUsers = _.map _.difference(modifier.$addToSet.associatedUserIds.$each, doc.associatedUserIds), (x) ->
           u = Meteor.users.findOne({_id: x})
-          if u.notificationSettings.associatedWithTicket
+          if u.notificationSettings?.associatedWithTicket
             recipients.push u.mail
           return u.username
         unless associatedUsers.length is 0
@@ -176,7 +176,7 @@ getEventMessagesFromUpdate = (userId, doc, fn, modifier) ->
       else if modifier.$addToSet?.associatedUserIds?
         unless _.contains doc.associatedUserIds, modifier.$addToSet.associatedUserIds
           u = Meteor.users.findOne(modifier.$addToSet.associatedUserIds)
-          if u.notificationSettings.associatedWithTicket
+          if u.notificationSettings?.associatedWithTicket
             recipients.push u.mail
           newValue = "#{u.username}"
       else if modifier.$pull?.associatedUserIds?
