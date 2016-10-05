@@ -66,9 +66,8 @@ if Npm.require('cluster').isMaster
 notifyTicketAuthor = (userId, doc) ->
   author = Meteor.users.findOne(doc.authorId)
   if author?.notificationSettings?.submitted
-    title = escapeString(doc.title)
     body = Parsers.prepareContentForEmail(doc.body)
-    subject = "Triage ticket ##{doc.ticketNumber} submitted: #{title}"
+    subject = "Triage ticket ##{doc.ticketNumber} submitted: #{doc.title}"
     message = "You submitted ticket ##{doc.ticketNumber} with body:<br>#{body}"
     queue = Queues.findOne({name: doc.queueName})
     if (doc.submissionData?.method is "Form" and queue.settings?.notifyOnAPISubmit) or !(doc.submissionData?.method is "Form")
@@ -85,9 +84,8 @@ notifyAssociatedUsers = (doc) ->
     if user.notificationSettings?.associatedWithTicket
       recipients.push(user.mail)
   if recipients.length
-    title = escapeString(doc.title)
     body = Parsers.prepareContentForEmail(doc.body)
-    subject = "You have been associated with Triage ticket ##{doc.ticketNumber}: #{title}"
+    subject = "You have been associated with Triage ticket ##{doc.ticketNumber}: #{doc.title}"
     message = "You are now associated with ticket ##{doc.ticketNumber}.<br>
     The original ticket body was:<br>#{body}"
     Job.push new NotificationJob
@@ -115,7 +113,6 @@ prepareTicket = (userId, doc) ->
 getEventMessagesFromUpdate = (userId, doc, fn, modifier) ->
   user = Meteor.users.findOne(userId)
   author = Meteor.users.findOne(doc.authorId)
-  title = escapeString(doc.title)
   body = Parsers.prepareContentForEmail(doc.body)
   switch fn
     when 'queueName'
@@ -143,7 +140,7 @@ getEventMessagesFromUpdate = (userId, doc, fn, modifier) ->
         type = "field"
         oldValue = oldStatus
         newValue = newStatus
-        subject = "User #{user.username} changed status for Triage ticket ##{doc.ticketNumber}: #{title}"
+        subject = "User #{user.username} changed status for Triage ticket ##{doc.ticketNumber}: #{doc.title}"
         emailBody ="<strong>User #{user.username} changed status for ticket ##{doc.ticketNumber} from
           #{oldStatus} to #{newStatus}.</strong><br>
           The original ticket body was:<br>
@@ -162,13 +159,13 @@ getEventMessagesFromUpdate = (userId, doc, fn, modifier) ->
     when 'associatedUserIds'
       type = "field"
       recipients = []
-      subject = "You have been associated with Triage ticket ##{doc.ticketNumber}: #{title}"
+      subject = "You have been associated with Triage ticket ##{doc.ticketNumber}: #{doc.title}"
       emailBody = "You are now associated with ticket ##{doc.ticketNumber}.<br>
       The original ticket body was:<br>#{body}"
       if modifier.$addToSet?.associatedUserIds?.$each?
         associatedUsers = _.map _.difference(modifier.$addToSet.associatedUserIds.$each, doc.associatedUserIds), (x) ->
           u = Meteor.users.findOne({_id: x})
-          if u.notificationSettings.associatedWithTicket
+          if u.notificationSettings?.associatedWithTicket
             recipients.push u.mail
           return u.username
         unless associatedUsers.length is 0
@@ -176,7 +173,7 @@ getEventMessagesFromUpdate = (userId, doc, fn, modifier) ->
       else if modifier.$addToSet?.associatedUserIds?
         unless _.contains doc.associatedUserIds, modifier.$addToSet.associatedUserIds
           u = Meteor.users.findOne(modifier.$addToSet.associatedUserIds)
-          if u.notificationSettings.associatedWithTicket
+          if u.notificationSettings?.associatedWithTicket
             recipients.push u.mail
           newValue = "#{u.username}"
       else if modifier.$pull?.associatedUserIds?
@@ -189,7 +186,7 @@ getEventMessagesFromUpdate = (userId, doc, fn, modifier) ->
         file = FileRegistry.findOne modifier.$addToSet.attachmentIds
         otherId = file._id
         newValue = file.filename
-        subject = "User #{user.username} added an attachment to Triage ticket ##{doc.ticketNumber}: #{title}"
+        subject = "User #{user.username} added an attachment to Triage ticket ##{doc.ticketNumber}: #{doc.title}"
         emailBody = "Attachment #{file.filename} added to ticket #{doc.ticketNumber}.
           The original ticket body was:<br>#{body}"
 
