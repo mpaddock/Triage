@@ -59,7 +59,7 @@ Template.newTicketModal.events
           queueName: queueName
           authorId: res
           authorName: submitter
-          status: status || 'Open'
+          status: 'Open'
           submittedTimestamp: new Date()
           attachmentIds: tpl.attachedFiles.get()
           submissionData:
