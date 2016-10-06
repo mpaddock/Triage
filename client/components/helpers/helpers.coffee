@@ -108,8 +108,12 @@ UI.registerHelper 'tagSettings', ->
 #Scans a body of text for hashtags (#hashtag), returns an array of unique results.
 @Parsers.getTags = (text) ->
   _.uniq text.match(/\B#[a-zA-Z0-9-_/]+\b/g) # normal word characters plus hyphens and slashes
-    .filter (x) -> not /((#[a-fA-F0-9]{3})(\W|$)|(#[a-fA-F0-9]{6})(\W|$))/g.test(x) # Filter if matching a 3 or 6-digit hex code, e.g. #a0a0a0 or #fff
-    .map (x) -> x.replace('#', '') #Strip out hash
+    .filter (x) ->
+      # Filter if matching a 3 or 6-digit hex code, e.g. #a0a0a0 or #fff
+      not /((#[a-fA-F0-9]{3})(\W|$)|(#[a-fA-F0-9]{6})(\W|$))/g.test(x)
+    .map (x) ->
+      # Strip out hash
+      x.replace('#', '')
 
 #Scans a body of text for user tags (@username), and then searches Meteor.users by username and returns an array of unique userIds.
 @Parsers.getUserIds = (text) ->
