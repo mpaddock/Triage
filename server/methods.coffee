@@ -16,6 +16,7 @@ Meteor.methods
         return userId = Meteor.users.insert(userObj)
 
   refreshUserInformation: (username) ->
+    if Meteor.settings.ldap?.debugMode then return
     client = LDAP.createClient Meteor.settings.ldap.serverUrl
     LDAP.bind client, Meteor.settings.ldapDummy.username, Meteor.settings.ldapDummy.password
     userObj = LDAP.search client, username

@@ -6,6 +6,7 @@ test2 = "@vrang2"
 
 tagsTest1 = "#tag/with/slash #tag-with-hyphen #tag_with_underscore" # tags with special characters
 tagsTest2 = "#fff #000 #abc #f1f1f1 #f1f1 #f1f1f1wordafter" #hex codes and hex code similar tags
+tagsTest3 = "waggle# waggle#test #test" #middle of word tags
 
 content1 = "This is now done.\nThanks,\nPerson"
 result1  = "<p>This is now done.</p><p>Thanks,</p><p>Person</p>"
@@ -27,6 +28,7 @@ if Meteor.isClient
     it 'hashtags and hex codes', ->
       expect(Parsers.getTags(tagsTest1)).to.deep.equal [ 'tag/with/slash', 'tag-with-hyphen', 'tag_with_underscore' ]
       expect(Parsers.getTags(tagsTest2)).to.deep.equal [ 'f1f1', 'f1f1f1wordafter' ]
+      expect(Parsers.getTags(tagsTest3)).to.deep.equal [ 'test' ]
 
 if Meteor.isServer
   describe 'Parsers', ->

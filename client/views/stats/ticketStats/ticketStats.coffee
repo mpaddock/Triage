@@ -211,10 +211,11 @@ Template.ticketStats.onRendered ->
         .margins(margins)
         .dimension(closedByUsernameDim2)
         .group(timeToCloseGroup).valueAccessor (d) ->  d.value.avg
+        .elasticX(true)
         .label (d) ->
           d.key + " - " + secondsToString(d.value.avg)
-        .elasticX(true)
         .ordering (d) -> -d.value.avg
+        .xAxis().ticks(4).tickFormat (h) -> secondsToString(h)
       timeToCloseRowChart.render()
       timeToCloseRowChart.turnOnControls(true)
 

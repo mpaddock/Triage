@@ -164,7 +164,7 @@ Router.map ->
       if @request.body.on_behalf_of?.length
         ticket.formFields['Submitted by'] = ticket.authorName
         ticket.formFields['On behalf of'] = @request.body.on_behalf_of
-        behalfOfId = Meteor.call 'checkUsername', @request.body.on_behalf_of
+        behalfOfId = try Meteor.call 'checkUsername', @request.body.on_behalf_of
         if behalfOfId
           ticket.submittedByUserId = ticket.authorId
           ticket.authorName = @request.body.on_behalf_of.toLowerCase()

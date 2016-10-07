@@ -19,8 +19,10 @@
     "127.0.0.1"
   ],
   "public": {
+    "siteTitle": "Triage",
     "pageLimitDefault": 20,
-    "pageLimitIncrement": 20
+    "pageLimitIncrement": 20,
+    "reopenAllowedTimespan": 604800
   },
   "email": {
     "sendEmailOnFormSubmit": false,
