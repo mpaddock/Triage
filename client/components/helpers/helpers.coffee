@@ -17,6 +17,7 @@ UI.registerHelper 'arrayify', (obj) ->
 UI.registerHelper 'linkify', (text) ->
   # URLs starting with http://, https://, or ftp://
   
+  {escapeString} = require '/imports/util/escapeString.coffee'
   text = escapeString(text)
 
   urlPattern = /(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gim
