@@ -79,8 +79,6 @@ Router.map ->
   @route 'userQueue',
     path: '/my/tickets'
     template: 'queue'
-    waitOn: ->
-      Meteor.subscribe 'queueNames'
     onBeforeAction: ->
       queueBeforeAction @,
         queueName: _.pluck(Queues.find().fetch(), 'name')
@@ -91,8 +89,6 @@ Router.map ->
   @route 'globalQueue',
     path: '/all/tickets'
     template: 'queue'
-    waitOn: ->
-      Meteor.subscribe 'queueNames'
     onBeforeAction: ->
       queueBeforeAction @,
         queueName: _.pluck(Queues.find({memberIds: Meteor.userId()}).fetch(), 'name')
