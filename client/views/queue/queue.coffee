@@ -76,6 +76,7 @@ submitQuickAddTicket = (tpl) ->
 
 Template.queue.rendered = ->
   Session.set 'newTicketSet', []
+  @subscribe 'queueNames'
 
   @autorun ->
     # Render ticketModal on query parameter change.
