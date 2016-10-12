@@ -5,7 +5,19 @@
   update: (userId, doc, fields, modifier) ->
     unless _.intersection(['_id', 'authorId', 'authorName', 'body', 'submissionData', 'submittedTimestamp', 'ticketNumber', 'title'], fields).length is 0
       return false
-    if Queues.findOne({name: doc.queueName, memberIds: userId})? or (_.contains doc.associatedUserIds, userId) or (doc.authorId == userId)
+    queueMember = Queues.findOne({name: doc.queueName, memberIds: userId})?
+    if queueMember or (_.contains doc.associatedUserIds, userId) or (doc.authorId == userId)
+      #Either the user has access to the queue, is associated, or is the ticket author.
+      
+      #Associated user permissions
+      if 'associatedUserIds' in fields and not (modifier.$addToSet?.associatedUserIds? or modifier.$pull?.associatedUserIds?)
+        console.log "User #{userId} attempting to use a non-standard modifier for associatedUserIds"
+        # Only allow operations with $addToSet or $pull modifiers, which are what we use
+        return false
+      if !queueMember and Queues.findOne({name: doc.queueName, memberIds: modifier.$addToSet?.associatedUserIds})
+        console.log "Non-queue member #{userId} can't associate queue member #{modifier.$addToSet?.associatedUserIds}"
+        return false
+
       #Only allow changing status of closed ticket within a certain time frame after close.
       if doc.status == 'Closed' and 'status' in fields
         closedFor = (Date.now() - doc.closedTimestamp)/1000
@@ -13,8 +25,9 @@
         if closedFor > allowed
           console.log "Denying status change of closed ticket #{doc._id}, which has been closed for #{closedFor}s"
           return false
-      #Either the user has access to the queue, is associated, or is the ticket author.
+
       return true
+
     console.log "Ticket update #{modifier} on #{fields} failed: user lacks correct access to update this ticket."
     return false
   remove: -> false

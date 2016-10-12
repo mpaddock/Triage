@@ -24,6 +24,9 @@ Template.ticketChangelogItem.events
   'click a[data-action=showAttachmentModal]': (e, tpl) ->
     Iron.query.set 'attachmentId', @valueOf()
 
+Template.ticketInfoPanels.onCreated ->
+  @associateUserError = new ReactiveVar ""
+
 Template.ticketInfoPanels.onRendered ->
   doc = @find 'div[name=attachments]'
   doc.ondragover = (e) ->
@@ -73,6 +76,8 @@ Template.ticketInfoPanels.helpers
     _.contains Queues.findOne({name: @queueName})?.memberIds, Meteor.userId()
   file: ->
     FileRegistry.findOne {_id: this.valueOf()}
+  associateUserError: ->
+    Template.instance().associateUserError.get()
 
 Template.removeAttachmentModal.helpers
   attachment: -> FileRegistry.findOne(@attachmentId)
@@ -94,6 +99,7 @@ Template.removeAttachmentModal.events
     Blaze.remove tpl.view
     if $('.modal:visible').length
       $('body').addClass('modal-open')
+
 
 Template.ticketInfoPanels.events
   'click a[data-action=showAttachmentModal]': (e, tpl) ->
@@ -118,18 +124,16 @@ Template.ticketInfoPanels.events
     if e.which is 13 and $(e.target).val().length
       id = Meteor.call 'checkUsername', $(e.target).val(), (err, res) ->
         if res
-          tpl.$('[data-toggle="tooltip"]').tooltip('hide')
-          Tickets.update tpl.data._id, { $addToSet: { associatedUserIds: res } }
+          associateUser tpl, res
           $(e.target).val('')
         else
-          tpl.$('[data-toggle="tooltip"]').tooltip('show')
-          Meteor.setTimeout ->
-            tpl.$('[data-toggle="tooltip"]').tooltip('hide')
+          tpl.associateUserError.set 'User not found.'
+          setTimeout ->
+            tpl.associateUserError.set null
           , 3000
 
   'autocompleteselect input[name=assignUser]': (e, tpl, doc) ->
-    tpl.$('[data-toggle="tooltip"]').tooltip('hide')
-    Tickets.update tpl.data._id, { $addToSet: { associatedUserIds: doc._id } }
+    associateUser tpl, doc._id
     $(e.target).val('')
 
   ### Uploading files. ###
@@ -144,6 +148,16 @@ Template.ticketInfoPanels.events
       Tickets.update tpl.data._id, {$addToSet: {attachmentIds: fileId}}
       Meteor.call 'setFlag', Meteor.userId(), tpl.data._id, 'attachment', true
 
+associateUser = (tpl, associatedUserId) ->
+  queueMember = Queues.findOne({name: tpl.data.queueName, memberIds: Meteor.userId()})
+  associatedQueueMember = Queues.findOne({name: tpl.data.queueName, memberIds: associatedUserId})
+  if queueMember or !associatedQueueMember
+    Tickets.update tpl.data._id, { $addToSet: { associatedUserIds: associatedUserId } }
+  else
+    tpl.associateUserError.set 'You do not have permission to associate this user.'
+    setTimeout ->
+      tpl.associateUserError.set null
+    , 3000
 
 Template.ticketNoteInput.helpers
   allowStatusChange: ->

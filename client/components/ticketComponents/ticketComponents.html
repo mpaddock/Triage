@@ -120,15 +120,16 @@
   <div name="associatedUsers" class="panel panel-default">
     <div class="panel-heading">Assigned Users</div>
     <div class="panel-body">
-      {{#if queueMember}}
-        <div class="assign-user-field">
-          <span class="icon glyphicon glyphicon-plus"></span>
-          {{>inputAutocomplete settings=userSettings name="assignUser" placeholder="Assign User" data-toggle="tooltip" data-trigger="manual" title="User not found."}}
-        </div>
-      {{/if}}
+      <div class="assign-user-field">
+        <span class="icon glyphicon glyphicon-plus"></span>
+        {{>inputAutocomplete settings=userSettings name="assignUser" placeholder="Assign User"}} 
+      </div>
       {{#each associatedUserIds}}
         {{> userPortrait userId=this associated=true}}
       {{/each}}
+      <div>
+        <span class="error">{{associateUserError}}</span>
+      </div>
     </div>
   </div>
 
