@@ -131,6 +131,8 @@ Router.map ->
 
 
       blackboxKeys = _.difference(_.keys(@request.body), requiredParams.concat(['submitter_name', 'subject_line', 'on_behalf_of'], Tickets.simpleSchema()._schemaKeys))
+      blackboxKeys = _.filter blackboxKeys, (k) =>
+        @request.body[k].length
       formFields = _.pick(@request.body, blackboxKeys)
       username = /// \b#{@request.body.username}\b ///i
 
