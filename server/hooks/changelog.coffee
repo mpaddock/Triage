@@ -45,9 +45,19 @@ sendNotificationForNote = (userId, doc) ->
 
   subject = "Note added to Triage ticket ##{ticket.ticketNumber}: #{title}"
   emailBody = "<strong>#{noteAuthorName} added a note to ticket ##{ticket.ticketNumber}:</strong><br>
-    #{note}<br><br>
-    <strong>#{ticket.authorName}'s original ticket body was:</strong><br>
-    #{body}"
+    #{note}<br><br>"
+  emailBody += "<strong>#{ticket.authorName}'s original ticket body was</strong>:<br>#{ticket.body}"
+  if ticket.formFields
+   emailBody += "
+    <br><strong>Additional details:</strong>
+    <table border=1>"
+
+   for k,v of ticket.formFields
+     emailBody += "<tr>
+     <td><strong>#{k}</strong></td>
+     <td>#{v}</td>
+     </tr>"
+   emailBody += "</table>"
   
   if !doc.internal or Queues.findOne({ name: ticket.queueName, memberIds: ticket.authorId })
     # If it's not an internal note or the author is a queue member, check notification settings and send

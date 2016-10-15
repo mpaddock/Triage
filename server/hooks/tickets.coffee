@@ -88,8 +88,8 @@ notifyAssociatedUsers = (doc) ->
   if recipients.length
     body = Parsers.prepareContentForEmail(doc.body)
     subject = "You have been associated with Triage ticket ##{doc.ticketNumber}: #{doc.title}"
-    message = "You are now associated with ticket ##{doc.ticketNumber}.<br>
-    The original ticket body was:<br>#{body}"
+    message = "You are now associated with ticket ##{doc.ticketNumber}.<br>"
+    message += getTicketInformationForEmail doc
     Job.push new NotificationJob
       ticketId: doc._id
       bcc: recipients
@@ -144,9 +144,8 @@ getEventMessagesFromUpdate = (userId, doc, fn, modifier) ->
         newValue = newStatus
         subject = "User #{user.username} changed status for Triage ticket ##{doc.ticketNumber}: #{doc.title}"
         emailBody ="<strong>User #{user.username} changed status for ticket ##{doc.ticketNumber} from
-          #{oldStatus} to #{newStatus}.</strong><br>
-          The original ticket body was:<br>
-          #{body}"
+          #{oldStatus} to #{newStatus}.</strong><br>"
+        emailBody+= getTicketInformationForEmail doc
 
         recipients = []
         if author.notificationSettings?.authorStatusChanged
@@ -162,8 +161,8 @@ getEventMessagesFromUpdate = (userId, doc, fn, modifier) ->
       type = "field"
       recipients = []
       subject = "You have been associated with Triage ticket ##{doc.ticketNumber}: #{doc.title}"
-      emailBody = "You are now associated with ticket ##{doc.ticketNumber}.<br>
-      The original ticket body was:<br>#{body}"
+      emailBody = "You are now associated with ticket ##{doc.ticketNumber}.<br>"
+      emailBody += getTicketInformationForEmail doc
       if modifier.$addToSet?.associatedUserIds?.$each?
         associatedUsers = _.map _.difference(modifier.$addToSet.associatedUserIds.$each, doc.associatedUserIds), (x) ->
           u = Meteor.users.findOne({_id: x})
@@ -189,8 +188,8 @@ getEventMessagesFromUpdate = (userId, doc, fn, modifier) ->
         otherId = file._id
         newValue = file.filename
         subject = "User #{user.username} added an attachment to Triage ticket ##{doc.ticketNumber}: #{doc.title}"
-        emailBody = "Attachment #{file.filename} added to ticket #{doc.ticketNumber}.
-          The original ticket body was:<br>#{body}"
+        emailBody = "Attachment #{file.filename} added to ticket #{doc.ticketNumber}.<br>"
+        emailBody += getTicketInformationForEmail doc
 
         recipients = []
         if author.notificationSettings?.authorAttachment
@@ -226,3 +225,19 @@ getEventMessagesFromUpdate = (userId, doc, fn, modifier) ->
       subject: subject
       html: emailBody
 
+
+ getTicketInformationForEmail = (ticket) ->
+   info = "<strong>#{ticket.authorName}'s original ticket body was</strong>:<br>#{ticket.body}"
+   if ticket.formFields
+     info += "
+      <br><strong>Additional details:</strong>
+      <table border=1>"
+
+     for k,v of ticket.formFields
+       info += "<tr>
+       <td><strong>#{k}</strong></td>
+       <td>#{v}</td>
+       </tr>"
+     info += "</table>"
+
+   return info
