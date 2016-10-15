@@ -1,3 +1,5 @@
+{escapeString} = require('/imports/util/escapeString.coffee')
+
 if Npm.require('cluster').isMaster
 
   Changelog.before.insert (userId, doc) ->
