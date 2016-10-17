@@ -75,6 +75,9 @@
     #A record of the 'true' submitter for on behalf of submissions.
     type: String
     optional: true
+  emailMessageIDs:
+    type: [String]
+    optional: true
   additionalText:
     type: [String]
     optional: true
