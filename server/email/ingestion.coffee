@@ -46,7 +46,7 @@ if Meteor.settings?.email?.smtpPipe?
         # Try to find a user. If no user, just attach the note with the author email address.
         user = Meteor.users.findOne { $or: [ { mail: message.fromEmail }, { emails: message.fromEmail } ] }
 
-        if ticket = Tickets.findOne(ticketId) and ticket.status is 'Closed'
+        if ticket = Tickets.findOne(ticketId) and ticket?.status is 'Closed'
           ticketLink = Meteor.absoluteUrl("/ticket/#{ticket.ticketNumber}")
           Email.send
             from: Meteor.settings.email?.fromEmail || "triagebot@triage.as.uky.edu"
