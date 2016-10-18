@@ -14,9 +14,12 @@
         console.log "User #{userId} attempting to use a non-standard modifier for associatedUserIds"
         # Only allow operations with $addToSet or $pull modifiers, which are what we use
         return false
-      if !queueMember and Queues.findOne({name: doc.queueName, memberIds: modifier.$addToSet?.associatedUserIds})
-        console.log "Non-queue member #{userId} can't associate queue member #{modifier.$addToSet?.associatedUserIds}"
-        return false
+      if !queueMember
+        userIds = modifier.$addToSet?.associatedUserIds?.$each || [modifier.$addToSet?.associatedUserIds]
+        members = Queues.findOne({name: doc.queueName}).memberIds
+        if _.intersection(userIds, members).length
+          console.log "Non-queue member #{userId} can't associate queue member(s) in list #{userIds}"
+          return false
 
       #Only allow changing status of closed ticket within a certain time frame after close.
       if doc.status == 'Closed' and 'status' in fields

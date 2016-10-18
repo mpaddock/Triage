@@ -193,20 +193,19 @@ Template.ticketNoteInput.events
     addNote e, tpl, true, true
 
   'click button[name=addNoteAndReOpen]': (e, tpl) ->
-    if tpl.$('textarea[name=newNoteAdmin]').val().trim().length > 0
+    if tpl.$('textarea[name=newNote]').val().trim().length > 0
       addNote e, tpl, true, false
     Tickets.update tpl.data.ticketId, { $set: {status: 'Open'} }
 
   'click button[name=addNoteAndClose]': (e, tpl) ->
-    if tpl.$('textarea[name=newNoteAdmin]').val().trim().length > 0
+    if tpl.$('textarea[name=newNote]').val().trim().length > 0
       addNote e, tpl, true, false
     Tickets.update tpl.data.ticketId, { $set: {status: 'Closed'} }
 
   'click button[name=closeSilently]': (e, tpl) ->
     Meteor.call 'closeSilently', tpl.data.ticketId
 
-  'input textarea[name=newNoteAdmin]': (e, tpl) ->
-    status = Tickets.findOne(tpl.data.ticketId).status
+  'input textarea[name=newNote]': (e, tpl) ->
     if $(e.target).val() is ""
       tpl.$('button[name=addNoteAndReOpen]').text("Re-Open Ticket")
       tpl.$('button[name=addNoteAndClose]').text("Close Ticket")
@@ -245,23 +244,29 @@ Template.ticketNoteInput.events
  
 addNote = (e, tpl, admin, internal) ->
   # Adds notes given the event and template.
-  # Admin flag will result in parsing for status, tags, and users. Collection permissions act as security.
+  # Admin flag will result in parsing for status.
+  # Other notes will be parsed for tags and associated users.
   # Internal flag will add an internal note.
   unless admin then internal = false
+  ticket = Tickets.findOne(tpl.data.ticketId)
   body = tpl.$('textarea[name=newNote]').val()
+  hashtags = Parsers.getTags body
+  users = Parsers.getUserIds body
+
+  if users?.length > 0
+    unless admin
+      users = _.filter users, (u) ->
+        !Queues.findOne({name: ticket.queueName, memberIds: u})?
+    Tickets.update tpl.data.ticketId, {$addToSet: {associatedUserIds: $each: users}}
+
+  if hashtags?.length > 0
+    Tickets.update tpl.data.ticketId, {$addToSet: {tags: $each: hashtags}}
+
   if admin
-    body = tpl.$('textarea[name=newNoteAdmin]').val()
-    hashtags = Parsers.getTags body
-    users = Parsers.getUserIds body
     status = Parsers.getStatuses body
     if status?.length > 0
       Tickets.update tpl.data.ticketId, {$set: {status: status[0]}} #If multiple results, just use the first.
 
-    if users?.length > 0
-      Tickets.update tpl.data.ticketId, {$addToSet: {associatedUserIds: $each: users}}
-
-    if hashtags?.length > 0
-      Tickets.update tpl.data.ticketId, {$addToSet: {tags: $each: hashtags}}
   if body
     Changelog.insert
       ticketId: tpl.data.ticketId
@@ -275,7 +280,6 @@ addNote = (e, tpl, admin, internal) ->
   Meteor.call 'setFlag', Meteor.userId(), tpl.data.ticketId, 'replied', true
 
   tpl.$('textarea[name=newNote]').val('')
-  tpl.$('textarea[name=newNoteAdmin]').val('')
 
   tpl.$('button[name=addNoteAndReOpen]').text("Re-Open Ticket")
   tpl.$('button[name=addNoteAndClose]').text("Close Ticket")
