@@ -10,24 +10,33 @@ makeMessageID = (ticketId) ->
 # Sends notifications to users about ticket updates.
 class @NotificationJob extends Job
   handleJob: ->
-    {ticketNumber, emailMessageIDs} = Tickets.findOne(@params.ticketId)
-    html = @params.html + "<br><br><a href='#{rootUrl}/ticket/#{ticketNumber}'>View the ticket here.</a>"
-    if @params.to or @params.bcc.length > 0
-      messageID = makeMessageID @params.ticketId
-      headers =
-        'Message-ID': messageID
-        'auto-submitted': 'auto-replied'
-        'x-auto-response-suppress': 'OOF, AutoReply'
-      if emailMessageIDs?
-        headers['References'] = emailMessageIDs.join(' ')
-      Tickets.update @params.ticketId,
-        $push:
-          emailMessageIDs: messageID
-      Email.send
-        from: @params.fromEmail || fromEmail
-        to: @params.toEmail
-        bcc: @params.bcc
-        subject: @params.subject
-        html: html
-        headers: headers
+    sendNotification @params
+
+sendNotification = (options) ->
+  check options.ticketId, String
+  check options.fromEmail, String
+  check options.toEmail, String
+  check options.subject, String
+  check options.html, String
+
+  {ticketNumber, emailMessageIDs} = Tickets.findOne(options.ticketId)
+  html = options.html + "<br><br><a href='#{rootUrl}/ticket/#{ticketNumber}'>View the ticket here.</a>"
+  if options.to or options.bcc.length > 0
+    messageID = makeMessageID options.ticketId
+    headers =
+      'Message-ID': messageID
+      'auto-submitted': 'auto-replied'
+      'x-auto-response-suppress': 'OOF, AutoReply'
+    if emailMessageIDs?
+      headers['References'] = emailMessageIDs.join(' ')
+    Tickets.update options.ticketId,
+      $push:
+        emailMessageIDs: messageID
+    Email.send
+      from: options.fromEmail || fromEmail
+      to: options.toEmail
+      bcc: options.bcc
+      subject: options.subject
+      html: html
+      headers: headers
 
