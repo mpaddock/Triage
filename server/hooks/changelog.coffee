@@ -81,7 +81,7 @@ sendNotificationForNote = (userId, doc) ->
       recipients.push(u.mail)
 
   if recipients.length > 0
-    Job.push new NotificationJob
+    TriageEmailFunctions.sendNotification
       bcc: _.uniq(recipients)
       ticketId: ticket._id
       subject: subject
