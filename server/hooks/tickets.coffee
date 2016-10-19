@@ -226,10 +226,10 @@ getEventMessagesFromUpdate = (userId, doc, fn, modifier) ->
       html: emailBody
 
 
- getTicketInformationForEmail = (ticket) ->
-   info = "<strong>#{ticket.authorName}'s original ticket body was</strong>:<br>#{ticket.body}"
-   if ticket.formFields
-     info += "
+getTicketInformationForEmail = (ticket) ->
+  info = "<strong>#{ticket.authorName}'s original ticket body was</strong>:<br>#{ticket.body}"
+  if ticket.formFields
+    info += "
       <br><strong>Additional details:</strong>
       <table border=1>"
 
@@ -240,4 +240,4 @@ getEventMessagesFromUpdate = (userId, doc, fn, modifier) ->
        </tr>"
      info += "</table>"
 
-   return info
+  return info
