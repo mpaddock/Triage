@@ -13,12 +13,6 @@ class @NotificationJob extends Job
     sendNotification @params
 
 sendNotification = (options) ->
-  check options.ticketId, String
-  check options.fromEmail, String
-  check options.toEmail, String
-  check options.subject, String
-  check options.html, String
-
   {ticketNumber, emailMessageIDs} = Tickets.findOne(options.ticketId)
   html = options.html + "<br><br><a href='#{rootUrl}/ticket/#{ticketNumber}'>View the ticket here.</a>"
   if options.to or options.bcc.length > 0
