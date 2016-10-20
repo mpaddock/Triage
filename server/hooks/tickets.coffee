@@ -73,7 +73,7 @@ notifyTicketAuthor = (userId, doc) ->
     message = "You submitted ticket ##{doc.ticketNumber} with body:<br>#{body}"
     queue = Queues.findOne({name: doc.queueName})
     if (doc.submissionData?.method is "Form" and queue.settings?.notifyOnAPISubmit) or !(doc.submissionData?.method is "Form")
-      TriageEmailFunctions.sendNotification
+      Job.push new NotificationJob
         ticketId: doc._id
         bcc: author.mail
         subject: subject
@@ -90,7 +90,7 @@ notifyAssociatedUsers = (doc) ->
     subject = "You have been associated with Triage ticket ##{doc.ticketNumber}: #{doc.title}"
     message = "You are now associated with ticket ##{doc.ticketNumber}.<br>"
     message += getTicketInformationForEmail doc
-    TriageEmailFunctions.sendNotification
+    Job.push new NotificationJob
       ticketId: doc._id
       bcc: recipients
       subject: subject
@@ -219,7 +219,7 @@ getEventMessagesFromUpdate = (userId, doc, fn, modifier) ->
       otherId: otherId
 
   if emailBody and (recipients.length > 0)
-    TriageEmailFunctions.sendNotification
+    Job.push new NotificationJob
       bcc: _.uniq(recipients)
       ticketId: doc._id
       subject: subject

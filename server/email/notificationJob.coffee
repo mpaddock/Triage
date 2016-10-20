@@ -12,10 +12,10 @@ class @NotificationJob extends Job
   handleJob: ->
     sendNotification @params
 
-@TriageEmailFunctions = @TriageEmailFunctions || {}
-@TriageEmailFunctions.sendNotification = (options) ->
+sendNotification = (options) ->
   check options.ticketId, String
-  check options.bcc, [String]
+  check options.fromEmail, String
+  check options.toEmail, String
   check options.subject, String
   check options.html, String
 

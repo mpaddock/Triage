@@ -1,4 +1,4 @@
-@TriageEmailFunctions = @TriageEmailFunctions || {}
+@TriageEmailFunctions = {}
 @TriageEmailFunctions.getTicketId = (message) ->
   ticketId = null
   r = message?.headers['references'].split(/[\s,]+/)
