@@ -233,11 +233,11 @@ getTicketInformationForEmail = (ticket) ->
       <br><strong>Additional details:</strong>
       <table border=1>"
 
-     for k,v of ticket.formFields
-       info += "<tr>
-       <td><strong>#{k}</strong></td>
-       <td>#{v}</td>
-       </tr>"
-     info += "</table>"
+    for k,v of ticket.formFields
+      info += "<tr>
+      <td><strong>#{k}</strong></td>
+      <td>#{v}</td>
+      </tr>"
+    info += "</table>"
 
   return info
