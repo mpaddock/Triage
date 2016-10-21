@@ -23,6 +23,7 @@ sendNotification = (options) ->
       'x-auto-response-suppress': 'OOF, AutoReply'
     if emailMessageIDs?
       headers['References'] = emailMessageIDs.join(' ')
+      headers['In-Reply-To'] = _.first emailMessageIDs
     Tickets.update options.ticketId,
       $push:
         emailMessageIDs: messageID
