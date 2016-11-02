@@ -43,6 +43,9 @@
   submittedTimestamp:
     type: new Date()
     defaultValue: Date.now
+  lastUpdated:
+    type: new Date()
+    defaultValue: Date.now
   timeToClose:
     optional: true
     type: Number # in seconds

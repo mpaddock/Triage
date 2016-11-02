@@ -31,6 +31,9 @@ if Npm.require('cluster').isMaster
           $set:
             v: true
 
+  Changelog.after.insert (userId, doc) ->
+    Tickets.update doc.ticketId, $set: lastUpdated: new Date()
+
 sendNotificationForNote = (userId, doc) ->
   ticket = Tickets.findOne(doc.ticketId)
   ticketAuthor = Meteor.users.findOne(ticket.authorId)
