@@ -24,5 +24,13 @@ Migrations.add
     _.each Tickets.find().fetch(), (doc) ->
       Tickets.direct.update doc._id, { $addToSet: { additionalText: doc.ticketNumber.toString() } }
 
+Migrations.add
+  version: 5
+  up: ->
+    Tickets.find().forEach (doc) ->
+      Tickets.direct.update doc._id,
+        $set:
+          lastUpdated: Changelog.findOne(ticketId: doc._id, {sort: {timestamp: -1}})?.timestamp || doc.submittedTimestamp
+
 Meteor.startup ->
-  Migrations.migrateTo(4)
+  Migrations.migrateTo(5)
