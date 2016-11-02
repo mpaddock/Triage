@@ -109,6 +109,7 @@ prepareTicket = (userId, doc) ->
   #Server-side timestamping.
   now = new Date()
   d.submittedTimestamp = now
+  d.lastUpdated = now
 
   return d
 
