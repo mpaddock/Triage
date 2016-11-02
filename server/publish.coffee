@@ -2,7 +2,7 @@ Meteor.publishComposite 'tickets', (filter, offset, limit) ->
   if offset < 0 then offset = 0
   if Filter.verifyFilterObject filter, _.pluck(Queues.find({memberIds: @userId}).fetch(), 'name'), @userId
     mongoFilter = Filter.toMongoSelector filter
-    [ticketSet, facets] = Tickets.findWithFacets(mongoFilter, {sort: {submittedTimestamp: -1}, limit: limit, skip: offset})
+    [ticketSet, facets] = Tickets.findWithFacets(mongoFilter, {sort: { lastUpdated: -1}, limit: limit, skip: offset})
     ticketSet = _.pluck ticketSet.fetch(), '_id'
   else
     ticketSet = []
@@ -10,7 +10,7 @@ Meteor.publishComposite 'tickets', (filter, offset, limit) ->
     find: () ->
       Counts.publish(this, 'ticketCount', Tickets.find(mongoFilter), { noReady: true })
 
-      Tickets.find { _id: { $in: ticketSet } }, { sort: { submittedTimestamp: -1 } }
+      Tickets.find { _id: { $in: ticketSet } }, { sort: { lastUpdated: -1 } }
     children: [
       {
         find: (ticket) ->
@@ -29,10 +29,10 @@ Meteor.publishComposite 'tickets', (filter, offset, limit) ->
 Meteor.publishComposite 'newTickets', (filter, time) ->
   if Filter.verifyFilterObject filter, _.pluck(Queues.find({memberIds: @userId}).fetch(), 'name'), @userId
     mongoFilter = Filter.toMongoSelector filter
-    _.extend mongoFilter, { submittedTimestamp: { $gt: time } }
+    _.extend mongoFilter, { lastUpdated: { $gt: time } }
   {
     find: () ->
-      Tickets.find mongoFilter, { sort: { submittedTimestamp: -1 } }
+      Tickets.find mongoFilter, { sort: { lastUpdated: -1 } }
     children: [
       {
         find: (ticket) ->
@@ -54,7 +54,7 @@ Meteor.publishComposite 'ticketSet', (ticketSet) ->
           { authorId: @userId },
           { queueName: { $in: queues } }
         ] },
-        {sort: {submittedTimestamp: -1}}
+        {sort: { lastUpdated: -1}}
     children: [
       {
         find: (ticket) ->
