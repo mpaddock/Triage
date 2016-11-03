@@ -27,7 +27,7 @@ Template.ticketTable.helpers
       associatedUser: Iron.query.get 'associatedUser'
     }
     mongoFilter = Filter.toMongoSelector filter
-    Tickets.find mongoFilter, {sort: {lastUpdated: -1}}
+    Tickets.find mongoFilter, {sort: {submittedTimestamp: -1}}
   noTickets: ->
     Tickets.find().count() is 0
   clientCount: ->
