@@ -53,6 +53,9 @@ if Npm.require('cluster').isMaster
 
       getEventMessagesFromUpdate userId, doc, fn, modifier
 
+  Tickets.after.update (userId, doc) ->
+    Tickets.direct.update doc._id, $set: lastUpdated: new Date()
+
   # Flag ticket as unread for associated users when it's updated
   Tickets.after.update (userId, doc, fieldNames, modifier, options) ->
     if doc.authorId != userId
