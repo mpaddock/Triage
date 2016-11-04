@@ -126,7 +126,7 @@ getEventMessagesFromUpdate = (userId, doc, fn, modifier) ->
     when 'tags'
       type = "field"
       if modifier.$addToSet?.tags?
-        tags = _.difference modifier.$addToSet.tags.$each, doc.tags
+        tags = _.difference (modifier.$addToSet.tags.$each || [modifier.$addToSet.tags]), doc.tags
         unless tags.length is 0
           newValue = "#{tags}"
           _.each tags, (x) ->
@@ -164,20 +164,16 @@ getEventMessagesFromUpdate = (userId, doc, fn, modifier) ->
       subject = "You have been associated with Triage ticket ##{doc.ticketNumber}: #{doc.title}"
       emailBody = "You are now associated with ticket ##{doc.ticketNumber}.<br>"
       emailBody += getTicketInformationForEmail doc
-      if modifier.$addToSet?.associatedUserIds?.$each?
-        associatedUsers = _.map _.difference(modifier.$addToSet.associatedUserIds.$each, doc.associatedUserIds), (x) ->
+      if modifier.$addToSet?.associatedUserIds?
+        users = modifier.$addToSet.associatedUserIds.$each || [ modifier.$addToSet.associatedUserIds ]
+        associatedUsers = _.map _.difference(users, doc.associatedUserIds), (x) ->
           u = Meteor.users.findOne({_id: x})
           if u.notificationSettings?.associatedWithTicket
             recipients.push u.mail
           return u.username
         unless associatedUsers.length is 0
           newValue = "#{associatedUsers}"
-      else if modifier.$addToSet?.associatedUserIds?
-        unless _.contains doc.associatedUserIds, modifier.$addToSet.associatedUserIds
-          u = Meteor.users.findOne(modifier.$addToSet.associatedUserIds)
-          if u.notificationSettings?.associatedWithTicket
-            recipients.push u.mail
-          newValue = "#{u.username}"
+
       else if modifier.$pull?.associatedUserIds?
         associatedUser = Meteor.users.findOne({_id: modifier.$pull.associatedUserIds}).username
         oldValue = "#{associatedUser}"

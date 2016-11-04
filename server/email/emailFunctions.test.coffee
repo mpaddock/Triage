@@ -30,7 +30,7 @@ mailObjs = [
       "content-type": "multipart/alternative; boundary=\"B_3528364707_492529968\""
     },
     "fromEmail": "Sarah.Condley@uky.edu",
-    "toEmail": "michael.paddock@uky.edu"
+    "toEmails": ["michael.paddock@uky.edu"]
   },
   {
     "subject": "RE: Triage ticket #27 submitted: Email test ticket",
@@ -60,7 +60,7 @@ mailObjs = [
       "content-type": "multipart/alternative; boundary=\"B_3528364707_492529968\""
     },
     "fromEmail": "Sarah.Condley@uky.edu",
-    "toEmail": "michael.paddock@uky.edu"
+    "toEmails": ["michael.paddock@uky.edu"]
   },
 
   {
@@ -91,7 +91,7 @@ mailObjs = [
       "content-type": "multipart/alternative; boundary=\"B_3528364707_492529968\""
     },
     "fromEmail": "Sarah.Condley@uky.edu",
-    "toEmail": "michael.paddock@uky.edu"
+    "toEmails": ["michael.paddock@uky.edu"]
   }
 
 ]

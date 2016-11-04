@@ -70,7 +70,7 @@ EmailIngestion.parse = (message) ->
       body: mailObject.text
       headers: mailObject.headers
       fromEmail: mailObject.from?[0].address
-      toEmail: mailObject.to?[0].address
+      toEmails: _.pluck mailObject.to, 'address'
     }
   mailparser.write message
   mailparser.end()

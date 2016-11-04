@@ -43,7 +43,7 @@ Tinytest.add 'Email - ingest reply parsing', (test) ->
     check parsed.body, String
     check parsed.attachments, Array
     check parsed.headers, Object
-    check parsed.fromEmail, String #SimpleSchema.RegEx.Email
+    check parsed.fromEmails, [String] #SimpleSchema.RegEx.Email
     check parsed.toEmail, String
 
     test.equal JSON.stringify(EmailIngestion.extractReplyFromBody(parsed.body, parsed.toEmail)), JSON.stringify(t.expected)
