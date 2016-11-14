@@ -36,6 +36,8 @@ Template.ticketRow.helpers
     TicketFlags.findOne({userId: Meteor.userId(), ticketId: @_id, k: 'unread'})?.v
   repliedTo: ->
     TicketFlags.findOne({userId: Meteor.userId(), ticketId: @_id, k: 'replied'})
+  hasBeenUpdated: ->
+    @lastUpdated?.getTime() != @submittedTimestamp?.getTime()
   hasAttachment: ->
     @attachmentIds?.length > 0
   noteCount: ->
