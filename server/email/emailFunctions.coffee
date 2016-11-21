@@ -1,7 +1,7 @@
 @TriageEmailFunctions = {}
 @TriageEmailFunctions.getTicketId = (message) ->
   ticketId = null
-  r = message?.headers['references'].split(/[\s,]+/)
+  r = message?.headers['references']?.split(/[\s,]+/)
   _.each r, (ref) ->
     id = ref.split('@').shift().substr(1).split('.').pop()
     if Tickets.findOne(id)
