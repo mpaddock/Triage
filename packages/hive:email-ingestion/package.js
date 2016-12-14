@@ -11,15 +11,15 @@ Npm.depends({
 });
 
 Package.onUse(function(api) {
-  api.versionsFrom('1.1.0.2');
-  api.use(['coffeescript', 'hive:file-registry', 'underscore'], 'server');
+  api.versionsFrom('1.3');
+  api.use(['modules', 'coffeescript', 'hive:file-registry', 'underscore'], 'server');
   api.addFiles('email-ingestion.coffee', 'server');
   api.export('EmailIngestion', 'server');
 });
 
 Package.onTest(function(api) {
-  api.use('tinytest');
-  api.use(['coffeescript', 'underscore', 'check']);
+  api.use('dispatch:mocha-phantomjs');
+  api.use(['coffeescript', 'underscore', 'check', 'modules', 'hive:file-registry']);
   api.use('hive:email-ingestion');
-  api.addFiles('email-ingestion-tests.coffee');
+  api.addFiles('email-ingestion-tests.coffee', 'server');
 });

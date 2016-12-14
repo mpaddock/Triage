@@ -1,6 +1,9 @@
+{expect} = require 'chai'
+{EmailIngestion} = require './email-ingestion.coffee'
+
 fs = Npm.require('fs')
 
-emaildir = process.env.PWD+'/emails/'
+emaildir = process.env.PWD+'/packages/hive:email-ingestion/emails/'
 
 testFiles = [
   {
@@ -36,33 +39,34 @@ testFiles = [
   }
 ]
 
-Tinytest.add 'Email - ingest reply parsing', (test) ->
-  _.each testFiles, (t) ->
-    parsed = EmailIngestion.parse fs.readFileSync("#{emaildir}/#{t.file}")
-    check parsed.subject, String
-    check parsed.body, String
-    check parsed.attachments, Array
-    check parsed.headers, Object
-    check parsed.fromEmails, [String] #SimpleSchema.RegEx.Email
-    check parsed.toEmail, String
+describe 'Email ingestion', ->
+  it 'ingest reply parsing', ->
+    _.each testFiles, (t) ->
+      parsed = EmailIngestion.parse fs.readFileSync("#{emaildir}/#{t.file}")
+      check parsed.subject, String
+      check parsed.body, String
+      check parsed.attachments, Array
+      check parsed.headers, Object
+      check parsed.fromEmail, String #SimpleSchema.RegEx.Email
+      check parsed.toEmails, [String]
 
-    test.equal JSON.stringify(EmailIngestion.extractReplyFromBody(parsed.body, parsed.toEmail)), JSON.stringify(t.expected)
+      expect(JSON.stringify(EmailIngestion.extractReplyFromBody(parsed.body, parsed.toEmails))).to.equal JSON.stringify(t.expected)
 
-Tinytest.add 'Email - quoted-text marker strings', (test) ->
-  good = [
-    'On Wed, Jul 15, 2015 at 1:21 PM, <triagebot@triage.as.uky.edu> wrote:',
-    '________________________________\nFrom:'
-  ]
+  it 'quoted-text marker strings', ->
+    good = [
+      'On Wed, Jul 15, 2015 at 1:21 PM, <triagebot@triage.as.uky.edu> wrote:',
+      '________________________________\nFrom:'
+    ]
 
-  bad = [
-    'On or around May 26th, I did something.\nwrote:',
-    '________________________________\nJohn Doe'
-  ]
+    bad = [
+      'On or around May 26th, I did something.\nwrote:',
+      '________________________________\nJohn Doe'
+    ]
 
-  # If it's a real quote-text delimiter, we just get the preceding text as the body
-  _.each good, (g) -> test.equal '', EmailIngestion.extractReplyFromBody g
+    # If it's a real quote-text delimiter, we just get the preceding text as the body
+    _.each good, (g) -> expect('').to.equal EmailIngestion.extractReplyFromBody g
 
-  # If it's actually body text that _looks_ like a quote-text delimiter, we
-  # should get the body text back
-  _.each bad, (b) -> test.equal b, EmailIngestion.extractReplyFromBody b
+    # If it's actually body text that _looks_ like a quote-text delimiter, we
+    # should get the body text back
+    _.each bad, (b) -> expect(b).to.equal EmailIngestion.extractReplyFromBody b
 

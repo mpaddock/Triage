@@ -119,3 +119,7 @@ describe 'Email Ingestion', ->
     _.each mailObjs, (m) ->
       expect(TriageEmailFunctions.getTicketId(m)).to.equal ticketId
 
+  it 'extractReplyFromBody', ->
+    _.each mailObjs, (m) ->
+      EmailIngestion.extractReplyFromBody m.body
+
