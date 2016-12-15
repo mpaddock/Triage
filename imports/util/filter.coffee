@@ -17,8 +17,7 @@ exports.Filter =
     if filter.userId?
       selfFilter = [
           { associatedUserIds: filter.userId },
-          { authorId: filter.userId },
-          { submittedByUserId: filter.userId }
+          { authorId: filter.userId }
       ]
     if Meteor.isServer
       # $text operator doesn't work on the client.
