@@ -15,6 +15,11 @@ filter3 =
   queueName: ['Q', 'R']
   status: '!Closed'
 
+filter4 =
+  queueName: 'Q'
+  search: '1234'
+  status: '!Closed'
+
 describe 'Filter', ->
   describe 'toMongoSelector', ->
     selector = Filter.toMongoSelector(filter)
@@ -25,6 +30,15 @@ describe 'Filter', ->
           queueName: 'Q'
           $text: { '$search': 'phrase' }
           status: { '$ne': 'Closed' }
+
+      it 'should search by ticket number, if query is a number', ->
+        expect(Filter.toMongoSelector(filter4)).to.deep.equal
+          queueName: 'Q'
+          status: { '$ne': 'Closed' }
+          $or: [
+            { $text: { '$search': '1234' } },
+            { ticketNumber: 1234 }
+          ]
 
     if Meteor.isClient
       it 'filters to queueName and a default closed status on client', ->

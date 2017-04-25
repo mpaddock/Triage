@@ -22,7 +22,15 @@ exports.Filter =
     if Meteor.isServer
       # $text operator doesn't work on the client.
       if filter.search?.trim().length
-        mongoFilter['$text'] = { $search: filter.search }
+        if ticketNumber = parseInt(filter.search?.trim())
+          mongoFilter['$or'] = [
+            { $text:
+              { $search: filter.search }
+            },
+            { ticketNumber: ticketNumber }
+          ]
+        else
+          mongoFilter['$text'] = { $search: filter.search }
     _.each [userFilter, selfFilter], (x) ->
       if x?.length > 0
         unless mongoFilter['$and'] then mongoFilter['$and'] = []
