@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "Triage is a Meteor.js application for ticket tracking and management.",
   "dependencies": {
-    "meteor-node-stubs": "^0.2.3"
+    "meteor-node-stubs": "^0.2.3",
+    "node-slack": "0.0.7"
   },
   "devDependencies": {
     "chai": "^3.5.0"

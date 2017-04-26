@@ -1,6 +1,6 @@
 {escapeString} = require('/imports/util/escapeString.coffee')
 
-SlackAPI = Meteor.npmRequire('node-slack')
+SlackAPI = require 'node-slack'
 Slack = new SlackAPI(Meteor.settings.private.slack.hookUrl)
 
 if Npm.require('cluster').isMaster
@@ -17,11 +17,7 @@ if Npm.require('cluster').isMaster
     QueueBadgeCounts.update { queueName: doc.queueName, userId: { $ne: userId } }, { $inc: { count: 1 } }, { multi: true }
 
     # Set the ticket number, store the ticket submitter, server-side timestamp, notify author.
-    console.log('pre doc', doc);
-
     doc = prepareTicket userId, doc
-
-    console.log('post doc', doc);
     notifyTicketAuthor userId, doc
     notifyAssociatedUsers doc
     if doc.queueName is 'Web'
@@ -109,12 +105,14 @@ notifyAssociatedUsers = (doc) ->
       html: message
 
 sendSlackNotification = (doc) ->
-
+  body = doc.body
+  if body.length > 200
+    body = body.substring(0,199) + '...'
   Slack.send
     "text": "A new ticket has been submitted by #{doc.authorName}."
     "username": "Triage"
     "attachments": [ {
-      "text": "<http://localhost:3000|##{doc.ticketNumber} #{doc.title}>\n#{doc.body}"
+      "text": "<https://triage.as.uky.edu/queue/Web?ticket=#{doc.ticketNumber}|##{doc.ticketNumber} #{doc.title}>\n#{body}"
       "color": "005daa"
     } ]
 

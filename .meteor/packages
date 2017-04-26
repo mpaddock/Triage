@@ -49,7 +49,3 @@ standard-minifier-js
 shell-server
 dispatch:mocha-phantomjs
 modules
-meteorhacks:npm
-
-
-npm-container
