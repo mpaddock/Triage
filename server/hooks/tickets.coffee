@@ -1,5 +1,8 @@
 {escapeString} = require('/imports/util/escapeString.coffee')
 
+SlackAPI = Meteor.npmRequire('node-slack')
+Slack = new SlackAPI(Meteor.settings.private.slack.hookUrl)
+
 if Npm.require('cluster').isMaster
 
   Tickets.before.insert (userId, doc) ->
@@ -14,10 +17,16 @@ if Npm.require('cluster').isMaster
     QueueBadgeCounts.update { queueName: doc.queueName, userId: { $ne: userId } }, { $inc: { count: 1 } }, { multi: true }
 
     # Set the ticket number, store the ticket submitter, server-side timestamp, notify author.
+    console.log('pre doc', doc);
+
     doc = prepareTicket userId, doc
+
+    console.log('post doc', doc);
     notifyTicketAuthor userId, doc
     notifyAssociatedUsers doc
-    
+    if doc.queueName is 'Web'
+      sendSlackNotification doc
+
     # Add ticketNumber and author's displayName and department to the text index.
     author = Meteor.users.findOne(doc.authorId)
     Job.push new TextAggregateJob
@@ -90,7 +99,7 @@ notifyAssociatedUsers = (doc) ->
       recipients.push(user.mail)
   if recipients.length
     body = Parsers.prepareContentForEmail(doc.body)
-    subject = "You have been associated with Triage ticket ##{doc.ticketNumber}: #{doc.title}"
+    subject = "You have been associated with Triage ticket ##{doc.ticketNumber}: "
     message = "You are now associated with ticket ##{doc.ticketNumber}.<br>"
     message += getTicketInformationForEmail doc
     Job.push new NotificationJob
@@ -99,6 +108,15 @@ notifyAssociatedUsers = (doc) ->
       subject: subject
       html: message
 
+sendSlackNotification = (doc) ->
+
+  Slack.send
+    "text": "A new ticket has been submitted by #{doc.authorName}."
+    "username": "Triage"
+    "attachments": [ {
+      "text": "<http://localhost:3000|##{doc.ticketNumber} #{doc.title}>\n#{doc.body}"
+      "color": "005daa"
+    } ]
 
 prepareTicket = (userId, doc) ->
   #Record of 'true' submitter.
