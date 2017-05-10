@@ -47,13 +47,19 @@ if Meteor.settings?.email?.smtpPipe?
         user = Meteor.users.findOne { $or: [ { mail: message.fromEmail }, { emails: message.fromEmail } ] }
 
         if ticket = Tickets.findOne(ticketId) and ticket?.status is 'Closed'
-          ticketLink = Meteor.absoluteUrl("/ticket/#{ticket.ticketNumber}")
+          closedFor = (Date.now() - ticket.closedTimestamp)/1000
+          allowed = Meteor.settings?.public?.reopenAllowedTimespan || 604800
+          html = "The ticket you are replying to is marked Closed, and your response may be overlooked.  Please make sure to follow up through other means"
+          if closedFor > allowed
+            html += ", or submit a new ticket."
+          else
+            ticketLink = Meteor.absoluteUrl("/ticket/#{ticket.ticketNumber}")
+            html += ", or login and re-open this ticket by visiting <a href='#{ticketLink}'>#{ticketLink}</a>."
           Email.send
             from: Meteor.settings.email?.fromEmail || "triagebot@triage.as.uky.edu"
             to: message.fromEmail
             subject: "Auto-response: Ticket ##{ticket.ticketNumber} is Closed"
-            html: "The ticket you are replying to is marked Closed, and your response may be overlooked.  Please make sure " +
-              "to follow up through other means, or login and re-open this ticket by visiting <a href='#{ticketLink}'>#{ticketLink}</a>."
+            html: html
 
         Changelog.insert
           ticketId: ticketId
