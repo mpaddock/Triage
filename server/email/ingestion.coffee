@@ -46,7 +46,7 @@ if Meteor.settings?.email?.smtpPipe?
         # Try to find a user. If no user, just attach the note with the author email address.
         user = Meteor.users.findOne { $or: [ { mail: message.fromEmail }, { emails: message.fromEmail } ] }
 
-        if ticket = Tickets.findOne(ticketId) and ticket?.status is 'Closed'
+        if (ticket = Tickets.findOne(ticketId)) and (ticket?.status is 'Closed')
           closedFor = (Date.now() - ticket.closedTimestamp)/1000
           allowed = Meteor.settings?.public?.reopenAllowedTimespan || 604800
           html = "The ticket you are replying to is marked Closed, and your response may be overlooked.  Please make sure to follow up through other means"
