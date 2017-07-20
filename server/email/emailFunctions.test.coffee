@@ -1,5 +1,6 @@
 {expect} = require 'chai'
 {TriageEmailFunctions} = require './emailFunctions.coffee'
+{EmailIngestion} = require './email-ingestion.coffee'
 
 mailObjs = [
   {

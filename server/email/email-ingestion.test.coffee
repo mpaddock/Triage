@@ -3,7 +3,7 @@
 
 fs = Npm.require('fs')
 
-emaildir = process.env.PWD+'/packages/hive:email-ingestion/emails/'
+emaildir = process.env.PWD+'/server/email/test-data/'
 
 testFiles = [
   {
@@ -52,21 +52,41 @@ describe 'Email ingestion', ->
 
       expect(JSON.stringify(EmailIngestion.extractReplyFromBody(parsed.body, parsed.toEmails))).to.equal JSON.stringify(t.expected)
 
-  it 'quoted-text marker strings', ->
-    good = [
-      'On Wed, Jul 15, 2015 at 1:21 PM, <triagebot@triage.as.uky.edu> wrote:',
-      '________________________________\nFrom:'
+  it 'removes quoted-text from email replies', ->
+    replies = [
+      {
+        message: "Here is my message.",
+        quoted: """
+          On Wed, Jul 15, 2015 at 1:21 PM, <somebody@triage.app> wrote:
+          > This text is quoted.
+          > And this is too.
+        """
+      },
+      {
+        message: "Here is another message.",
+        quoted: """
+          ________________________________
+          From: somebody@triage.app [somebody@triage.app]
+          Sent: Monday, November 18, 2015 4:00 PM
+          To: triagebot@triage.app
+          Subject: Something
+
+          Blah blah blah.  This counts as quoted text.
+        """
+      },
+      {
+        message: """
+          See interleaved replies below.
+          On Wed, Jul 15, 2015 at 1:21 PM, <somebody@triage.app> wrote:
+          > Something.
+          And I think that's great!
+          > Something else.
+          That is also fine.  Anyway, better keep the context.
+        """,
+        quoted: ""
+      }
     ]
 
-    bad = [
-      'On or around May 26th, I did something.\nwrote:',
-      '________________________________\nJohn Doe'
-    ]
-
-    # If it's a real quote-text delimiter, we just get the preceding text as the body
-    _.each good, (g) -> expect('').to.equal EmailIngestion.extractReplyFromBody g
-
-    # If it's actually body text that _looks_ like a quote-text delimiter, we
-    # should get the body text back
-    _.each bad, (b) -> expect(b).to.equal EmailIngestion.extractReplyFromBody b
+    _.each replies, (r) ->
+      expect(r.message).to.equal EmailIngestion.extractReplyFromBody("#{r.message}\n#{r.quoted}", ["somebody@triage.app"])
 

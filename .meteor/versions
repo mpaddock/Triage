@@ -38,7 +38,6 @@ email@1.1.17
 fastclick@1.0.12
 geojson-utils@1.0.9
 hive:accounts-ldap@0.4.1
-hive:email-ingestion@0.0.2
 hive:facets@0.1.4
 hive:file-registry@0.9.15
 hive:workers@2.0.5
@@ -80,7 +79,6 @@ mongo@1.1.12
 mongo-id@1.0.5
 mongo-livedata@1.0.12
 mrt:moment@2.8.1
-multipart@1.0.0
 natestrauser:select2@3.5.1
 npm-mongo@1.5.49
 observe-sequence@1.0.12

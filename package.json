@@ -3,13 +3,16 @@
   "version": "1.0.0",
   "description": "Triage is a Meteor.js application for ticket tracking and management.",
   "dependencies": {
-    "meteor-node-stubs": "^0.2.3"
+    "meteor-node-stubs": "^0.2.3",
+    "connect-busboy": "0.0.2",
+    "mailparser": "0.5.1"
   },
   "devDependencies": {
     "chai": "^3.5.0"
   },
   "scripts": {
-    "test": "meteor test --port 4096 --once --driver-package=dispatch:mocha-phantomjs"
+    "test": "meteor test --port 4096 --once --driver-package=dispatch:mocha-phantomjs",
+    "test-watch": "TEST_WATCH=1 meteor test --port 4096 --driver-package=dispatch:mocha-phantomjs"
   },
   "repository": {
     "type": "git",

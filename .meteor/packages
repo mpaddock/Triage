@@ -23,9 +23,9 @@ mizzao:user-status
 tmeasday:publish-counts
 email@1.1.17
 hive:facets
-hive:email-ingestion
+#hive:email-ingestion
 
-multipart
+#multipart
 percolate:migrations
 reactive-var@1.0.10
 percolate:synced-cron
