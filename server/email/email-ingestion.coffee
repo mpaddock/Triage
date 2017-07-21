@@ -42,6 +42,7 @@ EmailIngestion.monitorNamedPipe = (pipePath, cb) ->
 # .headers: { 'header1': 'value1', 'header2': 'value2'}
 
 EmailIngestion.parse = (message) ->
+  start = process.hrtime()
   mailFuture = new Future()
   mailparser = new MailParser()
 
@@ -74,7 +75,11 @@ EmailIngestion.parse = (message) ->
     }
   mailparser.write message
   mailparser.end()
-  return mailFuture.wait()
+  ret = mailFuture.wait()
+  elapsed = process.hrtime(start)
+  elapsed = elapsed[0]*1e3 + elapsed[1]*1e-6
+  console.log "Parsed email in #{elapsed}ms"
+  return ret
       
 EmailIngestion.extractReplyFromBody = (body, toAddresses) ->
   toAddresses = '('+toAddresses?.join('|')+')'

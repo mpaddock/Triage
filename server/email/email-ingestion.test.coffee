@@ -43,7 +43,7 @@ describe 'Email ingestion', ->
   _.each testFiles, (t) ->
     it 'ingest reply parsing '+t.file, ->
       # Set a little bit of extra time for the files which have attachments
-      @timeout 5000
+      @timeout 15000
       parsed = EmailIngestion.parse fs.readFileSync("#{emaildir}/#{t.file}")
       check parsed.subject, String
       check parsed.body, String
