@@ -40,8 +40,8 @@ testFiles = [
 ]
 
 describe 'Email ingestion', ->
-  it 'ingest reply parsing', ->
-    _.each testFiles, (t) ->
+  _.each testFiles, (t) ->
+    it 'ingest reply parsing '+t.file, ->
       parsed = EmailIngestion.parse fs.readFileSync("#{emaildir}/#{t.file}")
       check parsed.subject, String
       check parsed.body, String
