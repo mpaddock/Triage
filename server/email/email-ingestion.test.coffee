@@ -75,16 +75,25 @@ describe 'Email ingestion', ->
         """
       },
       {
-        message: """
-          See interleaved replies below.
-          On Wed, Jul 15, 2015 at 1:21 PM, <somebody@triage.app> wrote:
+        message: "Sometimes the separator has a newline in it.",
+        quoted: """
+          On Wed, Jul 15, 2015 at 1:21 PM, <somebody@triage.app>
+          wrote:
           > Something.
-          And I think that's great!
-          > Something else.
-          That is also fine.  Anyway, better keep the context.
-        """,
-        quoted: ""
+        """
       }
+      # TODO: support interleaved replies? right now, call it unsupported
+      #{
+      #  message: """
+      #    See interleaved replies below.
+      #    On Wed, Jul 15, 2015 at 1:21 PM, <somebody@triage.app> wrote:
+      #    > Something.
+      #    And I think that's great!
+      #    > Something else.
+      #    That is also fine.  Anyway, better keep the context.
+      #  """,
+      #  quoted: ""
+      #},
     ]
 
     _.each replies, (r) ->
