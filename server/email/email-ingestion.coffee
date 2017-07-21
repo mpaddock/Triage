@@ -87,4 +87,5 @@ EmailIngestion.extractReplyFromBody = (body, toAddresses) ->
   return body.split(regex)[0].trim()
 
 exports.EmailIngestion = EmailIngestion
+@EmailIngestion = EmailIngestion
 
