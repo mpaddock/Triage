@@ -53,7 +53,7 @@ if Meteor.settings?.email?.smtpPipe?
           if closedFor > allowed
             html += ", or submit a new ticket."
           else
-            ticketLink = Meteor.absoluteUrl("/ticket/#{ticket.ticketNumber}")
+            ticketLink = Meteor.absoluteUrl("ticket/#{ticket.ticketNumber}")
             html += ", or login and re-open this ticket by visiting <a href='#{ticketLink}'>#{ticketLink}</a>."
           Email.send
             from: Meteor.settings.email?.fromEmail || "triagebot@triage.as.uky.edu"
