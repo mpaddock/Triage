@@ -16,7 +16,7 @@ result2 = "<p>There are &lt; 2 reasons to use &lt; in place of &#x27;less than&#
   "<p>But I did it anyway, because this is a test.</p>"
 
 if Meteor.isClient
-  describe 'Parsers',
+  describe 'Parsers', ->
     it 'usernames and statuses', ->
       expect(Parsers.getTerms(test1)).to.deep.equal ['hello', 'this', 'is', 'a', 'test']
       expect(Parsers.getUsernames(test1)).to.deep.equal ['mdpadd2']
@@ -35,4 +35,9 @@ if Meteor.isServer
     it 'email content parsing on server', ->
       expect(Parsers.prepareContentForEmail(content1)).to.equal result1
       expect(Parsers.prepareContentForEmail(content2)).to.equal result2
+
+describe 'Parsers', ->
+  it 'should not match numeric hashtags', ->
+    expect(Parsers.getTags("#string #1234")).to.deep.equal ['string']
+    expect(Parsers.getTags("#alpha #5678 #beta")).to.deep.equal ['alpha', 'beta']
 

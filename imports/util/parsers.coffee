@@ -2,7 +2,7 @@
 
 #Scans a body of text for hashtags (#hashtag), returns an array of unique results.
 @Parsers.getTags = (text) ->
-  _.uniq text.match(/\B#[a-zA-Z0-9-_/]+\b/g) # normal word characters plus hyphens and slashes
+  _.uniq text.match(/\B#[a-zA-Z][a-zA-Z0-9-_/]*\b/g) # normal word characters plus hyphens and slashes
     .filter (x) ->
       # Filter if matching a 3 or 6-digit hex code, e.g. #a0a0a0 or #fff
       not /((#[a-fA-F0-9]{3})(\W|$)|(#[a-fA-F0-9]{6})(\W|$))/g.test(x)
