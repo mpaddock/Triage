@@ -10,7 +10,12 @@ Meteor.publishComposite 'tickets', (filter, offset, limit) ->
     find: () ->
       Counts.publish(this, 'ticketCount', Tickets.find(mongoFilter), { noReady: true })
 
-      Tickets.find { _id: { $in: ticketSet } }, { sort: { submittedTimestamp: -1 } }
+      Tickets.find { _id: { $in: ticketSet } },
+        sort:
+          submittedTimestamp: -1
+        fields:
+          emailMessageIDs: 0
+          additionalText: 0
     children: [
       {
         find: (ticket) ->
@@ -32,7 +37,12 @@ Meteor.publishComposite 'newTickets', (filter, time) ->
     _.extend mongoFilter, { submittedTimestamp: { $gt: time } }
   {
     find: () ->
-      Tickets.find mongoFilter, { sort: { submittedTimestamp: -1 } }
+      Tickets.find mongoFilter,
+        sort:
+          submittedTimestamp: -1
+        fields:
+          emailMessageIDs: 0
+          additionalText: 0
     children: [
       {
         find: (ticket) ->
