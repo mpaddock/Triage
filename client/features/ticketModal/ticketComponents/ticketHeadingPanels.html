@@ -1,0 +1,55 @@
+<template name="ticketHeadingPanels">
+    <div class="card">
+        <div class="card-content level">
+            <div class="level-left">
+                <div class="user-panel-portrait">{{> userPortrait userId=author._id}}</div>
+                <div class="user-panel-info">
+                    {{author.displayName}} ({{author.username}})<br>
+                    <a href="mailto:{{author.mail}}">{{author.mail}}</a><br>
+                    {{author.department}}<br>
+                    {{author.physicalDeliveryOfficeName}}<br>
+                </div>
+            </div>
+            <div class="level-right is-hidden-mobile is-block">
+                <a href="/ticket/{{ticketNumber}}" name="ticketLink">Ticket #{{ticketNumber}}</a><br>
+                {{#if queueMember}}
+                <strong><a href="#" name="changeQueue">{{queueName}}</a></strong><br>
+                {{else}}
+                <p><strong>{{queueName}}</strong></p>
+                {{/if}}
+                <p>{{>timestampFormatter date=submittedTimestamp}}</p>
+                <p>({{>timeFromNow date=submittedTimestamp}})</p>
+                {{#if submittedByOther}}
+                <p>Submitted by: {{> userPortrait userId=submittedByUserId class="in-row"}} {{usernameFromId submittedByUserId}}</p>
+                {{/if}}
+            </div>
+        </div>
+    </div>
+    <div class="card is-hidden-tablet">
+        <div class="card-content">
+            <a href="/ticket/{{ticketNumber}}" name="ticketLink">Ticket #{{ticketNumber}}</a><br>
+            <strong>{{queueName}}</strong><br>
+            {{>timestampFormatter date=submittedTimestamp}}<br>
+            ({{>timeFromNow date=submittedTimestamp}})
+        </div>
+    </div>
+</template>
+
+<template name="removeAttachmentModal">
+    <div class="modal fade" id="removeAttachmentModal" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Remove Attachment</h4>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to remove attachment <strong>{{attachment.filename}}</strong> from ticket <strong>#{{ticket.ticketNumber}}</strong>? This action cannot be undone.
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
+                    <button class="btn btn-danger pull-right" data-action="removeAttachment">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

@@ -1,0 +1,79 @@
+<template name="userDashboard">
+    <h4 class="title is-4">Preferences</h4>
+    <hr>
+    <div class="tile is-ancestor">
+        <div class="tile is-3 is-parent">
+            <div class="tile box is-child">
+                <div class="field is-horizontal">
+                    <div class="field-label is-normal">
+                        <label for="defaultQueue" class="label">Default Queue:</label>
+                    </div>
+                    <div class="control">
+                        <div class="select">
+                            <select name="defaultQueue">
+                                {{#each queue in queues}}
+                                <option {{queue.selected}}>{{queue.name}}</option>
+                                {{/each}}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="field is-horizontal">
+                    <div class="field-label is-normal">
+                        <label for="defaultQueue" class="label">Default Queue View:</label>
+                    </div>
+                    <div class="control">
+                        <div class="select">
+                            <select name="defaultQueue">
+                                {{#each viewOption in viewOptions}}
+                                <option {{viewOption.selected}}>{{viewOption.name}}</option>
+                                {{/each}}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{#with notificationSettings}}
+        <div class="tile is-3 is-parent">
+            <div class="tile box is-child">
+                <label for="authorPreferences" class="title is-6">If I am the author of a ticket, notify me when:</label>
+                {{>settingsCheckbox name="submitted" option="I submit the ticket" setting=submitted}}
+                {{>settingsCheckbox name="authorSelfNote" option="I leave a note on the ticket" setting=authorSelfNote}}
+                {{>settingsCheckbox name="authorOtherNote" option="Someone else leaves a note on the ticket" setting=authorOtherNote}}
+                {{>settingsCheckbox name="authorStatusChanged" option="The status of the ticket changes" setting=authorStatusChanged}}
+                {{>settingsCheckbox name="authorAttachment" option="An attachment is added to the ticket" setting=authorAttachment}}
+            </div>
+        </div>
+        <div class="tile is-3 is-parent">
+            <div class="tile box is-child">
+                <label for="associatedPreferences" class="title is-6">If I am associated with a ticket, notify me when:</label>
+                {{>settingsCheckbox name="associatedSelfNote" option="I leave a note on the ticket" setting=associatedSelfNote}}
+                {{>settingsCheckbox name="associatedOtherNote" option="Someone else leaves a note on the ticket" setting=associatedOtherNote}}
+                {{>settingsCheckbox name="associatedStatusChanged" option="The status of the ticket changes" setting=associatedStatusChanged}}
+                {{>settingsCheckbox name="associatedAttachment" option="An attachment is added to the ticket" setting=associatedAttachment}}
+            </div>
+        </div>
+        <div class="tile is-3 is-parent">
+            <div class="tile box is-child">
+                <label for="otherPreferences" class="title is-6">Other Settings</label>
+                {{> settingsCheckbox name="associatedWithTicket" option="Notify me when I am associated with a ticket" setting=associatedWithTicket}}
+            </div>
+        </div>
+        {{/with}}
+    </div>
+    <div id="saved-message" class="pull-right">
+        {{#if saved}}
+        <span class="saved-preferences">Preferences saved. </span>
+        {{/if}}
+        <button type="button" class="button" data-action="submit">Save</button>
+    </div>
+</template>
+
+<template name="settingsCheckbox">
+    <div class="control">
+        <label class="checkbox"><input type="checkbox" value="" name="{{name}}" {{checked}}>
+            {{option}}
+        </label>
+    </div>
+</template>

@@ -1,0 +1,18 @@
+<template name="userPortrait">
+    {{#if user}}
+    <div class="user-profile hover {{class}}">
+        <div class="user-picture">
+            <img src="https://as.uky.edu/profile-picture/{{user.username}}" class="{{online}}" alt="Photo of {{user.displayName}}">
+        </div>
+        {{#unless hideHoverContent}}
+        <div class="hover-content">
+            <div class="name">{{user.displayName}} ({{user.username}})</div>
+            <div class="email">{{user.mail}}</div>
+            <div class="department">{{user.department}}</div>
+            <div class="address">{{user.physicalDeliveryOfficeName}}</div>
+            {{#if associated}}<div class="remove"><a data-action="removeUser">Remove</a></div>{{/if}}
+        </div>
+        {{/unless}}
+    </div>
+    {{/if}}
+</template>

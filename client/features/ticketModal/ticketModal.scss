@@ -1,0 +1,8 @@
+.ticket-modal-card {
+    height: calc(100vh - 40px);
+
+    .ticket-modal-card-body {
+        border-bottom-left-radius: 5px;
+        border-bottom-right-radius: 5px;
+    }
+}

@@ -1,0 +1,30 @@
+@media (max-width: 768px) {
+  .modal-xl .modal-card {
+    width: 96vw;
+  }
+}
+
+@media (min-width: 769px) {
+  .modal-xl .modal-card {
+    width: 90vw;
+  }
+}
+
+.hover {
+    display: inline;
+
+    .hover-content {
+        position: absolute;
+        display: block;
+        border: 1px solid black;
+        z-index: 9999;
+        width: 13.8em;
+        background: rgba(255, 255, 255, 0.9);
+        padding: 2px 4px;
+        visibility: hidden;
+    }
+
+    &:hover .hover-content {
+        visibility: visible;
+    }
+}

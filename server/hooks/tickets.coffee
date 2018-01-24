@@ -8,7 +8,6 @@ if Npm.require('cluster').isMaster
     doc.tags?.forEach (x) ->
       Tags.upsert { name: x }, { $set: { lastUse: now } }
 
-    Statuses.upsert { name: doc.status }, { $set: { lastUse: now } }
 
     # Update queue new counts.
     QueueBadgeCounts.update { queueName: doc.queueName, userId: { $ne: userId } }, { $inc: { count: 1 } }, { multi: true }
@@ -142,7 +141,6 @@ getEventMessagesFromUpdate = (userId, doc, fn, modifier) ->
       oldStatus = escapeString(doc.status)
       newStatus = escapeString(modifier.$set.status)
       unless oldStatus is newStatus
-        Statuses.upsert { name: newStatus }, { $set: { lastUse: new Date() } }
         type = "field"
         oldValue = oldStatus
         newValue = newStatus

@@ -1,0 +1,25 @@
+<template name="queue">
+    <!--[if lt IE 10]>
+        <div class="row">
+        <div class="alert alert-danger">
+        You are using an outdated browser. Some features of Triage may not work or may work in unexpected ways.
+        Triage performs best in Chrome, Firefox, Safari, or Internet Explorer 10 or newer.
+        </div>
+        </div>
+    <![endif]-->
+    <div class="row">
+        {{queueName}}
+        {{#unless connected}}
+        <article class="message is-danger">
+            <div class="message-body">
+                <strong>You are not currently connected. For performance reasons, Triage may disconnect after periods of inactivity. If this message does not go away on its own, you may <a data-action="reconnect">attempt to reconnect.</a></strong>
+            </div>
+        </article>
+        {{/unless}}
+    </div>
+    <div class="is-hidden-desktop">
+        {{> mobileFilter data=tickets}}
+    </div>
+    {{> Template.dynamic template=ticketTemplate}}
+</template>
+

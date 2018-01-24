@@ -1,11 +1,6 @@
 <template name="layout">
-<div class="wrap">
-  {{> navbar}}
-  {{#if currentUser}}
-  {{> queuebar}}
-  {{/if}}
-</div>
-<div class="container-fluid">
-  {{> yield}}
-</div>
+    {{> navbar}}
+    <div class="container is-fluid">
+        {{> yield}}
+    </div>
 </template>

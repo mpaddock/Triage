@@ -1,0 +1,69 @@
+<template name="ticketInfoPanels">
+    <!-- Assigned User Panel --> 
+    <div name="associatedUsers" class="card">
+        <header class="card-header">
+            <p class="card-header-title">Assigned Users</p>
+        </header>
+        <div class="card-content">
+            <div class="assign-user-field">
+                <span class="icon glyphicon glyphicon-plus"></span>
+                {{>inputAutocomplete settings=userSettings name="assignUser" placeholder="Assign User"}} 
+            </div>
+            {{#each associatedUserIds}}
+            {{> userPortrait userId=this associated=true}}
+            {{/each}}
+            <div>
+                <span class="error">{{associateUserError}}</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tag Panel -->
+    <div name="tags" class="card">
+        <header class="card-header">
+            <p class="card-header-title">Tags</p>
+        </header>
+        <div class="card-content">
+            <div class="add-tag-field">
+                <span class="icon glyphicon glyphicon-plus"></span>
+                {{>inputAutocomplete settings=tagSettings name="addTag" placeholder="Add a tag"}}
+            </div>
+            {{#each tags}}
+            {{> ticketTag}}
+            {{/each}}
+        </div>
+    </div>
+
+    <!-- Attachments Panel -->
+    <div name="attachments" class="card">
+        <header class="card-header">
+            <p class="card-header-title">Attachments</p>
+        </header>
+        <div class="card-content">
+            <div class="btn-group">
+                <button type="button" class="add-attachment-btn btn dropdown-toggle" data-toggle="dropdown" aria-expanded="False">
+                    <span class="icon glyphicon glyphicon-plus"></span>
+                </button>
+
+                <ul class="dropdown-menu" data-toggle="dropdown">
+                    <li><a data-action="uploadFile">Upload File</a></li>
+                    {{#if isCordova}}<li><a data-action="takePicture">Take Picture</a></li>{{/if}}
+                </ul>
+            </div>
+
+            {{#each attachmentIds}}
+            <div class="attachment">
+                <div class="attachment-link">
+                    {{#if file.thumbnail}}
+                    <img class="img-thumbnail" style="max-width: 64px; max-height:24px;" src="/file/{{file.thumbnail}}" />
+                    {{/if}}
+                    <a class="cursor-pointer" data-action="showAttachmentModal" data-fileId="{{file._id}}">{{file.filename}}</a><br />
+                </div>
+                <div class="remove-attachment">
+                    <a href="#" data-action="removeAttachment">Remove</a>
+                </div>
+            </div>
+            {{/each}}
+        </div>
+    </div>
+</template>

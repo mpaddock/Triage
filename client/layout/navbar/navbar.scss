@@ -1,0 +1,13 @@
+.dropdown-menu {
+    :not(.active-queue) a {
+        font-weight: 300;
+    }
+    .active-queue a {
+        font-weight: 600
+    }
+}
+
+nav.navbar {
+    margin-bottom: 16px;
+    background-color: #ddd;
+}

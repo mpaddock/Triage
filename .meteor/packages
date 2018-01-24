@@ -4,21 +4,17 @@
 # 'meteor add' and 'meteor remove' will edit this file for you,
 # but you can also edit it by hand.
 
-twbs:bootstrap
 coffeescript@1.2.4_1
 iron:router
 aldeed:simple-schema
 aldeed:collection2
 mrt:moment
 accounts-base@1.2.11
-hive:accounts-ldap
 hive:file-registry
 reywood:publish-composite
-natestrauser:select2
 mizzao:autocomplete
 meteorhacks:aggregate
 cottz:iron-query
-matb33:collection-hooks
 mizzao:user-status
 tmeasday:publish-counts
 email@1.1.17
@@ -49,3 +45,12 @@ standard-minifier-js
 shell-server
 dispatch:mocha-phantomjs
 modules
+accounts-ui
+accounts-password
+hive:accounts-ldap
+fourseven:scss
+less
+matb33:bootstrap-glyphicons
+matb33:collection-hooks
+mixmax:smart-disconnect
+dburles:collection-helpers

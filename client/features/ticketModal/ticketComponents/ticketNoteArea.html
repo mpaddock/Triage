@@ -1,0 +1,10 @@
+<template name="ticketNoteArea">
+  <div class="panel panel-default">
+    <div class="panel-body">
+      {{#each changelog.items}}
+        {{> ticketChangelogItem}}
+      {{/each}}
+      {{> ticketNoteInput queueMember=queueMember ticketId=_id}}
+    </div>
+  </div>
+</template>

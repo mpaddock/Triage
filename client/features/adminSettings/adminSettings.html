@@ -1,0 +1,67 @@
+<template name="adminSettings">
+    <div class="columns">
+        <div id="as-application-admins" class="column">
+            <div class="panel settings-panel">
+                <header class="panel-heading">
+                    <p class="is-5">Application Administrators</p>
+                    <p class="subtitle is-6">These users will be able to administer all queues and add and delete application administrators.</p>
+                </header>
+                <div class="panel-content">
+                    {{#each admin in appAdmins}}
+                    <div class="panel-block">
+                        <span>
+                            {{> userPortrait userId=admin._id hideHoverContent=true}}
+                            {{admin.username}}
+                            ({{admin.displayName}})
+                        </span>
+                        <button class="button is-small is-danger" data-action="removeAdmin" data-id="{{admin._id}}">Remove</button>
+                    </div>
+                    {{/each}}
+                    <div class="field has-addons panel-block">
+                        <div class="control">
+                            {{> inputAutocomplete class="input" settings=userSettings name="addAdmin" placeholder="Enter Name or Username"}}
+                        </div>
+                        <div class="control">
+                            <button class="button is-primary" data-action="addAdmin">Add</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="as-queues" class="column">
+            <div class="panel settings-panel">
+                <header class="panel-heading">
+                    <p class="is-5">Queues</p>
+                    <p class="subtitle is-6">
+                    Create and delete queues.
+                    {{#if noQueues}}<br>There are currently no queues. Create a queue to begin using Triage.{{/if}}
+                    </p>
+                </header>
+                <div class="panel-content">
+                    {{#each queue in queues}}
+                    <div class="panel-block">
+                        {{queue.name}}
+                        <span>
+                            <a class="button is-small is-primary" href="/queue/{{queue.name}}/settings">Manage</a>
+                            {{#if queue.active}}
+                            <button class="button is-small is-warning" data-action="deactivateQueue" data-id="{{queue._id}}">Mark Inactive</button>
+                            {{else}}
+                            <button class="button is-small is-warning" data-action="activateQueue" data-id="{{queue._id}}">Mark Active</button>
+                            {{/if}}
+                            <button class="button is-small is-danger" data-action="deleteQueue" data-id="{{queue._id}}">Delete Queue</button>
+                        </span>
+                    </div>
+                    {{/each}}
+                    <div class="field has-addons panel-block">
+                        <div class="control">
+                            <input type="text" class="input" name="addQueue">
+                        </div>
+                        <div class="control">
+                            <button class="button is-primary" data-action="addQueue">Add</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

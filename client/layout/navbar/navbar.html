@@ -1,0 +1,68 @@
+<template name="navbar">
+    <nav class="navbar is-transparent">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="/">{{siteTitle}}</a>
+            {{#if currentUser}}
+            {{#if queues.length}}
+            <div class="navbar-item">
+                <button id="create-ticket" class="button is-primary">Create Ticket</button>
+            </div>
+            {{/if}}
+            <div class="navbar-burger burger" data-target="mobile-menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            {{/if}}
+        </div>
+
+        {{#if currentUser}}
+        <div id="mobile-menu" class="navbar-menu">
+            <div class="navbar-start">
+                {{#if queues.length}}
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <a class="navbar-link" href="#">
+                        Queues
+                    </a>
+                    <div class="navbar-dropdown is-boxed">
+                        {{#each queue in queues}}
+                        <a class="{{queueClass queue.name}} dropdown-item" href="/queue/{{queue.name}}">
+                            {{queue.name}}
+                            {{#if queue.count}}
+                            <span class="label label-danger label-as-badge">{{queue.count}} new</span>
+                            {{/if}}
+                        </a>
+                        {{/each}}
+                    </div>
+                </div>
+                {{/if}}
+            </div>
+
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a class="navbar-link" href="#">
+                    {{currentUser.username}}
+                </a>
+                <div class="navbar-dropdown is-boxed">
+                    <a class="dropdown-item" href="/my/dashboard">User Settings</a>
+                    {{#if canViewQueueSettings}}
+                    <a class="dropdown-item" href="/queue/{{currentQueue}}/settings">Queue Settings</a>
+                    {{/if}}
+                    {{#if canViewAppSettings}}
+                    <a class="dropdown-item" href="/admin/settings">Application Settings</a>
+                    {{/if}}
+                    <hr class="dropdown-divider">
+                    <a class="dropdown-item" href="#" id="logout">Logout</a>
+                </div>
+            </div>
+
+            <div class="navbar-item">
+                <a class="button is-primary" href="/stats">
+                    <i class="is-hidden-touch glyphicon glyphicon-stats"></i>
+                    <span class="is-hidden-desktop">Stats</span>
+                </a>
+            </div>
+        </div>
+        {{/if}}
+
+    </nav>
+</template>

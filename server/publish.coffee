@@ -1,14 +1,11 @@
 Meteor.publishComposite 'tickets', (filter, offset, limit) ->
-  if offset < 0 then offset = 0
-  if Filter.verifyFilterObject filter, _.pluck(Queues.find({memberIds: @userId}).fetch(), 'name'), @userId
-    mongoFilter = Filter.toMongoSelector filter
-    [ticketSet, facets] = Tickets.findWithFacets(mongoFilter, {sort: {submittedTimestamp: -1}, limit: limit, skip: offset})
-    ticketSet = _.pluck ticketSet.fetch(), '_id'
-  else
-    ticketSet = []
+  filter.queueName = null
+  mongoFilter = Filter.toMongoSelector filter
+
   {
     find: () ->
       Counts.publish(this, 'ticketCount', Tickets.find(mongoFilter), { noReady: true })
+      return Tickets.find()
 
       Tickets.find { _id: { $in: ticketSet } },
         sort:
@@ -16,62 +13,6 @@ Meteor.publishComposite 'tickets', (filter, offset, limit) ->
         fields:
           emailMessageIDs: 0
           additionalText: 0
-    children: [
-      {
-        find: (ticket) ->
-          filter = { ticketId: ticket._id, type: "note" }
-          if not Queues.findOne({name: ticket.queueName, memberIds: @userId})? then _.extend filter, { internal: { $ne: true } }
-          Counts.publish(this, "#{ticket._id}-noteCount", Changelog.find(filter))
-          TicketFlags.find { ticketId: ticket._id, userId: @userId }
-      },
-      {
-        find: ->
-          facets
-      }
-    ]
-  }
-
-Meteor.publishComposite 'newTickets', (filter, time) ->
-  if Filter.verifyFilterObject filter, _.pluck(Queues.find({memberIds: @userId}).fetch(), 'name'), @userId
-    mongoFilter = Filter.toMongoSelector filter
-    _.extend mongoFilter, { submittedTimestamp: { $gt: time } }
-  {
-    find: () ->
-      Tickets.find mongoFilter,
-        sort:
-          submittedTimestamp: -1
-        fields:
-          emailMessageIDs: 0
-          additionalText: 0
-    children: [
-      {
-        find: (ticket) ->
-          Counts.publish(this, "#{ticket._id}-noteCount", Changelog.find({ticketId: ticket._id, type: "note"}))
-          TicketFlags.find { ticketId: ticket._id, userId: @userId }
-      }
-    ]
-  }
-
-Meteor.publishComposite 'ticketSet', (ticketSet) ->
-  {
-    find: () ->
-      if not ticketSet then return
-      queues = _.pluck Queues.find({memberIds: @userId}).fetch(), 'name'
-      Tickets.find {
-        _id: { $in: ticketSet },
-        $or: [
-          { associatedUserIds: @userId },
-          { authorId: @userId },
-          { queueName: { $in: queues } }
-        ] },
-        {sort: {submittedTimestamp: -1}}
-    children: [
-      {
-        find: (ticket) ->
-          Counts.publish(this, "#{ticket._id}-noteCount", Changelog.find({ticketId: ticket._id, type: "note"}))
-          TicketFlags.find { ticketId: ticket._id, userId: @userId }
-      }
-    ]
   }
 
 
@@ -82,13 +23,7 @@ Meteor.publishComposite 'ticket', (ticketNumber) ->
       username = Meteor.users.findOne(@userId).username
       queues = _.pluck Queues.find({memberIds: @userId}).fetch(), 'name'
       return Tickets.find
-        ticketNumber: ticketNumber,
-        $or: [
-          { associatedUserIds: @userId },
-          { authorId: @userId },
-          { authorName: username },
-          { queueName: { $in: queues } }
-        ]
+        ticketNumber: ticketNumber
 
     children: [
       {
@@ -116,17 +51,17 @@ Meteor.publish 'allUserData', ->
   if @userId
     Meteor.users.find {}, { fields: { '_id': 1, 'username': 1, 'mail': 1, 'displayName': 1, 'department': 1, 'physicalDeliveryOfficeName': 1, 'status.online': 1, 'status.idle': 1 } }
 
+Meteor.publish 'allQueues', ->
+  if Roles.checkPermissions @userId, 'allQueues'
+    Queues.find {}
+
 Meteor.publish 'queueNames', ->
   if @userId
-    Queues.find {}, { fields: { 'name': 1, 'memberIds': 1, 'stats': 1 } }
+    Queues.find { active: true }, { fields: { 'name': 1, 'memberIds': 1, 'stats': 1, 'active': 1 } }
 
 Meteor.publish 'tags', ->
   if @userId
     Tags.find {}, { fields: { 'name': 1 }, sort: { lastUse: -1 }, limit: 100 }
-
-Meteor.publish 'statuses', ->
-  if @userId
-    Statuses.find {}, { fields: { 'name': 1 }, sort: { lastUse: -1 }, limit: 100 }
 
 Meteor.publish 'queueCounts', ->
   QueueBadgeCounts.find { userId: @userId }

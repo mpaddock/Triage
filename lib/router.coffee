@@ -5,10 +5,10 @@ Router.configure
   layoutTemplate: 'layout'
   loadingTemplate: 'loading'
   onBeforeAction: ->
-    if Meteor.isClient and not Meteor.userId()
-      @render 'login'
-    else
-      @next()
+      if Meteor.isClient and not Meteor.userId()
+          @render 'login'
+      else
+          @next()
 
 queueBeforeAction = (router, options) ->
   #check router, Object
@@ -64,6 +64,8 @@ Router.map ->
       queue = Meteor.user()?.defaultQueue || Queues.findOne({memberIds: Meteor.userId()})?.name
       if queue
         @redirect '/queue/'+queue
+      else if not Queues.findOne()
+        @redirect '/admin/settings'
       else
         @redirect '/my/tickets'
 
@@ -111,6 +113,19 @@ Router.map ->
       Session.set 'queueName', null
       Session.set 'pseudoQueue', null
       @next()
+
+  @route 'adminSettings',
+    path: '/admin/settings'
+    onBeforeAction: ->
+      Session.set 'queueName', null
+      Session.set 'pseudoQueue', null
+      @next()
+
+  @route 'queueSettings',
+    path: '/queue/:queueName/settings'
+    onBeforeAction: ->
+        Session.set 'queueName', @params.queueName
+        @next()
 
   @route 'apiSubmit',
     path: '/api/1.0/submit'

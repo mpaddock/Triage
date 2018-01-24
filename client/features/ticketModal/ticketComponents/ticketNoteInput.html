@@ -1,0 +1,43 @@
+<template name="ticketNoteInput">
+  <div class="columns ticket-note-input-area">
+    <div class="column is-12-mobile is-10-desktop is-offset-2-desktop">
+      {{# textareaAutocomplete name="newNote" class='textarea' placeholder="Add a new note..." settings=tokenSettings data-ticket=_id }}{{/textareaAutocomplete}}
+    </div>
+  </div>
+  <div class="columns">
+    <div class="column is-10-desktop is-offset-2-desktop is-12-mobile note-input-buttons">
+      {{#if queueMember}}
+        {{#if allowStatusChange}}
+          <div class="status-button pull-left">
+            <div class="dropdown" data-ticket="{{_id}}" style="display: inline-block;">
+              <button class="button btn-responsive dropdown-toggle" type="button" data-toggle="dropdown" name="statusButton" aria-expanded="false">{{status}}<span class="caret dropdown-toggle"></span></button>
+              <ul class="dropdown-menu" name="statusMenu" role="menu" aria-labelledby="ticketStatusDropdown">
+                <li role="presentation"><a role="menuitem" tabindex="-1">Open</a></li>
+                <li role="presentation"><a role="menuitem" tabindex="-1">Closed</a></li>
+                <li role="presentation" class="ticket-status-input">{{> inputAutocomplete name="customStatus" placeholder="Or a custom status" settings=statusSettings}}</li>
+              </ul>
+            </div>
+          </div>
+        {{/if}}
+      {{/if}}
+      <div class="input-buttons pull-right">
+        {{#if closed}}
+          {{#if allowStatusChange}}
+            <button type="button" class="button btn-responsive btn-default" name="addNoteAndReOpen">Re-Open Ticket</button>
+          {{/if}}
+          {{else}}
+          {{#if queueMember}}
+            <button type="button" class="button btn-responsive btn-default" name="closeSilently" title="Close ticket without sending any emails.">Close Ticket Silently</button>
+            <button type="button" class="button btn-responsive btn-default" name="addNoteAndClose">Close Ticket</button>
+          {{/if}}
+        {{/if}}
+        {{#if queueMember}}
+          <button type="button" class="button btn-responsive btn-default" name="addInternalNote">Add Internal Note</button>
+          <button type="button" class="button btn-responsive is-primary" name="addNoteAdmin">Add Note</button>
+          {{else}}
+          <button type="button" class="button btn-responsive is-primary" name="addNote">Add Note</button>
+        {{/if}}
+      </div>
+    </div>
+  </div>
+</template>

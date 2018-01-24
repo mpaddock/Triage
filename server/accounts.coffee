@@ -1,25 +1,9 @@
 Accounts.onLogin (info) ->
-  Meteor.call 'refreshUserInformation', info.user.username
-  usersgs = info.user.memberOf.map (x) ->
-    #Pulls the user SG out of the long string given to us by LDAP (after CN=, before ',') and converts to lower case for easier comparison.
-    return x.substr(x.indexOf('CN=')+3, x.indexOf(',')-3).toLowerCase()
-  Meteor.settings.queues.forEach (queue) ->
-    member = false
-    if info.user.username in queue.admins
-      member = true
-      queue = Queues.findOne { name: queue.name }
-      Queues.update queue._id, { $addToSet: { memberIds:info.user._id } }
-    else
-      queue.securityGroups.forEach (sg) ->
-        if sg.toLowerCase() in usersgs
-          queue = Queues.findOne { name: queue.name }
-          Queues.update queue._id, { $addToSet: { memberIds:info.user._id } }
-          member = true
-        else if Queues.findOne({ name: queue.name, memberIds: info.user._id }) and not member
-          queue = Queues.findOne({ name: queue.name })
-          Queues.update queue._id, { $pull: { memberIds: info.user._id } }
+    # Our first user is the application admin. Congrats, first user.
+    if Meteor.users.find().count() is 1
+        Meteor.users.update info.user?._id, { $set: { applicationRole: Constants.appAdminRole } }
+    
+    # Make sure app admins are listed as members and admins of all queues, avoiding role-specific logic for queues
+    if Meteor.users.findOne(info.user?._id).isAppAdmin()
+        Queues.update {}, { $addToSet: { memberIds: info.user._id, adminIds: info.user._id } }, { multi: true }
 
-    #Make sure there's an entry for badge counts for each queue the user has access to.
-    Queues.find({memberIds: info.user._id}, {fields: {'name': 1}}).forEach (q) ->
-      if not QueueBadgeCounts.findOne({ userId: info.user._id, queueName: q.name})
-        QueueBadgeCounts.insert { userId: info.user._id, queueName: q.name, count: 0 }

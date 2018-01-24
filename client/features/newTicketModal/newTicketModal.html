@@ -1,0 +1,73 @@
+<template name="newTicketModal">
+    <div class="modal is-active" id="new-ticket-modal" role="dialog">
+        <div class="modal-background"></div>
+        <div class="modal-card">
+            <div class="modal-card-head">
+                <p class="modal-card-title">Add a Ticket</p>
+            </div>
+            <div class="modal-card-body">
+                <p class="text-center error">{{errorText}}</p>
+                <form>
+                    <div class="field">
+                        <label for="onBehalfOf" class="label">Submit on Behalf Of:</label>
+                        <div class="field has-addons">
+                            <div class="control">
+                                {{>inputAutocomplete name="onBehalfOf" class="input" placeholder="Enter username" settings=userSettingsBottom}}
+                            </div>
+                            <div class="control">
+                                <button type="button" class="button is-primary" data-action="checkUsername">Check</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label for="title" class="label">Title:</label>
+                        <div class="control">
+                            {{>inputAutocomplete settings=tokenSettings name="title" class="input" }}
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label for="body" class="label">Body:</label>
+                        <div class="control">
+                            {{#textareaAutocomplete settings=tokenSettings name="body" class="textarea" rows="6"}}{{/textareaAutocomplete}}
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label for="tags" class="label">Tags:</label>
+                        <div class="control">
+                            <input class="input" type="text" name="tags" data-placeholder="Enter tags" style="width: 100%">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label for="tags" class="label">Attach files:</label>
+                        <div class="control">
+                            <button type="button" class="button" data-action="uploadFile">Upload a file</button>
+                        </div>
+                    </div>
+                    <div>
+                        {{#each files}}
+                        <div>
+                            <a href="#" data-action="removeAttachment"><span data-file="{{_id}}" style="color: red;" class="fas fa-times"></span></a>
+                            {{#if thumbnail}} <img class="img-thumbnail" style="max-width: 100%; max-height: 32px;" src="/file/{{thumbnail}}" /> {{/if}}
+                            {{filename}}&nbsp;
+                        </div>
+                        {{/each}}
+                    </div>
+                    <div class="form-group">
+                        <label for="queueName" class="label">Queue:</label>
+                        <div>
+                            <select name="queue" class="select" data-placeholder="Select queue">
+                                {{#each queue in queues}}
+                                <option value="{{queue._id}}" data-queueName="{{queue.name}}">{{queue.name}}</option>
+                                {{/each}}
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-card-foot">
+                <button type="button" class="button is-danger pull-left" data-dismiss="modal">Cancel</button>
+                <button type="button" class="button is-primary pull-right" data-action="submit">{{#unless submitting}}Submit Ticket{{else}}{{> loading class="submit-loader"}}{{/unless}}</button>
+            </div>
+        </div>
+    </div>
+</template>
