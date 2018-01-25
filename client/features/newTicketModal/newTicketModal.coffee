@@ -67,7 +67,7 @@ Template.newTicketModal.events
                 method: "Web"
         }
 
-        Meteor.call 'createTicket', ticket, (err, res) ->
+        Meteor.call 'ticket.create', ticket, (err, res) ->
           if err
             tpl.submitting.set false
             tpl.errorText.set "Error: #{err.message}."

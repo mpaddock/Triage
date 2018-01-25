@@ -42,7 +42,7 @@ Template.ticketNoteInput.events
     Tickets.update tpl.data.ticketId, { $set: {status: 'Closed'} }
 
   'click button[name=closeSilently]': (e, tpl) ->
-    Meteor.call 'closeSilently', tpl.data.ticketId
+    Meteor.call 'ticket.closeSilently', tpl.data.ticketId
 
   'input textarea[name=newNote]': (e, tpl) ->
     if $(e.target).val() is ""

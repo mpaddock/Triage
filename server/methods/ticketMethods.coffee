@@ -2,7 +2,7 @@ TicketHelpers = require('/imports/server/util/ticketHelpers.coffee').TicketHelpe
 
 
 Meteor.methods
-    createTicket: (ticket) ->
+    'ticket.create': (ticket) ->
         ticket.tags?.forEach (tag) ->
             Tags.upsert { name: tag }, { $set: { lastUse: new Date() } }
 
@@ -13,7 +13,7 @@ Meteor.methods
         ticket = TicketHelpers.prepareTicket(ticket, @userId)
         Tickets.insert ticket
 
-    closeSilently: (ticketId) ->
+    'ticket.closeSilently': (ticketId) ->
         ticket = Tickets.findOne(ticketId)
         if Queues.findOne { name: ticket.queueName, memberIds: @userId }
             d = new Date()
@@ -36,6 +36,6 @@ Meteor.methods
                 oldValue: ticket.status
                 newValue: 'Closed'
 
-    associateUserWithTicket: (ticketId, associatedUserId) ->
+    'ticket.associateUser': (ticketId, associatedUserId) ->
         if Tickets.findOne(ticketId).isQueueMemberForTicket(@userId)
             Tickets.update ticketId, { $addToSet: { associatedUserIds: associatedUserId } }

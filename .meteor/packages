@@ -49,8 +49,8 @@ accounts-ui
 accounts-password
 hive:accounts-ldap
 fourseven:scss
-less
-matb33:bootstrap-glyphicons
 matb33:collection-hooks
 mixmax:smart-disconnect
 dburles:collection-helpers
+less
+matb33:bootstrap-glyphicons

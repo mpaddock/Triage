@@ -12,13 +12,13 @@
                     {{> ticketHeadingPanels}}
                 </section>
 
-                <section>
+                <section class="section body-section">
                     <label for="body">Body:</label>
-                    <blockquote>
+                    <div class="box">
                         {{#each bodyParagraph}}
                         <p>{{linkify this}}</p>
                         {{/each}}
-                    </blockquote>
+                    </div>
                 </section>
 
                 {{#if formFields}}

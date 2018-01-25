@@ -104,8 +104,7 @@ associateUser = (tpl, associatedUserId) ->
   queueMember = Meteor.user().isQueueMemberById(tpl.data.queueId)
   associatedQueueMember = Queues.findOne({name: tpl.data.queueName, memberIds: associatedUserId})
   if queueMember or !associatedQueueMember
-    #Meteor.call 'associateUserWithTicket', tpl.data._id, associatedUserId
-    Tickets.update tpl.data._id, { $addToSet: { associatedUserIds: associatedUserId } }
+    Meteor.call 'ticket.associateUser', tpl.data._id, associatedUserId
   else
     tpl.associateUserError.set 'You do not have permission to associate this user.'
     setTimeout ->

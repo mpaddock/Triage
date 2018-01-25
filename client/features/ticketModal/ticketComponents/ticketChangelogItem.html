@@ -1,18 +1,18 @@
 <template name="ticketChangelogItem">
   {{#if note}}
-    <div class="row">
-      <div class="col-xs-4 col-md-2">
+    <div class="columns">
+      <div class="column is-4-mobile is-2-desktop">
         <label for="note-{{_id}}" class="control-label pull-right">
-          {{#if authorId}}
-            {{> userPortrait userId=authorId}}
+            {{#if authorId}}
+                {{> userPortrait userId=authorId}}
             {{else}}
-            {{authorEmail}} (via e-mail)
-          {{/if}}
+                {{authorEmail}} (via e-mail)
+            {{/if}}
           <small style="font-size: 0.7em; font-weight: lighter;">{{>timeFromNow date=timestamp}}</small>
         </label>
       </div>
-      <div class="col-xs-8 col-md-10">
-        <div class="well well-sm note-well {{internalNoteClass}}" style="text-align: left;">
+      <div class="column is-8-mobile is-10-desktop">
+        <div class="box {{internalNoteClass}}" style="text-align: left;">
           {{#each noteParagraph}}
             <p>{{linkify this}}</p>
           {{/each}}
@@ -21,8 +21,8 @@
         </div>
       </div>
       {{else}}
-      <div class="row">
-        <div class="col-xs-8 col-xs-offset-4 col-md-10 col-md-offset-2">
+      <div class="columns">
+          <div class="column is-8-mobile is-offset-4-mobile is-10-desktop is-offset-2-desktop">
           {{#if changeIsType 'attachment'}}
             {{#with otherId}}
               {{#if file.thumbnail}}

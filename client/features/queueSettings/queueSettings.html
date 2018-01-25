@@ -1,48 +1,60 @@
 <template name="queueSettings">
     {{#with queue}}
-    <div class="row">
-        <div class="col-md-6">
-            <h3>Members and Administrators</h3>
-            <h5>Queue members can view and interact with tickets in the queue. Administrators can add and delete members and statuses.</h5>
-            <ul class="list-group qs-admin-list">
-                {{#each member in members}}
-                <li class="list-group-item">
-                    <span>
-                        {{> userPortrait userId=memberId hideHoverContent=true}}
-                        {{member.username}}
-                        ({{member.displayName}})
-                        {{#if isAdmin}} (Admin) {{/if}}
-                    </span>
-                    <button class="btn btn-xs btn-danger" data-action="removeAdmin" data-id="{{admin._id}}">Remove</button>
-                </li>
-                {{/each}}
-                <li class="list-group-item input-list-item">
-                    {{> inputAutocomplete type="text" settings=userSettings class="form-control" name="addAdmin" placeholder="Enter Name or Username"}}
-                    <span class="input-group-btn">
-                        <button class="btn btn-primary" data-action="addAdmin">Add</button>
-                    </span>
-                </li>
-            </ul>
+    <div class="columns">
+        <div id="qs-queue-members" class="column">
+            <div class="panel settings-panel">
+                <header class="panel-heading">
+                    <p class="is-5">Members and Administrators</p>
+                    <p class="subtitle is-6">Queue members can view and interact with tickets in the queue. Administrators can add and delete members and statuses.</p>
+                </header>
+                <div class="panel-content">
+                    {{#each member in members}}
+                    <div class="panel-block">
+                        <span>
+                            {{> userPortrait userId=memberId hideHoverContent=true}}
+                            {{member.username}}
+                            ({{member.displayName}})
+                            {{#if isAdmin}} (Admin) {{/if}}
+                        </span>
+                        <button class="button is-small is-danger" data-action="removeAdmin" data-id="{{admin._id}}">Remove</button>
+                    </div>
+                    {{/each}}
+                    <div class="field has-addons panel-block">
+                        <div class="control">
+                            {{> inputAutocomplete type="text" settings=userSettings class="input" name="addAdmin" placeholder="Enter Name or Username"}}
+                        </div>
+                        <div class="control">
+                            <button class="button is-primary" data-action="addAdmin">Add</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="col-md-6">
-            <h3>Statuses</h3>
-            <h5>Define a custom list of status options for tickets in this queue. If 'Allow Custom Statuses' is selected, a text input will be added below the list for manual status input.</h5>
-            <ul class="list-group qs-queue-list">
-                {{#each status in queue.statuses}}
-                <li class="list-group-item">
-                    <span>
-                        {{status.name}}
-                    </span>
-                    <button class="btn btn-xs btn-danger" data-action="removeAdmin" data-id="{{admin._id}}">Remove</button>
-                </li>
-                {{/each}}
-                <li class="list-group-item input-list-item">
-                    <input type="text" class="form-control" name="addStatus" data-queue="{{queue._id}}" placeholder="Enter New Status">
-                    <span class="input-group-btn">
-                        <button class="btn btn-primary" data-action="addAdmin">Add</button>
-                    </span>
-                </li>
-            </ul>
+        <div class="column">
+            <div class="panel settings-panel">
+                <header class="panel-heading">
+                    <p class="is-5">Statuses</p>
+                    <p class="subtitle is-6">Define a custom list of status options for tickets in this queue. If 'Allow Custom Statuses' is selected, a text input will be added below the list for manual status input.</p>
+                </header>
+                <div class="panel-content">
+                    {{#each status in queue.statuses}}
+                    <div class="panel-block">
+                        <span>
+                            {{status.name}}
+                        </span>
+                        <button class="button is-small is-danger" data-action="removeAdmin" data-id="{{admin._id}}">Remove</button>
+                    </div>
+                    {{/each}}
+                    <div class="field has-addons panel-block">
+                        <div class="control">
+                            <input type="text" class="input" name="addStatus" data-queue="{{queue._id}}" placeholder="Enter New Status">
+                        </div>
+                        <div class="control">
+                            <button class="button is-primary" data-action="addAdmin">Add</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     {{/with}}
