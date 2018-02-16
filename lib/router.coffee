@@ -155,7 +155,7 @@ Router.map ->
           hostname: @request.body.hostname? @request.body.ip_address
         submittedTimestamp: Date.now()
         queueName: @request.body.queueName || 'Triage'
-        tags: @request.body.tags?.split(';\n') || []
+        tags: @request.body.tags?.split(/[;\n]/).map((t) => t.trim()).filter((t) => t.length) || []
         formFields: formFields
         attachmentIds: _.pluck(@request.files, '_id')
 
