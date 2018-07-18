@@ -82,7 +82,7 @@ removeInactiveUsersFromQueues = ->
 
 SyncedCron.add
   name: 'Remove stale users from queue membership'
-  schedule: (parser) -> parser.text 'every day'
+  schedule: (parser) -> parser.text 'at 12:00 am'
   job: -> removeInactiveUsersFromQueues()
 
 SyncedCron.start()
