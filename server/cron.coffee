@@ -73,16 +73,19 @@ SyncedCron.add
 removeInactiveUsersFromQueues = ->
   now = new Date()
   Queues.find({}, {fields: {_id: 1, name: 1, memberIds: 1}}).forEach (queue) ->
+    console.log "Removing stale users from #{queue.name} queue"
     _.each queue.memberIds, (memberId) ->
       member = Meteor.users.findOne(memberId, {fields: {username: 1, status: 1}})
-      if now - member.status.lastLogin > 7*24*60*60*1000
+      unless member
+        console.log "Error: #{memberId} not found in users collection"
+      else if now - member.status.lastLogin > 7*24*60*60*1000
         Queues.update queue._id, { $pull: {memberIds: memberId} }
         QueueBadgeCounts.remove {userId: memberId, queueName: queue.name}
         console.log "Removed #{member.username} from #{queue.name} after 7 day inactivity"
 
 SyncedCron.add
   name: 'Remove stale users from queue membership'
-  schedule: (parser) -> parser.text 'at 12:00 am'
+  schedule: (parser) -> parser.text 'at 1:00 am'
   job: -> removeInactiveUsersFromQueues()
 
 SyncedCron.start()
