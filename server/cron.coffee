@@ -78,10 +78,15 @@ removeInactiveUsersFromQueues = ->
       member = Meteor.users.findOne(memberId, {fields: {username: 1, status: 1}})
       unless member
         console.log "Error: #{memberId} not found in users collection"
-      else if now - member.status.lastLogin > 7*24*60*60*1000
         Queues.update queue._id, { $pull: {memberIds: memberId} }
         QueueBadgeCounts.remove {userId: memberId, queueName: queue.name}
-        console.log "Removed #{member.username} from #{queue.name} after 7 day inactivity"
+      else
+        elapsed = now - member.status.lastLogin.date
+        sevenDays = 7*24*60*60*1000
+        if elapsed > sevenDays
+          Queues.update queue._id, { $pull: {memberIds: memberId} }
+          QueueBadgeCounts.remove {userId: memberId, queueName: queue.name}
+          console.log "Removed #{member.username} from #{queue.name} after 7 day inactivity"
 
 SyncedCron.add
   name: 'Remove stale users from queue membership'
